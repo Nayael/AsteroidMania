@@ -1,0 +1,18 @@
+{
+	"name": "nodeJS_game",
+	"version": "1.0.0",
+	"author": "Nicolas Vannier",
+	"main": "server",
+	"engines": {
+		"node": "0.8.14"
+	},
+	"scripts": {
+		"start": "server.js"
+	},
+	"dependencies": {
+		"express": "3.0.0rc4",
+		"connect": "2.4.4",
+		"jade": "0.27.6",
+		"socket.io": "0.9.10"
+	}
+}
