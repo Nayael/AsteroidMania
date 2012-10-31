@@ -2,12 +2,12 @@
 	"name": "nodeJS_game",
 	"version": "1.0.0",
 	"author": "Nicolas Vannier",
-	"main": "server",
+	"main": "index",
 	"engines": {
 		"node": "0.8.14"
 	},
 	"scripts": {
-		"start": "server.js"
+		"start": "index.js"
 	},
 	"dependencies": {
 		"express": "3.0.0rc4",
