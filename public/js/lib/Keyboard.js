@@ -96,5 +96,33 @@ var KEYBOARD = {
 	OPEN_BRACKET: 219,
 	BACK_SLASH: 220,
 	CLOSE_BRAKET: 221,
-	SINGLE_QUOTE: 222
+	SINGLE_QUOTE: 222,
+
+	keysPressed: {},
+	callbacks: {}
+};
+
+addEventListener('keydown', function (e) {
+	KEYBOARD.keysPressed[e.keyCode] = true;
+}, false);
+
+addEventListener('keyup', function (e) {
+	delete KEYBOARD.keysPressed[e.keyCode];
+}, false);
+
+function addControlsCapabilities (obj) {
+	if (obj.hasOwnProperty('controls')) {
+		for (var key in obj.controls) {
+			KEYBOARD.callbacks[key] = obj.controls[key][1];	// We get the callbacks from the object one by one
+		};
+
+		obj.control = function () {
+			for (var key in obj.controls) {
+				if (obj.controls[key][0] in KEYBOARD.keysPressed && KEYBOARD.callbacks.hasOwnProperty(key)) {	// If the key from the object controls is pressed
+					console.log(KEYBOARD.callbacks[key]);
+					KEYBOARD.callbacks[key]();	// We call the associated function
+				}
+			};	
+		};
+	}
 };

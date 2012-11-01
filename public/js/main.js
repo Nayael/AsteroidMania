@@ -26,7 +26,7 @@ $(function() {
 
 	onEachFrame(function() {
 		cx.clearRect(0, 0, canvas.width, canvas.height);
-		ship.controls();
+		ship.control();
 		ship.move(cx);
 	});
 });

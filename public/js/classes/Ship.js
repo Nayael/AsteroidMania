@@ -6,23 +6,24 @@ function Ship (x, y) {
 	this.y = y || 0;
 	this.angle = 0;
 	this.speed = 0;
-	this.keysDown = {};
-	var LEFT = KEYBOARD.LEFT;
-	var RIGHT = KEYBOARD.RIGHT;
-	var UP = KEYBOARD.UP;
-	var DOWN = KEYBOARD.DOWN;
 
-	this.left = function() {
-		return LEFT;
+	this.moveLeft = function() {
+		this.angle += 3;
 	};
-	this.right = function() {
-		return RIGHT;
+	this.moveRight = function() {
+		this.angle -= 3;
 	};
-	this.up = function() {
-		return UP;
+	this.moveForward = function() {
+		this.speed += 0.1;
 	};
-	this.down = function() {
-		return DOWN;
+	this.moveBackwards = function() {
+		this.speed -= 0.1;
+	};
+	this.controls = {
+		LEFT: [KEYBOARD.LEFT, this.moveLeft],
+		RIGHT: [KEYBOARD.RIGHT, this.moveRight],
+		UP: [KEYBOARD.UP, this.moveForward],
+		DOWN: [KEYBOARD.DOWN, this.moveBackwards]
 	};
 
 	addMoveCapabilities(this);
