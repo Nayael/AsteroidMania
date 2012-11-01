@@ -8,12 +8,12 @@ $(function() {
 	game.perSecond = function () {
 	    game.time = game.time || new Date();
 	    var t = new Date();
-	    var dt = (t - game.time)/1000;
+	    var dt = (t - game.time) / 100;
 	        
 	    game.time = t;
 	    return dt;
 	};
-var dt = game.perSecond();
+	
 	onEachFrame(function() {
 		ship.control();
 		ship.move();
