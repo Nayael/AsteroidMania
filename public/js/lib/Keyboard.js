@@ -1,3 +1,28 @@
+/**
+ * A library to control an object with the keyboard
+ * 
+ **** HOW TO USE ****
+ * 		my_object.controls = {
+ * 			prop1: [keyCode, my_function1],
+ * 			prop2: [keyCode, my_function2]
+ * 		};
+ * 		addControlsCapabilities(my_object);
+ *	Then, call the control() method on your object to apply the pressed keys
+ * 		
+ * Real World Example :
+ * 		ship.controls = {
+ * 			shoot: [KEYBOARD.X, shipShoot],
+ * 			explode: [KEYBOARD.Y, makeExplosion]
+ * 		};
+ * 		addControlsCapabilities(ship);
+ * 
+ * 		onEachFrame(function(){
+ *			ship.control();
+ *		})
+ * 
+ * @author Nicolas Vannier
+ */
+
 var KEYBOARD = {
 	BACKSPACE: 8,
 	TAB: 9,
@@ -119,7 +144,6 @@ function addControlsCapabilities (obj) {
 		obj.control = function () {
 			for (var key in obj.controls) {
 				if (obj.controls[key][0] in KEYBOARD.keysPressed && KEYBOARD.callbacks.hasOwnProperty(key)) {	// If the key from the object controls is pressed
-					console.log(KEYBOARD.callbacks[key]);
 					KEYBOARD.callbacks[key]();	// We call the associated function
 				}
 			};	
