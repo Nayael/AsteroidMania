@@ -1,7 +1,7 @@
 exports.start = function (initRoutes) {
-	var express = require('express'),
-		app = express(),
-		server = require('http').createServer(app),
+	var express = 	require('express'),
+		app = 		express(),
+		server = 	require('http').createServer(app),
 		io = require('socket.io').listen(server);
 
 	app.use(express.logger());
@@ -11,4 +11,5 @@ exports.start = function (initRoutes) {
 	initRoutes(app);
 
 	server.listen(8080);
+	return io;
 };
