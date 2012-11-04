@@ -35,7 +35,7 @@ function Ship (x, y, player, keys) {
 Ship.prototype.render = function(canvas) {
 	if (canvas.getContext) {
 		var cx = canvas.getContext('2d');
-		cx.clearRect(0, 0, canvas.width, canvas.height);
+		cx.clearRect(this.x - 30, this.y - 30, 60, 60);
 		cx.beginPath();
 		cx.moveTo(this.x, this.y);
 		cx.lineTo(this.x - 20*Math.cos((this.angle * Math.PI / 180) - 0.3), this.y + 20*Math.sin((this.angle * Math.PI / 180) - 0.3));

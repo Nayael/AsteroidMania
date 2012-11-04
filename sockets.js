@@ -20,15 +20,23 @@ exports.init = function (io) {
 		});
 
 		// When the client sends the player's data to the socket after he connected
-		socket.on('send_player_data', function (data) {
-			socket.emit('get_players', players);	// We send him info about the other players
-			players[socket.id] = {username : data};
-			socket.broadcast.emit('new_player', {id : socket.id, data : {
-					username : data
-				}
-			});	// We tell everyone else he connected
+		socket.on('send_user_data', function (data) {
+			console.log('\n\n\nUSER DATA: ', data);console.log('\n\n');
+			var connectedPlayers = players;
+			socket.emit('get_players', connectedPlayers);	// We send him info about the other players
+			players[data.id] = data;						// We had him to the connected players
+			socket.broadcast.emit('new_player', data);		// We tell everyone else he is connected
 		});
 
-		socket.emit('connection_ok');
+		var playerData = setPlayerData(socket);
+		console.log('\n\n\n\n**************CONNECTION OK***************************');
+		socket.emit('connection_ok', playerData);
 	});
+	
+	function setPlayerData(socket) {
+		var data = {id: socket.id};
+		data['x'] = Math.random()*700;
+		data['y'] = Math.random()*520;
+		return data;
+	}
 }
