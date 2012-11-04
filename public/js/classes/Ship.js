@@ -1,13 +1,14 @@
 /**
  * A Ship for "Asteroid Mania"
  */
-function Ship (x, y, player, keys) {
+function Ship (x, y, angle, color, player, keys) {
 	this.id;
 	this.username;
 	this.x = x || 0;
 	this.y = y || 0;
-	this.angle = 0;
+	this.angle = angle || 0;
 	this.speed = 0;
+	this.color = color || "#333";
 
 	addMoveCapabilities(this);	// We add the movement methods
 

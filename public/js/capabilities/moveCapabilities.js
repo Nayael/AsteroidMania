@@ -43,7 +43,7 @@ function addMoveCapabilities (obj) {
 			ctx.lineTo(obj.x - 20*Math.cos((obj.angle * Math.PI / 180) - 0.3), obj.y + 20*Math.sin((obj.angle * Math.PI / 180) - 0.3));
 			ctx.lineTo(obj.x - 20*Math.cos((obj.angle * Math.PI / 180) + 0.3), obj.y + 20*Math.sin((obj.angle * Math.PI / 180) + 0.3));
 			ctx.closePath();
-			ctx.strokeStyle = '#333';
+			ctx.strokeStyle = obj.color;
 			ctx.lineWidth = '2';
 			ctx.stroke();
 		}

@@ -25,7 +25,8 @@ game.init = function (user) {
 				x : game.players[user.id].x,
 				y : game.players[user.id].y,
 				angle : game.players[user.id].angle,
-				speed : game.players[user.id].speed
+				speed : game.players[user.id].speed,
+				color : game.players[user.id].color
 			};
 			socket.emit('send_user_data', userData);
 		});
@@ -40,7 +41,7 @@ game.addPlayer = function (playerData, isUser) {
 		playerData['username'] = game.user.username;
 		game.user = playerData;
 	}
-	game.players[playerData.id] = new Ship(playerData.x, playerData.y, (isUser === true ? true : false));
+	game.players[playerData.id] = new Ship(playerData.x, playerData.y, playerData.angle, playerData.color, (isUser === true ? true : false));
 	game.players[playerData.id].id = playerData.id;
 	game.players[playerData.id].username = playerData.username;
 
