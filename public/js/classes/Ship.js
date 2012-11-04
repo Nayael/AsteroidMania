@@ -1,7 +1,7 @@
 /**
  * A Ship for "Asteroid Mania"
  */
-function Ship (x, y, keys) {
+function Ship (x, y, player, keys) {
 	this.x = x || 0;
 	this.y = y || 0;
 	this.angle = 0;
@@ -9,21 +9,23 @@ function Ship (x, y, keys) {
 
 	addMoveCapabilities(this);	// We add the movement methods
 
-	if (keys != undefined) {
-		var leftKey = keys.left || KEYBOARD.LEFT,
-			rightKey = keys.right || KEYBOARD.RIGHT,
-			forwardKey = keys.forward || KEYBOARD.UP,
-			backwardsKey = keys.backwards || KEYBOARD.DOWN;
+	if (player) {
+		if (keys != undefined) {
+			var leftKey = keys.left || KEYBOARD.LEFT,
+				rightKey = keys.right || KEYBOARD.RIGHT,
+				forwardKey = keys.forward || KEYBOARD.UP,
+				backwardsKey = keys.backwards || KEYBOARD.DOWN;
+		}
+
+		this.controls = {
+			left: [leftKey || KEYBOARD.LEFT, this.moveLeft],
+			right: [rightKey || KEYBOARD.RIGHT, this.moveRight],
+			forward: [forwardKey || KEYBOARD.UP, this.moveForward],
+			backwards: [backwardsKey || KEYBOARD.DOWN, this.moveBackwards]
+		};
+
+		addControlsCapabilities(this);	// We make the ship controllable with the keyboard
 	}
-
-	this.controls = {
-		left: [leftKey || KEYBOARD.LEFT, this.moveLeft],
-		right: [rightKey || KEYBOARD.RIGHT, this.moveRight],
-		forward: [forwardKey || KEYBOARD.UP, this.moveForward],
-		backwards: [backwardsKey || KEYBOARD.DOWN, this.moveBackwards]
-	};
-
-	addControlsCapabilities(this);	// We make the ship controllable with the keyboard
 };
 
 /**
