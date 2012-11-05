@@ -2,6 +2,8 @@ var game = {};
 game.init = function (user) {
 	$(function() {
 		game.players = {};
+		game.asteroids = [];
+		game.colors = ['#FF0000', '#00FF00', '#0000FF'];
 		game.canvas = document.getElementById('main_canvas');
 		game.addPlayer(user, true);	// We add the user to the list of players
 		
@@ -41,9 +43,14 @@ game.addPlayer = function (playerData, isUser) {
 		playerData['username'] = game.user.username;
 		game.user = playerData;
 	}
-	game.players[playerData.id] = new Ship(playerData.x, playerData.y, playerData.angle, playerData.color, (isUser === true ? true : false));
+	game.players[playerData.id] = new game.Ship(playerData.x, playerData.y, playerData.angle, playerData.color, (isUser === true ? true : false));
 	game.players[playerData.id].id = playerData.id;
 	game.players[playerData.id].username = playerData.username;
 
 	game.players[playerData.id].render(game.canvas);	// We display the created user's ship
 };
+
+game.addAsteroid = function (asteroid) {
+	game.asteroids.push(asteroid);
+	asteroid.render(game.canvas, true);
+}

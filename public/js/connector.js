@@ -55,14 +55,30 @@ socket.on('player_quit', function (data) {
 ////////////////////
 // GAME EVENTS
 //
-// When the server sends datas from all the players (on each frame)
-socket.on('get_players_data', function (data) {
-	for (var player in data) {
+// When the server sends datas from the game (on each frame)
+socket.on('get_game_state', function (data) {
+	var players = data.players,
+		asteroids = data.asteroids;
+	
+	for (var player in players) {
 		if (game.players.hasOwnProperty(player)) {
-			game.players[player].x = data[player].x;
-			game.players[player].y = data[player].y;
-			game.players[player].speed = data[player].speed;
-			game.players[player].angle = data[player].angle;
+			game.players[player].x = players[player].x;
+			game.players[player].y = players[player].y;
+			game.players[player].speed = players[player].speed;
+			game.players[player].angle = players[player].angle;
 		}
+	};
+
+	game.asteroids = [];
+	for (var asteroid in asteroids) {
+		game.addAsteroid(new game.Asteroid(asteroids[asteroid].x, asteroids[asteroid].y, asteroids[asteroid].size, asteroids[asteroid].color));
+	};
+});
+
+// When the server starts the level
+socket.on('start_level', function (asteroids) {
+	game.asteroids = [];
+	for (var key in asteroids) {
+		game.addAsteroid(new game.Asteroid(asteroids[key].x, asteroids[key].y, asteroids[key].size, asteroids[key].color));
 	};
 });
