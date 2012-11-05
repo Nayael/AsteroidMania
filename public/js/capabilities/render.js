@@ -6,7 +6,6 @@ function addRenderCapabilities (obj) {
 	 */
 	obj.render = function(canvas, isAsteroid) {
 		if (canvas.getContext) {
-			obj.remove(canvas, isAsteroid);
 			var ctx = canvas.getContext('2d');
 			ctx.beginPath();
 			ctx.moveTo(obj.x, obj.y);
@@ -32,11 +31,7 @@ function addRenderCapabilities (obj) {
 	obj.remove = function(canvas, isAsteroid) {
 		if (canvas.getContext) {
 			var ctx = canvas.getContext('2d');
-			if (isAsteroid) {
-				ctx.clearRect(obj.x - (obj.size + 10 * obj.speed), obj.y - (obj.size + 10 * obj.speed), 2.5 * (obj.size + 10 * obj.speed), 2.5 * (obj.size + 10 * obj.speed));
-			}else {
-				ctx.clearRect(obj.x - (obj.width + 3 * obj.speed), obj.y - (obj.width + 3 * obj.speed), obj.width * 3, obj.width * 3);
-			}
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
 		}
 	};
 };

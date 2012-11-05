@@ -18,8 +18,14 @@ game.init = function (user) {
 		
 		onEachFrame(function() {
 			game.players[user.id].control();	// We detect the pressed keys
+			game.players[user.id].move(game.canvas);	// We detect the pressed keys
+
 			for (var index in game.players) {
-				game.players[index].move(game.canvas);
+				game.players[index].render(game.canvas);
+			};
+
+			for (var asteroid in game.asteroids) {
+				game.asteroids[asteroid].render(game.canvas, true);
 			};
 
 			var userData = {
@@ -52,5 +58,4 @@ game.addPlayer = function (playerData, isUser) {
 
 game.addAsteroid = function (asteroid) {
 	game.asteroids.push(asteroid);
-	asteroid.render(game.canvas, true);
 }
