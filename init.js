@@ -46,7 +46,7 @@ exports.initLevel = function (index) {
 			y: Math.random() * 500,
 			xDirection: (this.x < 0) ? 1 : -1,
 			yDirection: (this.y < 270) ? 1 : -1,
-			speed: 10 * (1 / size),
+			speed: 5 * (1 / size),
 			size: size,
 			color: colors[colorIndex],
 			inside: false

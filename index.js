@@ -1,8 +1,8 @@
-var server = require("./modules/server"),
-	router = require('./modules/router'),
-	sockets = require('./modules/sockets'),
-	initModule = require('./modules/init'),
-	gameModule = require('./modules/game');
+var server = require("./server"),
+	router = require('./router'),
+	sockets = require('./sockets'),
+	initModule = require('./init'),
+	gameModule = require('./game');
 
 initModule.init();
 
