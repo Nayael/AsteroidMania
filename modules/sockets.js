@@ -33,6 +33,7 @@ exports.init = function (io, initModule, gameModule) {
 				initModule.initLevel(level);
 				socket.emit('start_level', asteroids);
 				socket.broadcast.emit('start_level', asteroids);
+			// TODO Remplacer setInterval par un moyen plus propre de faire une boucle asynchrone
 				setInterval(function () {
 					gameModule.moveAsteroids();	// We handle the asteroids
 				}, 30);
