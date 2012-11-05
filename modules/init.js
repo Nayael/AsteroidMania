@@ -42,11 +42,14 @@ exports.initLevel = function (index) {
 		var size = Math.ceil(Math.random() * waves[index].max);
 		totalSize += size;
 		asteroids.push({
-			x: Math.random()*720,
-			y: Math.random()*500,
-			// speed: 10 * (1 / size),
+			x: (Math.random() <= 0.5) ? (-120 + Math.random() * (50 - 10 * size)) : ((850 + 10 * size) + Math.random() * 920),
+			y: Math.random() * 500,
+			xDirection: (this.x < 0) ? 1 : -1,
+			yDirection: (this.y < 270) ? 1 : -1,
+			speed: 10 * (1 / size),
 			size: size,
-			color: colors[colorIndex]
+			color: colors[colorIndex],
+			inside: false
 		});
 		colorIndex++;
 	};

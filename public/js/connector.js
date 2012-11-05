@@ -59,7 +59,7 @@ socket.on('player_quit', function (data) {
 socket.on('get_game_state', function (data) {
 	var players = data.players,
 		asteroids = data.asteroids;
-	
+
 	for (var player in players) {
 		if (game.players.hasOwnProperty(player)) {
 			game.players[player].x = players[player].x;
@@ -71,7 +71,7 @@ socket.on('get_game_state', function (data) {
 
 	game.asteroids = [];
 	for (var asteroid in asteroids) {
-		game.addAsteroid(new game.Asteroid(asteroids[asteroid].x, asteroids[asteroid].y, asteroids[asteroid].size, asteroids[asteroid].color));
+		game.addAsteroid(new game.Asteroid(asteroids[asteroid]));
 	};
 });
 
