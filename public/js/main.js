@@ -3,7 +3,7 @@ game.init = function (user) {
 	$(function() {
 		game.players = {};
 		game.asteroids = [];
-		game.colors = ['#FF0000', '#00FF00', '#0000FF'];
+		game.colors = ['#FF0000', '#00FF00', '#FFFF00'];
 		game.canvas = document.getElementById('main_canvas');
 		game.addPlayer(user, true);	// We add the user to the list of players
 		

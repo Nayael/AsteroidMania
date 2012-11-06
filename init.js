@@ -30,7 +30,7 @@ exports.initLevel = function (index) {
 			max: 5,
 			total: 35
 		}],
-		colors = ['#FF0000', '#00FF00', '#0000FF'],
+		colors = ['#FF0000', '#00FF00', '#FFFF00'],
 		colorIndex = 0,
 		totalSize = 0;	// We use the asteroids' sizes to set a number of asteroids per wave
 	GLOBAL.asteroids = [];
@@ -46,7 +46,7 @@ exports.initLevel = function (index) {
 			y: Math.random() * 500,
 			xDirection: (this.x < 0) ? 1 : -1,
 			yDirection: (this.y < 270) ? 1 : -1,
-			speed: 6 * (1 / size),
+			speed: 5 * (1 / size),
 			size: size,
 			color: colors[colorIndex],
 			inside: false

@@ -1,10 +1,59 @@
 @charset 'UTF-8';
 
-body, html {
-	margin: 0;
-	padding: 0;
+html {
+	height: 100%;
 }
 
 body {
+	margin: 0;
+	padding: 0;
+	height: 100%;
 	background-color: #EEEEEE;
+}
+
+a {
+	text-decoration: none;
+	color: #000000;
+}
+
+#content {
+	position: relative;
+	width: 1200px;
+	min-height: 100%;
+	margin: auto;
+	padding-left: 15px;
+	padding-right: 15px;
+	background-color: #DDDDDD;
+	font-family: 'Segoe UI', 'Trebuchet MS', Arial, sans-serif;
+}
+
+#content .text {
+	text-align: justify;
+}
+
+header {
+	position: absolute;
+	right: 20px;
+}
+
+header h1 {
+	margin-bottom: -5px;
+	font-size: 16px;
+	font-style: italic;
+}
+
+nav {
+	margin: 0px -15px 20px -15px;
+	padding-left: 10px;
+	background-color: #CCCCCC;
+}
+
+nav a {
+	display: inline-block;
+	padding: 10px 20px 15px 20px;
+}
+
+nav a.current_menu {
+	background-color: #AAAAAA;
+	font-weight: bold;
 }

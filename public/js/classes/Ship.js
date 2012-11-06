@@ -16,7 +16,7 @@ game.Ship = function (x, y, angle, color, player) {
 	this.vulnerability = {
 		'#FF0000': (this.color === game.colors[0] ? 0 : (this.color === game.colors[1] ? 1 : 2)),
 		'#00FF00': (this.color === game.colors[0] ? 1 : (this.color === game.colors[1] ? 0 : 2)),
-		'#0000FF': (this.color === game.colors[0] ? 2 : (this.color === game.colors[1] ? 1 : 0))
+		'#FFFF00': (this.color === game.colors[0] ? 2 : (this.color === game.colors[1] ? 1 : 0))
 	}
 
 	addMoveCapabilities(this);	// We add the movement methods

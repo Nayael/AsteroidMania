@@ -11,7 +11,7 @@ exports.setPlayerData = function (id) {
 			break;
 		case 2: case 5:
 			y = 450;
-			color = "#0000FF";
+			color = "#FFFF00";
 			break;
 		default:
 			x = Math.random()*700;
