@@ -5,4 +5,7 @@ exports.routes = function (app) {
 	app.get('/game', function(request, response) {
 		response.render('game.jade');
 	});
+	app.get('/technical', function(request, response) {
+		response.render('technical.jade');
+	});
 }

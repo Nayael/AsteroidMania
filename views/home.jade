@@ -10,7 +10,8 @@ html
 			nav
 				a(href="/").current_menu Accueil
 				a(href="/game") Jeu
-			p.text
+				a(href="/technical") Explications techniques
+			div.text
 				p
 					em Asteroid Mania
 					|  est un jeu multijoueur dans lequel vous pilotez un vaisseau spatial perdu avec son escadron au milieu d'un champ d'astéroïdes.
@@ -21,8 +22,8 @@ html
 						li Les astéroïdes de la couleur qui vous est supérieure détruisent votre vaisseau au moindre contact
 						li Vous pouvez détruire les astéroïdes de la couleur qui vous est inférieure, mais ils peuvent aussi vous causer des dégâts
 				p Les couleurs sont réparties de cette manière :
-					br
-					| Rouge => Jaune => Vert => Rouge
+				p
+					img(src="/images/colors_explanation.png", alt="Rouge => Jaune => Vert => Rouge")
 				p
 					strong Votre mission
 					| &nbsp;: survivre jusqu'à ce que votre escadron sorte de ce champ d'astéroïdes, en évitant et en détruisant les rochers dangereux pour vous et vos coéquipiers !
