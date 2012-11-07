@@ -14,8 +14,13 @@ game.Asteroid = function (data) {
 	addRenderCapabilities(this);
 }
 
-game.Asteroid.prototype.setHitbox = function() {
-	this.hitbox = [
+game.Asteroid.prototype.setDrawbox = function() {
+	// We define the center of the element's hitbox
+	this.center = {
+		x: this.x + 15 * this.size / 2,
+		y: this.y + 15 * this.size / 2
+	};
+	this.drawbox = [
 		[this.x, this.y],
 		[this.x + 15*this.size, this.y],
 		[this.x + 15*this.size, this.y + 15*this.size],

@@ -17,22 +17,27 @@ game.init = function (user) {
 		};
 		
 		onEachFrame(function() {
-			game.players[user.id].control();	// We detect the pressed keys
-			game.players[user.id].move(game.canvas);	// We detect the pressed keys
+			var player = game.players[user.id];
+			player.control();	// We detect the pressed keys
+			player.move(game.canvas);	// We detect the pressed keys
 
 			for (var index in game.players) {
 				game.players[index].render(game.canvas);
+				if (game.players[index] != player) {
+					player.handleCollision(game.players[index]);
+				}
 			};
 
 			for (var asteroid in game.asteroids) {
 				game.asteroids[asteroid].render(game.canvas);
+				player.handleCollision(game.asteroids[asteroid], true);
 			};
 
 			var userData = {
-				x : game.players[user.id].x,
-				y : game.players[user.id].y,
-				angle : game.players[user.id].angle,
-				speed : game.players[user.id].speed
+				x : player.x,
+				y : player.y,
+				angle : player.angle,
+				speed : player.speed
 			};
 			socket.emit('send_user_data', userData);
 		});

@@ -6,15 +6,15 @@ function addRenderCapabilities (obj) {
 	obj.render = function(canvas) {
 		if (canvas.getContext) {
 			var ctx = canvas.getContext('2d');
-			if (obj.setHitbox) {		    
-				obj.setHitbox();
+			if (obj.setDrawbox) {		    
+				obj.setDrawbox();
 			}
 			ctx.beginPath();
-			ctx.moveTo(obj.hitbox[0][0], obj.hitbox[0][1]);
-			// The hitbox array contains the coordinates of the bounding box of the object
-			for (var i = 1, newX, newY; i < obj.hitbox.length; i++) {
-				newX = obj.hitbox[i][0];
-				newY = obj.hitbox[i][1]
+			ctx.moveTo(obj.drawbox[0][0], obj.drawbox[0][1]);
+			// The drawbox array contains the coordinates of the bounding box of the object
+			for (var i = 1, newX, newY; i < obj.drawbox.length; i++) {
+				newX = obj.drawbox[i][0];
+				newY = obj.drawbox[i][1]
 				ctx.lineTo(newX, newY);
 				for (var player in game.players) {
 					if (game.players[player] !== this) {

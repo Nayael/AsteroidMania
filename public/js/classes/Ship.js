@@ -11,6 +11,7 @@ game.Ship = function (x, y, angle, color, player) {
 	this.color = color || "#333";
 	this.width = 20;
 	this.height = 20;
+	this.size = 20;
 	
 	// We set the different interactions between the ships and the asteroids, in function of the colors
 	this.vulnerability = {
@@ -20,6 +21,7 @@ game.Ship = function (x, y, angle, color, player) {
 	}
 
 	addMoveCapabilities(this);	// We add the movement methods
+	addCollisionCapabilities(this);
 
 	if (player) {
 		this.controls = {
@@ -32,10 +34,29 @@ game.Ship = function (x, y, angle, color, player) {
 	}
 };
 
-game.Ship.prototype.setHitbox = function() {
-	this.hitbox = [
+/**
+ * Sets the points that will be used to draw the ship
+ */
+game.Ship.prototype.setDrawbox = function() {
+	// We define the center of the element's hitbox
+	this.center = {
+		x: this.x - 10*Math.cos((this.angle * Math.PI / 180) - 0.3),
+		y: this.y + 10*Math.sin((this.angle * Math.PI / 180) - 0.3)
+	};
+	this.drawbox = [
 		[this.x, this.y],
 		[this.x - 20*Math.cos((this.angle * Math.PI / 180) - 0.3), this.y + 20*Math.sin((this.angle * Math.PI / 180) - 0.3)],
 		[this.x - 20*Math.cos((this.angle * Math.PI / 180) + 0.3), this.y + 20*Math.sin((this.angle * Math.PI / 180) + 0.3)]
 	];
+};
+
+game.Ship.prototype.handleCollision = function(target, isAsteroid) {
+	if (this.hitTest(target)) {
+		if (isAsteroid && this.vulnerability[target.color] != 0) {
+			game.log('Touché par un astéroïde !');	    
+		    this.angle += 180;
+		}else if (!isAsteroid) {
+			game.log('Ne vous rentrez pas dedans !');
+		}
+	}
 };
