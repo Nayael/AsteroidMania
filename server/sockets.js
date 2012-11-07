@@ -1,6 +1,7 @@
 exports.init = function (io, initModule, gameModule) {
 	io.sockets.on('connection', function(socket) {
-		var playerData = gameModule.setPlayerData(socket.id);
+		var playerData = gameModule.setPlayerData(socket.id),
+			mainLoop;
 		socket.emit('connection_ok', playerData);
 
 		// A message from the client to the socket
@@ -16,8 +17,14 @@ exports.init = function (io, initModule, gameModule) {
 		// When the client disconnects
 		socket.on('disconnect', function (data) {
 			if (players.hasOwnProperty(socket.id)){
+				var player = players[socket.id];
 				delete players[socket.id];
-				socket.broadcast.emit('player_quit', {id: socket.id});
+				socket.broadcast.emit('player_quit', {id: player.id, username: player.username});
+				
+				// If there are no players left we stop the main loop
+				if (Object.size(players) === 0) {
+					clearInterval(mainLoop);
+				}
 			}
 		});
 
@@ -33,15 +40,19 @@ exports.init = function (io, initModule, gameModule) {
 				initModule.initLevel(level);
 				socket.emit('start_level', asteroids);
 				socket.broadcast.emit('start_level', asteroids);
-			// TODO Remplacer setInterval par un moyen plus propre de faire une boucle asynchrone
-				setInterval(function () {
+				mainLoop = setInterval(function () {
 					gameModule.moveAsteroids();	// We handle the asteroids
 				}, 1000 / 60);
 			}
 			
 			// When the client sends the player's data to the socket (on each frame)
 			socket.on('send_user_data', function (data) {
-				players[data.id] = data;	// We update his datas
+				// We update his datas
+				players[socket.id].x = data.x;
+				players[socket.id].y = data.y;
+				players[socket.id].angle = data.angle;
+				players[socket.id].speed = data.speed;
+
 				var gameData = {
 					players: players,
 					asteroids: []
