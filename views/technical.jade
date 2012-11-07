@@ -13,6 +13,18 @@ html
 				a(href="/technical").current_menu Explications techniques
 			div.text
 				h2 Explications techniques&nbsp;:
-				| Oui alors écoute moi, là on voit qu'on a beaucoup à travailler sur nous-mêmes car là, j'ai un chien en ce moment à côté de moi et je le caresse, et cela même si les gens ne le savent pas ! Et j'ai toujours grandi parmi les chiens.
-				br
-				| Quand tu fais le calcul, j'ai vraiment une grande mission car il faut toute la splendeur du aware parce que spirituellement, on est tous ensemble, ok ? Il y a un an, je t'aurais parlé de mes muscles.
+				p Le jeu est développé entièrement en JavaScript et HTML 5. La partie serveur utilise Node.js.
+				p
+					| La communication client-serveur s'effectue avec des websockets, via le module socket.io. Lorsqu'un client se connecte, le serveur lui attribue un id, détermine sa position de départ, et envoie ses données à tous les clients.
+					br
+					| Coté client, chaque joueur est une occurence de Ship. L'un d'entre eux représente le joueur lui-meme et possède donc la méthode 
+					em control()
+					| , qui permet de le diriger avec le clavier. Ensuite, à chaque frame, le client déplace le vaisseau du joueur en fonction du déplacement opéré avec le clavier, puis envoie ses données (comme sa position) au serveur.
+					br
+					| Ce dernier renvoie ces données à tous les autres clients, qui les utilisent au moment du render, à chaque frame également, pour déplacer ses propres occurences de Ship (identifées par les memes id que sur le serveur et chez les autres clients.)
+				p
+					| Les astéroïdes sont quant à eux générés sur le serveur. Lors de la connexion du premier joueur, une fonction 
+					em initLevel()
+					|  est appelée, qui va créer un nombre d'astéroïdes aléatoire, en fonction de leur taille, et d'une valeur propre au niveau, la taille maximale (ex : un niveau de taille 25 peut contenir 2 taille 3, 4 taille 4, 1 taille 2 et 1 taille 1).
+					br
+					| Ici, à chaque frame, la position de chaque astéroïde est recalculée en fonction de sa direction, puis ses données sont énvoyées à tous les joueurs. C'est du coté client, chez chaque joueur, que les astéroïdes sont dessinés.

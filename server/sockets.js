@@ -36,7 +36,7 @@ exports.init = function (io, initModule, gameModule) {
 			// TODO Remplacer setInterval par un moyen plus propre de faire une boucle asynchrone
 				setInterval(function () {
 					gameModule.moveAsteroids();	// We handle the asteroids
-				}, 30);
+				}, 1000 / 60);
 			}
 			
 			// When the client sends the player's data to the socket (on each frame)
