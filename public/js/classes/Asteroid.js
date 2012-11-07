@@ -6,7 +6,7 @@ game.Asteroid = function (data) {
 	this.y = data.y || 0;
 	this.size = data.size || 2;
 	this.color = data.color || "#FF0000";
-	this.speed = data.speed || 10 * (1/this.size);
+	this.speed = data.speed;
 	this.xDirection = data.xDirection || 1;
 	this.yDirection = data.yDirection || 1;
 	this.inside = false;
@@ -17,8 +17,8 @@ game.Asteroid = function (data) {
 game.Asteroid.prototype.setHitbox = function() {
 	this.hitbox = [
 		[this.x, this.y],
-		[this.x + 10*this.size, this.y],
-		[this.x + 10*this.size, this.y + 10*this.size],
-		[this.x, this.y + 10*this.size]
+		[this.x + 15*this.size, this.y],
+		[this.x + 15*this.size, this.y + 15*this.size],
+		[this.x, this.y + 15*this.size]
 	];
 };
