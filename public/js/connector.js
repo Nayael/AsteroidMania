@@ -5,12 +5,14 @@ var socket = io.connect('http://localhost:8080');
 //
 // When a message from the server arrives
 socket.on('message', function (data) {
-	console.log('Message from server :', data);
+	console.log('Message du serveur :', data);
+	game.log('Message du serveur :', data);
 });
 
 // When a broadcast message from another player arrives
 socket.on('brodcast_message', function (data) {
-	console.log('Message from ' + data.id + ' : ', data.message);
+	console.log('Message de ' + data.id + ' : ', data.message);
+	game.log('Message de ' + data.id + ' : ', data.message);
 });
 
 
@@ -20,7 +22,15 @@ socket.on('brodcast_message', function (data) {
 // Once the connection is established
 socket.on('connection_ok', function (data) {
 	game.init(data);			// We initialize the game
-	socket.emit('send_user_init_data', game.players[data.id]);	// We send the user data to the socket
+	socket.emit('send_user_init_data', {
+		id: game.players[data.id].id,
+		x: game.players[data.id].x,
+		y: game.players[data.id].y,
+		speed: game.players[data.id].speed,
+		angle: game.players[data.id].angle,
+		color: game.players[data.id].color,
+		username: game.players[data.id].username
+	});	// We send the user data to the socket
 	game.user = data.id;	// We only keep the id, since the user is now with the other players
 });
 
@@ -39,15 +49,17 @@ socket.on('new_player', function (newPlayer) {
 		game.addPlayer(newPlayer);
 	}
 	console.log(game.players[newPlayer.id].username + ' a rejoint le jeu.');
+	game.log(game.players[newPlayer.id].username + ' a rejoint le jeu.');
 });
 
 // When a player leaves the game
-socket.on('player_quit', function (data) {
-	if (game.players.hasOwnProperty(data.id)) {
-		var leavingPlayer = game.players[data.id];
-		console.log(leavingPlayer.username + ' a quitté le jeu.');
+socket.on('player_quit', function (player) {
+	if (game.players.hasOwnProperty(player.id)) {
+		var leavingPlayer = game.players[player.id];
+		console.log(player.username + ' a quitté le jeu.');
+		game.log(player.username + ' a quitté le jeu.');
 		leavingPlayer.remove(game.canvas);
-		delete game.players[data.id];
+		delete game.players[player.id];
 	}
 });
 
@@ -78,7 +90,7 @@ socket.on('get_game_state', function (data) {
 // When the server starts the level
 socket.on('start_level', function (asteroids) {
 	game.asteroids = [];
-	for (var key in asteroids) {
-		game.addAsteroid(new game.Asteroid(asteroids[key].x, asteroids[key].y, asteroids[key].size, asteroids[key].color));
+	for (var asteroid in asteroids) {
+		game.addAsteroid(new game.Asteroid(asteroids[asteroid]));
 	};
 });

@@ -25,12 +25,13 @@ html
 				p
 					| Les astéroïdes sont quant à eux générés sur le serveur. Lors de la connexion du premier joueur, une fonction 
 					em initLevel()
-					|  est appelée, qui va créer un nombre d'astéroïdes aléatoire, en fonction de leur taille, et d'une valeur propre au niveau, la taille maximale (ex : un niveau de taille 25 peut contenir 2 taille 3, 4 taille 4, 1 taille 2 et 1 taille 1).
+					|  est appelée, qui va créer un nombre d'astéroïdes aléatoire, en fonction de leur taille, et d'une valeur propre au niveau, la taille maximale (ex : un niveau de taille 25 peut contenir 2 astéroïdes de taille 3, 4 de taille 4, 1 de taille 2 et 1 de taille 1).
 					br
-					| Ici, à chaque frame, la position de chaque astéroïde est recalculée en fonction de sa direction, puis ses données sont énvoyées à tous les joueurs. C'est du coté client, chez chaque joueur, que les astéroïdes sont dessinés.
+					| Ici, à chaque frame, la position de chaque astéroïde est recalculée en fonction de sa direction, puis ses données sont envoyées à tous les joueurs. C'est du coté client, chez chaque joueur, que les astéroïdes sont dessinés.
 				p Features non implémentées pour l'instant :
 					ul
-						li Nombre de joueurs limité à 6
+						li Nombre de joueurs limité
 						li Durée des manches limitée
 						li Tir des vaisseaux
 						li Graphisme / sprites
+						li Permettre au joueur d'entrer un pseudo

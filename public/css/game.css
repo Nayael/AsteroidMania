@@ -2,4 +2,13 @@
 
 #main_canvas {
 	background-color: #FFFFFF;
+	position: absolute;
+}
+
+#logger {
+	float: right;
+	width: 350px;
+	height: 540px;
+	border: 1px solid black;
+	overflow: scroll;
 }
