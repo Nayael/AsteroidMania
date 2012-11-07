@@ -13,7 +13,6 @@ function addRenderCapabilities (obj) {
 			ctx.moveTo(obj.hitbox[0][0], obj.hitbox[0][1]);
 			// The hitbox array contains the coordinates of the bounding box of the object
 			for (var i = 1, newX, newY; i < obj.hitbox.length; i++) {
-				// console.log('obj.hitbox[i][0], obj.hitbox[i][1]: ', obj.hitbox[i][0], obj.hitbox[i][1]);
 				newX = obj.hitbox[i][0];
 				newY = obj.hitbox[i][1]
 				ctx.lineTo(newX, newY);

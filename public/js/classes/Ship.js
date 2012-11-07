@@ -7,7 +7,7 @@ game.Ship = function (x, y, angle, color, player) {
 	this.x = x || 0;
 	this.y = y || 0;
 	this.angle = angle || 0;
-	this.speed = 0;
+	this.speed = 2;
 	this.color = color || "#333";
 	this.width = 20;
 	this.height = 20;
@@ -25,8 +25,7 @@ game.Ship = function (x, y, angle, color, player) {
 		this.controls = {
 			left: [KEYBOARD.LEFT, this.moveLeft],
 			right: [KEYBOARD.RIGHT, this.moveRight],
-			forward: [KEYBOARD.UP, this.moveForward],
-			backwards: [KEYBOARD.DOWN, this.moveBackwards]
+			forward: [KEYBOARD.UP, this.moveForward]
 		};
 
 		addControlsCapabilities(this);	// We make the ship controllable with the keyboard
