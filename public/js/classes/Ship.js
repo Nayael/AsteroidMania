@@ -32,3 +32,11 @@ game.Ship = function (x, y, angle, color, player) {
 		addControlsCapabilities(this);	// We make the ship controllable with the keyboard
 	}
 };
+
+game.Ship.prototype.setHitbox = function() {
+	this.hitbox = [
+		[this.x, this.y],
+		[this.x - 20*Math.cos((this.angle * Math.PI / 180) - 0.3), this.y + 20*Math.sin((this.angle * Math.PI / 180) - 0.3)],
+		[this.x - 20*Math.cos((this.angle * Math.PI / 180) + 0.3), this.y + 20*Math.sin((this.angle * Math.PI / 180) + 0.3)]
+	];
+};

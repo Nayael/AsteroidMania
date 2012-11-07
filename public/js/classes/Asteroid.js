@@ -13,3 +13,12 @@ game.Asteroid = function (data) {
 
 	addRenderCapabilities(this);
 }
+
+game.Asteroid.prototype.setHitbox = function() {
+	this.hitbox = [
+		[this.x, this.y],
+		[this.x + 10*this.size, this.y],
+		[this.x + 10*this.size, this.y + 10*this.size],
+		[this.x, this.y + 10*this.size]
+	];
+};

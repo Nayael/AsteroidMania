@@ -25,7 +25,7 @@ game.init = function (user) {
 			};
 
 			for (var asteroid in game.asteroids) {
-				game.asteroids[asteroid].render(game.canvas, true);
+				game.asteroids[asteroid].render(game.canvas);
 			};
 
 			var userData = {
