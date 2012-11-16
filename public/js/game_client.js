@@ -42,7 +42,7 @@
 			};
 			for (var asteroid in game.asteroids) {
 				game.asteroids[asteroid].render(game.canvas);
-				player.handleCollision(game.asteroids[asteroid], true);
+				player.handleCollision(game.asteroids[asteroid]);
 			};
 			var userData = {
 				x : player.x,

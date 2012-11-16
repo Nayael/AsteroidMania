@@ -1,5 +1,6 @@
 /**
  * A Ship for "Asteroid Mania"
+ * @param data	The data to create the ship (coordinates, etc.)
  */
 function Ship(data) {
 	this.id;
@@ -49,12 +50,16 @@ Ship.prototype.setDrawbox = function() {
 	];
 };
 
-Ship.prototype.handleCollision = function(target, isAsteroid) {
+/**
+ * Handles the collisions for a ship
+ * @param target	The element which the collision will be tested with
+ */
+Ship.prototype.handleCollision = function(target) {
 	if (this.hitTest(target)) {
-		if (isAsteroid && this.vulnerability[target.color] != 0) {
+		if (target instanceof Asteroid && this.vulnerability[target.color] != 0) {
 			game.log('Touché par un astéroïde !');	    
 			this.angle += 180;
-		}else if (!isAsteroid) {
+		}else if (target instanceof Ship) {
 			game.log('Ne vous rentrez pas dedans !');
 		}
 	}
