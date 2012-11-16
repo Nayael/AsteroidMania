@@ -16,17 +16,6 @@ function addRenderCapabilities (obj) {
 				newX = obj.drawbox[i][0];
 				newY = obj.drawbox[i][1]
 				ctx.lineTo(newX, newY);
-				for (var player in game.players) {
-					if (game.players[player] !== this) {
-					    
-					}
-				};
-
-				for (var asteroid in game.asteroids) {
-					if (game.asteroids[asteroid] !== this) {
-					    
-					}
-				};
 			};
 			ctx.closePath();
 			ctx.strokeStyle = obj.color;
