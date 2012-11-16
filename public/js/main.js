@@ -66,4 +66,5 @@ game.addAsteroid = function (asteroid) {
 
 game.log = function (message) {
 	$('#logger').append('<div class="message">' + message + '</div>');
+	console.log(message);
 }

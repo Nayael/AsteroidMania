@@ -5,13 +5,11 @@ var socket = io.connect('http://localhost:8080');
 //
 // When a message from the server arrives
 socket.on('message', function (data) {
-	console.log('Message du serveur :', data);
 	game.log('Message du serveur :', data);
 });
 
 // When a broadcast message from another player arrives
 socket.on('brodcast_message', function (data) {
-	console.log('Message de ' + data.id + ' : ', data.message);
 	game.log('Message de ' + data.id + ' : ', data.message);
 });
 
@@ -48,7 +46,6 @@ socket.on('new_player', function (newPlayer) {
 	if (!game.players.hasOwnProperty(newPlayer.id) && newPlayer.id != game.user) {
 		game.addPlayer(newPlayer);
 	}
-	console.log(game.players[newPlayer.id].username + ' a rejoint le jeu.');
 	game.log(game.players[newPlayer.id].username + ' a rejoint le jeu.');
 });
 

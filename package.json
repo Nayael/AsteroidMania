@@ -7,7 +7,7 @@
 		"node": "0.8.14"
 	},
 	"scripts": {
-		"start": "index.js"
+		"start": "server/index.js"
 	},
 	"dependencies": {
 		"express": "3.0.0rc4",
