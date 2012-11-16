@@ -12,10 +12,12 @@ html
 				a(href="/") Accueil
 				a(href="/game").current_menu Jeu
 				a(href="/technical") Explications techniques
-			canvas#main_canvas(width="800", height="540")
+			div#game_content
+				canvas#main_canvas(width="800", height="540")
 			div#logger
 			//- script(type="text/javascript", src="/js/lib/require.js", data-main="/js/main")
 			script(type="text/javascript", src="/socket.io/socket.io.js")
+			script(type="text/javascript", src="/js/game_client.js")
 			script(type="text/javascript", src="/js/connector.js")
 			script(type="text/javascript", src="/js/lib/Keyboard.js")
 			script(type="text/javascript", src="/js/lib/jquery.js")
@@ -23,6 +25,5 @@ html
 			script(type="text/javascript", src="/js/capabilities/collision.js")
 			script(type="text/javascript", src="/js/capabilities/render.js")
 			script(type="text/javascript", src="/js/capabilities/move.js")
-			script(type="text/javascript", src="/js/main.js")
-			script(type="text/javascript", src="/js/classes/Asteroid.js")
 			script(type="text/javascript", src="/js/classes/Ship.js")
+			script(type="text/javascript", src="/js/classes/Asteroid.js")

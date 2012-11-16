@@ -1,14 +1,14 @@
 /**
  * A Ship for "Asteroid Mania"
  */
-game.Ship = function (x, y, angle, color, player) {
+function Ship(data) {
 	this.id;
 	this.username;
-	this.x = x || 0;
-	this.y = y || 0;
-	this.angle = angle || 0;
+	this.x = data.x || 0;
+	this.y = data.y || 0;
+	this.angle = data.angle || 0;
 	this.speed = 2;
-	this.color = color || "#333";
+	this.color = data.color || "#FF0000";
 	this.width = 20;
 	this.height = 20;
 	this.size = 20;
@@ -23,7 +23,7 @@ game.Ship = function (x, y, angle, color, player) {
 	addMoveCapabilities(this);	// We add the movement methods
 	addCollisionCapabilities(this);
 
-	if (player) {
+	if (data.isUser) {
 		this.controls = {
 			left: [KEYBOARD.LEFT, this.moveLeft],
 			right: [KEYBOARD.RIGHT, this.moveRight],
@@ -37,8 +37,7 @@ game.Ship = function (x, y, angle, color, player) {
 /**
  * Sets the points that will be used to draw the ship
  */
-game.Ship.prototype.setDrawbox = function() {
-	// We define the center of the element's hitbox
+Ship.prototype.setDrawbox = function() {
 	this.center = {
 		x: this.x - 10*Math.cos((this.angle * Math.PI / 180) - 0.3),
 		y: this.y + 10*Math.sin((this.angle * Math.PI / 180) - 0.3)
@@ -50,13 +49,24 @@ game.Ship.prototype.setDrawbox = function() {
 	];
 };
 
-game.Ship.prototype.handleCollision = function(target, isAsteroid) {
+Ship.prototype.handleCollision = function(target, isAsteroid) {
 	if (this.hitTest(target)) {
 		if (isAsteroid && this.vulnerability[target.color] != 0) {
 			game.log('Touché par un astéroïde !');	    
-		    this.angle += 180;
+			this.angle += 180;
 		}else if (!isAsteroid) {
 			game.log('Ne vous rentrez pas dedans !');
 		}
 	}
+};
+
+/**
+ * Synchronizes the ship's data with the data received from the server
+ * @param data	The data to insert in the ship
+ */
+Ship.prototype.syncFromServer = function(data) {
+	this.x = data.players[this.id].x;
+	this.y = data.players[this.id].y;
+	this.speed = data.players[this.id].speed;
+	this.angle = data.players[this.id].angle;
 };

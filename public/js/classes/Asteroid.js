@@ -1,7 +1,7 @@
 /**
  * An asteroid for "Asteroid Mania"
  */
-game.Asteroid = function (data) {
+function Asteroid (data) {
 	this.x = data.x || 0;
 	this.y = data.y || 0;
 	this.size = data.size || 2;
@@ -14,7 +14,7 @@ game.Asteroid = function (data) {
 	addRenderCapabilities(this);
 }
 
-game.Asteroid.prototype.setDrawbox = function() {
+Asteroid.prototype.setDrawbox = function() {
 	// We define the center of the element's hitbox
 	this.center = {
 		x: this.x + 15 * this.size / 2,
