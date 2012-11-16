@@ -8,7 +8,7 @@
  * 			prop2: [keyCode, my_function2]
  * 		};
  * 		addControlsCapabilities(my_object);
- *	Then, call the control() method on your object to apply the pressed keys
+ *	Then, call the checkControls() method on your object to apply the pressed keys
  * 		
  * Real World Example :
  * 		ship.controls = {
@@ -18,7 +18,7 @@
  * 		addControlsCapabilities(ship);
  * 
  * 		onEachFrame(function(){
- *			ship.control();
+ *			ship.checkControls();
  *		})
  * 
  * @author Nicolas Vannier
@@ -142,7 +142,7 @@ function addControlsCapabilities (obj) {
 			KEYBOARD.callbacks[key] = obj.controls[key][1];	// We get the callbacks from the object one by one
 		};
 
-		obj.control = function () {
+		obj.checkControls = function () {
 			for (var key in obj.controls) {
 				if (obj.controls[key][0] in KEYBOARD.keysPressed && KEYBOARD.callbacks.hasOwnProperty(key)) {	// If the key from the object controls is pressed
 					KEYBOARD.callbacks[key]();	// We call the associated function

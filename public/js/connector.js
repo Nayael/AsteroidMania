@@ -1,5 +1,5 @@
 // define(['socket_io'], function (io) {
-// 	function connectSocket () {
+	function connectSocket () {
 		var socket = io.connect('http://localhost:8080');
 		////////////////////
 		// GENERAL EVENTS
@@ -20,7 +20,8 @@
 		//
 		// Once the connection is established
 		socket.on('connection_ok', function (data) {
-			game.launch(data);			// We launch the game
+			game.launch(data);
+			// We send the user data to the socket
 			socket.emit('send_user_init_data', {
 				id: game.players[data.id].id,
 				x: game.players[data.id].x,
@@ -29,7 +30,7 @@
 				angle: game.players[data.id].angle,
 				color: game.players[data.id].color,
 				username: game.players[data.id].username
-			});	// We send the user data to the socket
+			});
 			game.user = data.id;	// We only keep the id, since the user is now with the other players
 		});
 
@@ -54,6 +55,7 @@
 		socket.on('player_quit', function (player) {
 			if (game.players.hasOwnProperty(player.id)) {
 				var leavingPlayer = game.players[player.id];
+
 				game.log(player.username + ' a quitté le jeu.');
 				leavingPlayer.remove(game.canvas);
 				delete game.players[player.id];
@@ -89,7 +91,7 @@
 			};
 		});
 
-		// return socket;
-	// }
+		return socket;
+	}
 // 	return connectSocket;
 // });

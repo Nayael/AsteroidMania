@@ -1,5 +1,6 @@
 /**
  * An asteroid for "Asteroid Mania"
+ * @param data	The data to create the asteroid (coordinates, etc.)
  */
 function Asteroid (data) {
 	this.x = data.x || 0;
@@ -14,6 +15,9 @@ function Asteroid (data) {
 	addRenderCapabilities(this);
 }
 
+/**
+ * Sets the points that will be used to draw the asteroid
+ */
 Asteroid.prototype.setDrawbox = function() {
 	// We define the center of the element's hitbox
 	this.center = {

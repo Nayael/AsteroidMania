@@ -11,12 +11,11 @@
 	 * @param gameContainer	The <div> which the canvas will be added in
 	 */
 	game.init = function (gameContainer) {
-		// game.players = {};
-		// game.asteroids = [];
-		// game.colors = ['#FF0000', '#00FF00', '#FFFF00'];
-		// gameContainer.append('<canvas id="main_canvas" width="800" height="540"></canvas>');
-		// game.canvas = document.getElementById('main_canvas');
-		// socket = connectSocket();
+		game.players = {};
+		game.asteroids = [];
+		game.colors = ['#FF0000', '#00FF00', '#FFFF00'];
+		gameContainer.append('<canvas id="main_canvas" width="800" height="540"></canvas>');
+		game.canvas = document.getElementById('main_canvas');
 	};
 
 	/**
@@ -24,16 +23,16 @@
 	 * @param user	The current game user
 	 */
 	game.launch = function (user) {
-		game.players = {};
-		game.asteroids = [];
-		game.colors = ['#FF0000', '#00FF00', '#FFFF00'];
-		game.canvas = document.getElementById('main_canvas');
 		game.addPlayer(user, true);	// We add the user to the list of players
 		
-		onEachFrame(function() {
+		/**
+		 * The game's main loop
+		 */
+		game.onEachFrame = function() {
 			var player = game.players[user.id];
-			player.control();			// We detect the pressed keys
+			player.checkControls();			// We detect the pressed keys
 			player.move(game.canvas);
+
 			for (var index in game.players) {
 				game.players[index].render(game.canvas);
 				if (game.players[index] != player) {
@@ -44,14 +43,14 @@
 				game.asteroids[asteroid].render(game.canvas);
 				player.handleCollision(game.asteroids[asteroid]);
 			};
-			var userData = {
+
+			return {
 				x : player.x,
 				y : player.y,
 				angle : player.angle,
 				speed : player.speed
 			};
-			game.syncToServer(userData);
-		});
+		};
 	};
 
 	/**
@@ -104,15 +103,6 @@
 	game.log = function (message) {
 		$('#logger').append('<div class="message">' + message + '</div>');
 		console.log(message);
-	};
-
-	/**
-	 * Synchronizes the user with the server
-	 * @param userData	The data to send to the server
-	 */
-	game.syncToServer = function(userData) {
-		// TODO asynchrone : Si le joueur ne change pas de direction, on n'envoie pas les données : les autres joueurs calculent le déplacement de leur côté
-		socket.emit('send_user_data', userData);
 	};
 
 // 	return game;

@@ -39,6 +39,7 @@ function Ship(data) {
  * Sets the points that will be used to draw the ship
  */
 Ship.prototype.setDrawbox = function() {
+	// We define the center of the element's hitbox
 	this.center = {
 		x: this.x - 10*Math.cos((this.angle * Math.PI / 180) - 0.3),
 		y: this.y + 10*Math.sin((this.angle * Math.PI / 180) - 0.3)
