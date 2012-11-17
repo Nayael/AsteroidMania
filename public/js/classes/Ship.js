@@ -39,6 +39,12 @@ define(['Asteroid', 'keyboard', 'move', 'collision'], function(Asteroid, keyboar
 			};
 
 			keyboard.addControlsCapabilities(this);	// We make the ship controllable with the keyboard
+			keyboard.addKeyListener('keyup', 'left', function () {
+				console.log('ok');
+			});
+			keyboard.addKeyListener('keydown', 'forward', function () {
+				console.log('forward');
+			});
 		}
 	};
 

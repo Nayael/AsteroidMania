@@ -128,15 +128,27 @@ define(function() {
 		callbacks: {}
 	};
 
-	addEventListener('keydown', function (e) {
-		KEYBOARD.keysPressed[e.keyCode] = true;
+	addEventListener('keydown', function(e) {
+		if (KEYBOARD.listeners != undefined) {
+			// We execute the keydown listener for the current key
+			var listener = KEYBOARD.listeners.keydown[e.keyCode];
+			if (listener != undefined) {		    
+				listener();
+			}
+		}
 
-		// if (obj.controls[key][0] in KEYBOARD.keysPressed && KEYBOARD.callbacks.hasOwnProperty(key)) {	// If the key from the object controls is pressed
-		// 	KEYBOARD.callbacks[key]();	// We call the associated function
-		// }
+		KEYBOARD.keysPressed[e.keyCode] = true;
 	}, false);
 
-	addEventListener('keyup', function (e) {
+	addEventListener('keyup', function(e) {
+		if (KEYBOARD.listeners != undefined) {
+			// We execute the keyup listener for the current key
+			var listener = KEYBOARD.listeners.keyup[e.keyCode];
+			if (listener != undefined) {		    
+				listener();
+			}
+		}
+
 		delete KEYBOARD.keysPressed[e.keyCode];
 	}, false);
 
@@ -184,14 +196,26 @@ define(function() {
 	 * @param listener	function: The function to trigger on the event
 	 */
 	function addKeyListener(event, key, listener) {
-		if (KEYBOARD[customKeys] != undefined) {
-			
+		if (KEYBOARD.listeners == undefined) {
+			// We create the list of listeners
+			KEYBOARD.listeners = {
+				keyup: {},
+				keydown: {}
+			};
+		}
+		// If the custom keys are defined
+		if (KEYBOARD.customKeys != undefined && KEYBOARD.customKeys[key] != undefined) {
+			for (var i = 0; i < KEYBOARD.customKeys[key].length; i++) {
+				realKey = KEYBOARD.customKeys[key][i];
+				KEYBOARD.listeners[event][realKey] = listener;	// We add the listeners for each key associated with the custom key
+			};
 		}
 	}
 
 	return {
 		addControlsCapabilities: addControlsCapabilities,
 		KEYS: KEYBOARD,
-		bindKeys: bindKeys
+		bindKeys: bindKeys,
+		addKeyListener: addKeyListener
 	};
 });
