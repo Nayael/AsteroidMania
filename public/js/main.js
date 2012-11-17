@@ -3,7 +3,13 @@ require.config({
 		'socket_io'  : '/socket.io/socket.io',
 		'jquery'  : 'lib/jquery',
 		'Ship': 'classes/Ship',
-		'Asteroid': 'classes/Asteroid'
+		'Asteroid': 'classes/Asteroid',
+		'onEachFrame': 'lib/onEachFrame',
+		'keyboard': 'lib/keyboard',
+		'onEachFrame': 'lib/onEachFrame',
+		'render': 'capabilities/render',
+		'move': 'capabilities/move',
+		'collision': 'capabilities/collision'
 	},
 	shim: {
 		'socket_io': {

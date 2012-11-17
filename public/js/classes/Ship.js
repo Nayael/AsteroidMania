@@ -1,4 +1,4 @@
-define(['Asteroid'], function(Asteroid) {
+define(['Asteroid', 'keyboard', 'move', 'collision'], function(Asteroid, keyboard, addMoveCapabilities, addCollisionCapabilities) {
 	/**
 	 * A Ship for "Asteroid Mania"
 	 * @param data	The data to create the ship (coordinates, etc.)
@@ -27,12 +27,12 @@ define(['Asteroid'], function(Asteroid) {
 
 		if (data.isUser) {
 			this.controls = {
-				left: [KEYBOARD.LEFT, this.moveLeft],
-				right: [KEYBOARD.RIGHT, this.moveRight],
-				forward: [KEYBOARD.UP, this.moveForward]
+				left: [keyboard.KEYBOARD.LEFT, this.moveLeft],
+				right: [keyboard.KEYBOARD.RIGHT, this.moveRight],
+				forward: [keyboard.KEYBOARD.UP, this.moveForward]
 			};
 
-			addControlsCapabilities(this);	// We make the ship controllable with the keyboard
+			keyboard.addControlsCapabilities(this);	// We make the ship controllable with the keyboard
 		}
 	};
 

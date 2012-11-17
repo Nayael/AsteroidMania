@@ -1,4 +1,4 @@
-define(['connector'], function(connectSocket) {
+define(['connector', 'onEachFrame'], function(connectSocket, onEachFrame) {
 	var gameEngine = {
 		/**
 		 * Initializes the game engine

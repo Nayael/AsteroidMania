@@ -1,4 +1,4 @@
-define(function() {
+define(['render'], function(addRenderCapabilities) {
 	/**
 	 * An asteroid for "Asteroid Mania"
 	 * @param data	The data to create the asteroid (coordinates, etc.)
