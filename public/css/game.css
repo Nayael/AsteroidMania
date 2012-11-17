@@ -2,6 +2,7 @@
 
 #main_canvas {
 	background-color: #FFFFFF;
+	position: absolute;
 }
 
 #logger {

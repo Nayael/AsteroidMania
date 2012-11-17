@@ -1,4 +1,3 @@
-// TODO Ajout de labels personnalisés pour l'utilisateur
 /**
  * A library to control an object with the keyboard
  * 
@@ -131,30 +130,68 @@ define(function() {
 
 	addEventListener('keydown', function (e) {
 		KEYBOARD.keysPressed[e.keyCode] = true;
+
+		// if (obj.controls[key][0] in KEYBOARD.keysPressed && KEYBOARD.callbacks.hasOwnProperty(key)) {	// If the key from the object controls is pressed
+		// 	KEYBOARD.callbacks[key]();	// We call the associated function
+		// }
 	}, false);
 
 	addEventListener('keyup', function (e) {
 		delete KEYBOARD.keysPressed[e.keyCode];
 	}, false);
 
-	var addControlsCapabilities = function (obj) {
+	/**
+	 * Binds a given string to one or more keys of the keyboard
+	 * @param customKeys	obj: The custom labels and their associated keyboard keys
+	 */
+	function bindKeys(customKeys) {
+		KEYBOARD.callbacks = {};	// We reset the key listeners
+		KEYBOARD.customKeys = customKeys;
+	};
+
+	/**
+	 * Makes an object controllable with the keyboard
+	 * @param obj	The object to make controllable
+	 */
+	function addControlsCapabilities(obj) {
 		if (obj.hasOwnProperty('controls')) {
 			for (var key in obj.controls) {
-				KEYBOARD.callbacks[key] = obj.controls[key][1];	// We get the callbacks from the object one by one
+				for (var i = 0, realKey; i < KEYBOARD.customKeys[key].length; i++) {
+					realKey = KEYBOARD.customKeys[key][i];
+					KEYBOARD.callbacks[realKey] = obj.controls[key];	// We get the callbacks from the object one by one
+				};
 			};
 
-			obj.checkControls = function () {
+			obj.checkControls = function() {
+				var called = {};	// A list of the currently executed callbacks (in order to call them only once)
 				for (var key in obj.controls) {
-					if (obj.controls[key][0] in KEYBOARD.keysPressed && KEYBOARD.callbacks.hasOwnProperty(key)) {	// If the key from the object controls is pressed
-						KEYBOARD.callbacks[key]();	// We call the associated function
-					}
+					for (var i = 0, realKey; i < KEYBOARD.customKeys[key].length; i++) {
+						realKey = KEYBOARD.customKeys[key][i];
+						if ((realKey in KEYBOARD.keysPressed) && KEYBOARD.callbacks.hasOwnProperty(realKey) && called[key] == undefined) {	// If the key from the object controls is pressed
+							KEYBOARD.callbacks[realKey]();	// We call the associated function
+							called[key] = true;
+						}
+					};
 				};	
 			};
 		}
 	};
 
+	/**
+	 * Adds the listeners to a list of keys
+	 * @param event	string: The event to listen to ('up' or 'down')
+	 * @param key	The key which event will be listened to
+	 * @param listener	function: The function to trigger on the event
+	 */
+	function addKeyListener(event, key, listener) {
+		if (KEYBOARD[customKeys] != undefined) {
+			
+		}
+	}
+
 	return {
 		addControlsCapabilities: addControlsCapabilities,
-		KEYBOARD: KEYBOARD
+		KEYS: KEYBOARD,
+		bindKeys: bindKeys
 	};
 });

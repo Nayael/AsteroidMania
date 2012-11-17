@@ -26,10 +26,16 @@ define(['Asteroid', 'keyboard', 'move', 'collision'], function(Asteroid, keyboar
 		addCollisionCapabilities(this);
 
 		if (data.isUser) {
+			keyboard.bindKeys({
+				left: [keyboard.KEYS.LEFT, keyboard.KEYS.Q],
+				right: [keyboard.KEYS.RIGHT, keyboard.KEYS.D],
+				forward: [keyboard.KEYS.UP, keyboard.KEYS.Z]
+			});
+
 			this.controls = {
-				left: [keyboard.KEYBOARD.LEFT, this.moveLeft],
-				right: [keyboard.KEYBOARD.RIGHT, this.moveRight],
-				forward: [keyboard.KEYBOARD.UP, this.moveForward]
+				left: this.moveLeft,
+				right: this.moveRight,
+				forward: this.moveForward
 			};
 
 			keyboard.addControlsCapabilities(this);	// We make the ship controllable with the keyboard
@@ -59,10 +65,10 @@ define(['Asteroid', 'keyboard', 'move', 'collision'], function(Asteroid, keyboar
 	Ship.prototype.handleCollision = function(target) {
 		if (this.hitTest(target)) {
 			if (target instanceof Asteroid && this.vulnerability[target.color] != 0) {
-				// game.log('Touché par un astéroïde !');	    
+				return 'Touché par un astéroïde !';
 				this.angle += 180;
 			}else if (target instanceof Ship) {
-				// game.log('Ne vous rentrez pas dedans !');
+				return 'Ne vous rentrez pas dedans !';
 			}
 		}
 	};
