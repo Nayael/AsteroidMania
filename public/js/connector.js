@@ -1,4 +1,4 @@
-// define(['socket_io'], function (io) {
+define(['socket_io', 'game_client'], function (io, game) {
 	function connectSocket () {
 		var socket = io.connect('http://localhost:8080');
 		////////////////////
@@ -73,7 +73,7 @@
 
 			game.asteroids = [];
 			for (var asteroid in asteroids) {
-				game.addAsteroid(new Asteroid(asteroids[asteroid]));
+				game.addAsteroid(asteroids[asteroid]);
 			};
 
 			for (var player in players) {
@@ -87,11 +87,11 @@
 		socket.on('start_level', function (asteroids) {
 			game.asteroids = [];
 			for (var asteroid in asteroids) {
-				game.addAsteroid(new Asteroid(asteroids[asteroid]));
+				game.addAsteroid(asteroids[asteroid]);
 			};
 		});
 
 		return socket;
 	}
-// 	return connectSocket;
-// });
+	return connectSocket;
+});

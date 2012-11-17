@@ -1,6 +1,5 @@
-// define(['connector'], function (connectSocket) {
-	var game = {}/*,
-		socket*/;
+define(['Ship', 'Asteroid'], function (Ship, Asteroid) {
+	var game = {};	// The game namespace
 
 	game.user = {
 		username : 'Player' + Math.floor(Math.random() * 99999)
@@ -81,7 +80,7 @@
 			angle: playerData.angle,
 			color: playerData.color,
 			isUser: (isUser === true ? true : false)
-		});
+		}, game.colors);
 		game.players[playerData.id].id = playerData.id;
 		game.players[playerData.id].username = playerData.username;
 
@@ -90,10 +89,10 @@
 
 	/**
 	 * Adds a player ship to the game
-	 * @param asteroid	The asteroid to add
+	 * @param asteroidData	The asteroid to add's data
 	 */
-	game.addAsteroid = function (asteroid) {
-		game.asteroids.push(asteroid);
+	game.addAsteroid = function (asteroidData) {
+		game.asteroids.push(new Asteroid(asteroidData));
 	};
 
 	/**
@@ -105,5 +104,5 @@
 		console.log(message);
 	};
 
-// 	return game;
-// });
+	return game;
+});
