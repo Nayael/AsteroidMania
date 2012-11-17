@@ -20,7 +20,7 @@ define(['render'], function(addRenderCapabilities) {
 	 * Sets the points that will be used to draw the asteroid
 	 */
 	Asteroid.prototype.setDrawbox = function() {
-		// We define the center of the element's hitbox
+		// We define the center of the element's bounding box
 		this.center = {
 			x: this.x + 15 * this.size / 2,
 			y: this.y + 15 * this.size / 2

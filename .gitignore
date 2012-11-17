@@ -1,10 +1,6 @@
 # NPM modules
 node_modules/
 
-############
-## Windows
-############
-
 # Windows image file caches
 Thumbs.db
 
