@@ -152,7 +152,7 @@
 		 * Makes an object controllable with the keyboard
 		 * @param obj	The object to make controllable
 		 */
-		addControlsCapabilities: function(obj) {
+		makeControllable: function(obj) {
 			if (obj.hasOwnProperty('controls')) {
 				for (var key in obj.controls) {
 					for (var i = 0, realKey; i < _Keyboard.customKeys[key].length; i++) {

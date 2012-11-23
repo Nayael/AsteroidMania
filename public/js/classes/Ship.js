@@ -38,7 +38,7 @@ define(['Asteroid', 'Keyboard', 'move', 'collision'], function(Asteroid, Keyboar
 				forward: this.moveForward
 			};
 
-			Keyboard.addControlsCapabilities(this);	// We make the ship controllable with the Keyboard
+			Keyboard.makeControllable(this);	// We make the ship controllable with the Keyboard
 		}
 	};
 
