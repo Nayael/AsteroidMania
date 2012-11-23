@@ -1,30 +1,15 @@
 /**
- * A library to control an object with the keyboard
+ **** JavaScript Keyboard.js library ****
  * 
- **** HOW TO USE ****
- * 		my_object.controls = {
- * 			prop1: [keyCode, my_function1],
- * 			prop2: [keyCode, my_function2]
- * 		};
- * 		addControlsCapabilities(my_object);
- *	Then, call the checkControls() method on your object to apply the pressed keys
- * 		
- * Real World Example :
- * 		ship.controls = {
- * 			shoot: [KEYBOARD.X, shipShoot],
- * 			explode: [KEYBOARD.Y, makeExplosion]
- * 		};
- * 		addControlsCapabilities(ship);
+ * This library allows you to control an object with the keyboard (adapted for video games)
+ * You can also use it to handle all the key pressing on your page
  * 
- * 		onEachFrame(function(){
- *			ship.checkControls();
- *		})
- * 
- * @author Nicolas Vannier
+ * Developed by Nicolas Vannier
+ * http://www.nicolas-vannier.com
  */
 
-define(function() {
-	var KEYBOARD = {
+(function(window) {
+	var _Keyboard = {
 		BACKSPACE: 8,
 		TAB: 9,
 		ENTER: 13,
@@ -125,97 +110,94 @@ define(function() {
 		SINGLE_QUOTE: 222,
 
 		keysPressed: {},
-		callbacks: {}
-	};
+		callbacks: {},
 
-	addEventListener('keydown', function(e) {
-		if (KEYBOARD.listeners != undefined) {
-			// We execute the keydown listener for the current key
-			var listener = KEYBOARD.listeners.keydown[e.keyCode];
-			if (listener != undefined) {		    
-				listener();
-			}
-		}
+		init: function() {
+			addEventListener('keydown', function(e) {
+				if (_Keyboard.listeners != undefined) {
+					// We execute the keydown listener for the current key
+					var listener = _Keyboard.listeners.keydown[e.keyCode];
+					if (listener != undefined) {		    
+						listener();
+					}
+				}
 
-		KEYBOARD.keysPressed[e.keyCode] = true;
-	}, false);
+				_Keyboard.keysPressed[e.keyCode] = true;
+			}, false);
 
-	addEventListener('keyup', function(e) {
-		if (KEYBOARD.listeners != undefined) {
-			// We execute the keyup listener for the current key
-			var listener = KEYBOARD.listeners.keyup[e.keyCode];
-			if (listener != undefined) {		    
-				listener();
-			}
-		}
+			addEventListener('keyup', function(e) {
+				if (_Keyboard.listeners != undefined) {
+					// We execute the keyup listener for the current key
+					var listener = _Keyboard.listeners.keyup[e.keyCode];
+					if (listener != undefined) {		    
+						listener();
+					}
+				}
 
-		delete KEYBOARD.keysPressed[e.keyCode];
-	}, false);
+				delete _Keyboard.keysPressed[e.keyCode];
+			}, false);
+			return _Keyboard;
+		},
+		
+		/**
+		 * Binds a given string to one or more keys of the keyboard
+		 * @param customKeys	obj: The custom labels and their associated keyboard keys
+		 */
+		bindKeys: function(customKeys) {
+			_Keyboard.callbacks = {};	// We reset the key listeners
+			_Keyboard.customKeys = customKeys;
+		},
 
-	/**
-	 * Binds a given string to one or more keys of the keyboard
-	 * @param customKeys	obj: The custom labels and their associated keyboard keys
-	 */
-	function bindKeys(customKeys) {
-		KEYBOARD.callbacks = {};	// We reset the key listeners
-		KEYBOARD.customKeys = customKeys;
-	};
-
-	/**
-	 * Makes an object controllable with the keyboard
-	 * @param obj	The object to make controllable
-	 */
-	function addControlsCapabilities(obj) {
-		if (obj.hasOwnProperty('controls')) {
-			for (var key in obj.controls) {
-				for (var i = 0, realKey; i < KEYBOARD.customKeys[key].length; i++) {
-					realKey = KEYBOARD.customKeys[key][i];
-					KEYBOARD.callbacks[realKey] = obj.controls[key];	// We get the callbacks from the object one by one
-				};
-			};
-
-			obj.checkControls = function() {
-				var called = {};	// A list of the currently executed callbacks (in order to call them only once)
+		/**
+		 * Makes an object controllable with the keyboard
+		 * @param obj	The object to make controllable
+		 */
+		addControlsCapabilities: function(obj) {
+			if (obj.hasOwnProperty('controls')) {
 				for (var key in obj.controls) {
-					for (var i = 0, realKey; i < KEYBOARD.customKeys[key].length; i++) {
-						realKey = KEYBOARD.customKeys[key][i];
-						if ((realKey in KEYBOARD.keysPressed) && KEYBOARD.callbacks.hasOwnProperty(realKey) && called[key] == undefined) {	// If the key from the object controls is pressed
-							KEYBOARD.callbacks[realKey]();	// We call the associated function
-							called[key] = true;
-						}
+					for (var i = 0, realKey; i < _Keyboard.customKeys[key].length; i++) {
+						realKey = _Keyboard.customKeys[key][i];
+						_Keyboard.callbacks[realKey] = obj.controls[key];	// We get the callbacks from the object one by one
 					};
-				};	
-			};
+				};
+
+				obj.checkControls = function() {
+					var called = {};	// A list of the currently executed callbacks (in order to call them only once)
+					for (var key in obj.controls) {
+						for (var i = 0, realKey; i < _Keyboard.customKeys[key].length; i++) {
+							realKey = _Keyboard.customKeys[key][i];
+							if ((realKey in _Keyboard.keysPressed) && _Keyboard.callbacks.hasOwnProperty(realKey) && called[key] == undefined) {	// If the key from the object controls is pressed
+								_Keyboard.callbacks[realKey]();	// We call the associated function
+								called[key] = true;
+							}
+						};
+					};	
+				};
+			}
+		},
+
+		/**
+		 * Adds the listeners to a list of keys
+		 * @param event	string: The event to listen to ('up' or 'down')
+		 * @param key	The key which event will be listened to
+		 * @param listener	function: The function to trigger on the event
+		 */
+		addKeyListener: function(event, key, listener) {
+			if (_Keyboard.listeners == undefined) {
+				// We create the list of listeners
+				_Keyboard.listeners = {
+					keyup: {},
+					keydown: {}
+				};
+			}
+			// If the custom keys are defined
+			if (_Keyboard.customKeys != undefined && _Keyboard.customKeys[key] != undefined) {
+				for (var i = 0; i < _Keyboard.customKeys[key].length; i++) {
+					realKey = _Keyboard.customKeys[key][i];
+					_Keyboard.listeners[event][realKey] = listener;	// We add the listeners for each key associated with the custom key
+				};
+			}
 		}
 	};
-
-	/**
-	 * Adds the listeners to a list of keys
-	 * @param event	string: The event to listen to ('up' or 'down')
-	 * @param key	The key which event will be listened to
-	 * @param listener	function: The function to trigger on the event
-	 */
-	function addKeyListener(event, key, listener) {
-		if (KEYBOARD.listeners == undefined) {
-			// We create the list of listeners
-			KEYBOARD.listeners = {
-				keyup: {},
-				keydown: {}
-			};
-		}
-		// If the custom keys are defined
-		if (KEYBOARD.customKeys != undefined && KEYBOARD.customKeys[key] != undefined) {
-			for (var i = 0; i < KEYBOARD.customKeys[key].length; i++) {
-				realKey = KEYBOARD.customKeys[key][i];
-				KEYBOARD.listeners[event][realKey] = listener;	// We add the listeners for each key associated with the custom key
-			};
-		}
-	}
-
-	return {
-		addControlsCapabilities: addControlsCapabilities,
-		KEYS: KEYBOARD,
-		bindKeys: bindKeys,
-		addKeyListener: addKeyListener
-	};
-});
+	window.Keyboard = _Keyboard.init();
+})(window);

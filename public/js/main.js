@@ -5,7 +5,7 @@ require.config({
 		'Ship': 'classes/Ship',
 		'Asteroid': 'classes/Asteroid',
 		'onEachFrame': 'lib/onEachFrame',
-		'keyboard': 'lib/keyboard',
+		'Keyboard': 'lib/Keyboard',
 		'onEachFrame': 'lib/onEachFrame',
 		'render': 'capabilities/render',
 		'move': 'capabilities/move',
@@ -17,6 +17,9 @@ require.config({
 		},
 		'jquery': {
 			exports: '$'
+		},
+		'Keyboard': {
+			exports: 'Keyboard'
 		}
 	}
 });
