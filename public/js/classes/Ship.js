@@ -32,11 +32,10 @@ define(['Asteroid', 'Keyboard', 'move', 'collision'], function(Asteroid, Keyboar
 				forward: [Keyboard.UP, Keyboard.Z]
 			});
 
-			this.controls = {
-				left: this.moveLeft,
-				right: this.moveRight,
-				forward: this.moveForward
-			};
+			this.controls = {};
+			this.controls.left = this.moveLeft;
+			this.controls.right = this.moveRight;
+			this.controls.forward = this.moveForward;
 
 			Keyboard.makeControllable(this);	// We make the ship controllable with the Keyboard
 		}
