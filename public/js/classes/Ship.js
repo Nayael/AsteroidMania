@@ -27,23 +27,17 @@ define(['Asteroid', 'Keyboard', 'move', 'collision'], function(Asteroid, Keyboar
 
 		if (data.isUser) {
 			Keyboard.bindKeys({
-				left: ['LEFT', 'Q'],
-				right: ['RIGHT', 'D'],
-				forward: ['UP', 'Z']
+				left: ['LEFT_ARROW', 'Q'],
+				right: ['RIGHT_ARROW', 'D'],
+				forward: ['UP_ARROW', 'Z']
 			});
 
 			this.controls = {};
 			this.controls.left = this.moveLeft;
 			this.controls.right = this.moveRight;
 			this.controls.forward = this.moveForward;
-			// this.controls.LEFT = this.moveLeft;
-			// this.controls.RIGHT = this.moveRight;
-			// this.controls.UP = this.moveForward;
 
 			Keyboard.makeControllable(this);	// We make the ship controllable with the Keyboard
-			// Keyboard.addKeyListener('keyup', 'P', function() {
-			// 	console.log('Touche P relâchée');
-			// });
 		}
 	};
 

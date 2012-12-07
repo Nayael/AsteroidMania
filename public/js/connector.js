@@ -1,6 +1,6 @@
 define(['socket_io', 'game_client'], function (io, game) {
 	function connectSocket () {
-		var socket = io.connect('http://172.16.60.145:8080');
+		var socket = io.connect('http://localhost:8080');
 	////////////////////
 	// GENERAL EVENTS
 	//

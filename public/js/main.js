@@ -5,7 +5,7 @@ require.config({
 		'Ship': 'classes/Ship',
 		'Asteroid': 'classes/Asteroid',
 		'onEachFrame': 'lib/onEachFrame',
-		'Keyboard': 'lib/Keyboard',
+		'Keyboard': 'lib/Keyboard.min',
 		'onEachFrame': 'lib/onEachFrame',
 		'render': 'capabilities/render',
 		'move': 'capabilities/move',
