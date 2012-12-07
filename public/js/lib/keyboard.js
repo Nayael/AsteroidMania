@@ -112,8 +112,6 @@ var _Keyboard = {
 
 	init: function() {
 		addEventListener('keydown', function(e) {
-			console.log('e.keyCode: ', e.keyCode);
-			console.log('e.which: ', e.which);
 			if (_Keyboard.listeners != undefined) {
 				// We execute the keydown listener for the current key
 				var listener = _Keyboard.listeners.keydown[e.keyCode];
