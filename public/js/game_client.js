@@ -19,41 +19,48 @@ define(['Ship', 'Asteroid'], function (Ship, Asteroid) {
 
 	/**
 	 * Launches the game
-	 * @param user	The current game user
+	 * @param user The current game user
 	 */
 	game.launch = function (user) {
 		game.addPlayer(user, true);	// We add the user to the list of players
 		
 		/**
 		 * The game's main loop
+		 * @return {Object} The user's new position
 		 */
 		game.onEachFrame = function() {
-			var player = game.players[user.id];
-			player.checkControls();			// We detect the pressed keys
-			player.move(game.canvas);
+			var gameUser = game.players[user.id],
+				message = null;
+			gameUser.checkControls();			// We detect the pressed keys
+			gameUser.move(game.canvas);
 
 			for (var index in game.players) {
 				game.players[index].render(game.canvas);
-				if (game.players[index] != player) {
-					player.handleCollision(game.players[index]);
+				if (game.players[index] != gameUser) {
+					message = gameUser.handleCollision(game.players[index]);
+					if (message != null)
+						game.log(message);
 				}
 			};
 			for (var asteroid in game.asteroids) {
 				game.asteroids[asteroid].render(game.canvas);
-				player.handleCollision(game.asteroids[asteroid]);
+				message = gameUser.handleCollision(game.asteroids[asteroid]);
+				if (message != null)
+					game.log(message);
 			};
 
 			return {
-				x : player.x,
-				y : player.y,
-				angle : player.angle,
-				speed : player.speed
+				x : gameUser.x,
+				y : gameUser.y,
+				angle : gameUser.angle,
+				speed : gameUser.speed
 			};
 		};
 	};
 
 	/**
 	 * Calculates the delta to move the elements per second
+	 * @return {Number} The delta value
 	 */
 	game.perSecond = function() {
 		game.time = game.time || new Date();

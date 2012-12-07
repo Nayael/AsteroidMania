@@ -27,17 +27,23 @@ define(['Asteroid', 'Keyboard', 'move', 'collision'], function(Asteroid, Keyboar
 
 		if (data.isUser) {
 			Keyboard.bindKeys({
-				left: [Keyboard.LEFT, Keyboard.Q],
-				right: [Keyboard.RIGHT, Keyboard.D],
-				forward: [Keyboard.UP, Keyboard.Z]
+				left: ['LEFT', 'Q'],
+				right: ['RIGHT', 'D'],
+				forward: ['UP', 'Z']
 			});
 
 			this.controls = {};
 			this.controls.left = this.moveLeft;
 			this.controls.right = this.moveRight;
 			this.controls.forward = this.moveForward;
+			// this.controls.LEFT = this.moveLeft;
+			// this.controls.RIGHT = this.moveRight;
+			// this.controls.UP = this.moveForward;
 
 			Keyboard.makeControllable(this);	// We make the ship controllable with the Keyboard
+			// Keyboard.addKeyListener('keyup', 'P', function() {
+			// 	console.log('Touche P relâchée');
+			// });
 		}
 	};
 
@@ -64,11 +70,12 @@ define(['Asteroid', 'Keyboard', 'move', 'collision'], function(Asteroid, Keyboar
 	Ship.prototype.handleCollision = function(target) {
 		if (this.hitTest(target)) {
 			if (target instanceof Asteroid && this.vulnerability[target.color] != 0) {
-				return 'Touché par un astéroïde !';
 				this.angle += 180;
+				return 'Touché par un astéroïde !';
 			}else if (target instanceof Ship) {
 				return 'Ne vous rentrez pas dedans !';
 			}
+			return null;
 		}
 	};
 

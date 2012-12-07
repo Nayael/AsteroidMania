@@ -1,9 +1,9 @@
 define(['socket_io', 'game_client'], function (io, game) {
 	function connectSocket () {
-		var socket = io.connect('http://localhost:8080');
-		////////////////////
-		// GENERAL EVENTS
-		//
+		var socket = io.connect('http://172.16.60.145:8080');
+	////////////////////
+	// GENERAL EVENTS
+	//
 		// When a message from the server arrives
 		socket.on('message', function (data) {
 			game.log('Message du serveur :', data);
@@ -15,9 +15,9 @@ define(['socket_io', 'game_client'], function (io, game) {
 		});
 
 
-		////////////////////
-		// INITIALISATION EVENTS
-		//
+	////////////////////
+	// INITIALISATION EVENTS
+	//
 		// Once the connection is established
 		socket.on('connection_ok', function (data) {
 			game.launch(data);
@@ -63,9 +63,9 @@ define(['socket_io', 'game_client'], function (io, game) {
 		});
 
 
-		////////////////////
-		// GAME EVENTS
-		//
+	////////////////////
+	// GAME EVENTS
+	//
 		// When the server sends datas from the game (on each frame)
 		socket.on('get_game_state', function (data) {
 			var players = data.players,

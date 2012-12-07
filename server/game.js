@@ -34,7 +34,8 @@ exports.setPlayerData = function (id) {
 			color = "#FF0000";
 			break;
 	}
-	var data = {
+	
+	return {
 		id: id,
 		x: x,
 		y: y,
@@ -42,7 +43,6 @@ exports.setPlayerData = function (id) {
 		angle: angle,
 		color: color
 	};
-	return data;
 };
 
 /**
