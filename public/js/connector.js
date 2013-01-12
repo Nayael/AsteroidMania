@@ -19,7 +19,7 @@ define(['socket_io', 'game_client'], function (io, game) {
 	// INITIALISATION EVENTS
 	//
 		// Once the connection is established
-		socket.on('connection_ok', function (data) {
+		socket.on('launchGame', function (data) {
 			game.launch(data);
 			// We send the user data to the socket
 			socket.emit('send_user_init_data', {

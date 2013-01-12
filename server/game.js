@@ -1,49 +1,8 @@
-exports.setPlayerData = function (id) {
-	var x, y, angle, color;
-	switch (Object.size(players)){
-		case 0: case 3:
-			y = 150;
-			color = "#FF0000";
-			break;
-		case 1: case 4:
-			y = 300;
-			color = "#00FF00";
-			break;
-		case 2: case 5:
-			y = 450;
-			color = "#FFFF00";
-			break;
-		default:
-			x = Math.random()*700;
-			y = Math.random()*520;
-			color = "#FF0000";
-			break;
-	}
-	switch (Object.size(players)){
-		case 0: case 1: case 2:
-			x = 200;
-			angle = 180;
-			break;
-		case 3: case 4: case 5:
-			x = 600;
-			angle = 0;
-			break;
-		default:
-			x = Math.random()*700;
-			y = Math.random()*520;
-			color = "#FF0000";
-			break;
-	}
-	
-	return {
-		id: id,
-		x: x,
-		y: y,
-		speed: 0,
-		angle: angle,
-		color: color
-	};
-};
+var Player = require('./Player').Player;
+
+exports.createOrFindPlayer = function(id, username) {
+	return new Player(id, username);
+}
 
 /**
  * Moves the asteroids according to their direction
