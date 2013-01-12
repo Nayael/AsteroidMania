@@ -1,0 +1,3 @@
+exports.Player = function(data) {
+	
+};
