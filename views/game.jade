@@ -5,13 +5,24 @@ html
 		link(type='text/css', rel='stylesheet', href='/css/main.css')
 		link(type='text/css', rel='stylesheet', href='/css/game.css')
 	body
+		- if (typeof(login) != 'undefined' && login == true)
+			div#prompt
+				span
+					h3 Entre ton pseudo
+					p
+						input(type="text", name="username", id="username", placeholder="Pseudo")
+					p
+						input(type="button", value="Valider", id="sendBt")
 		div#content
 			header
 				h1 Asteroid Mania
+				//- h1 Hello #{player.nickname} !
+
 			nav
 				a(href="/") Accueil
 				a(href="/game").current_menu Jeu
 				a(href="/technical") Explications techniques
+			//- div#game_content(data-playerid=player.id, data-token=player.token)
 			div#game_content
 			div#logger
 			script(type="text/javascript", src="/js/lib/require.js", data-main="/js/main")

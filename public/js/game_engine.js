@@ -12,9 +12,8 @@ define(['connector', 'onEachFrame'], function(connectSocket, onEachFrame) {
 		onEachFrame(function() {
 			if (game.onEachFrame) {
 				var userData = game.onEachFrame();
-				if (userData != null) {				    
+				if (userData != null)  
 					gameEngine.sendToServer(userData);
-				}
 			}
 		});
 	};
