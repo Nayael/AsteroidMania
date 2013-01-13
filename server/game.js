@@ -1,8 +1,14 @@
 var Player = require('./Player').Player;
 
-exports.createOrFindPlayer = function(id, username) {
-	return new Player(id, username);
-}
+exports.createOrFindPlayer = function(username) {
+	for (player in players) {
+		if (players.hasOwnProperty(player) && player.username == username)
+			return player;
+	}
+	var player = new Player(username);
+	players[player.id] = player;
+	return player;
+};
 
 /**
  * Moves the asteroids according to their direction

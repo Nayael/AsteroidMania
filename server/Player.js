@@ -1,8 +1,8 @@
-exports.Player = function(id, username) {
+exports.Player = function(username) {
 	var nbPlayers = Object.size(players);
 
-	// this.id = nbPlayers;
-	this.id = id;
+	this.id = nbPlayers;
+	// this.id = id;
 	this.token = Math.round(9999999999 * Math.random());
 	this.username = username;
 	this.x = (nbPlayers < 3 ? 200 : 600);

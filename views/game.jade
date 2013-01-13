@@ -16,13 +16,16 @@ html
 		div#content
 			header
 				h1 Asteroid Mania
-				//- h1 Hello #{player.nickname} !
+				- if (typeof(player) != 'undefined')
+					h1 Hello #{player.username} !
 
 			nav
 				a(href="/") Accueil
 				a(href="/game").current_menu Jeu
 				a(href="/technical") Explications techniques
-			//- div#game_content(data-playerid=player.id, data-token=player.token)
-			div#game_content
+			- if (typeof(player) != 'undefined')
+				div#game_content(data-playerid=player.id, data-token=player.token)
+			- else
+				div#game_content
 			div#logger
 			script(type="text/javascript", src="/js/lib/require.js", data-main="/js/main")

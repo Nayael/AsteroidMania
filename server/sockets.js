@@ -1,17 +1,17 @@
 exports.init = function(io, initModule, game) {
 	io.sockets.on('connection', function(socket) {
-		var player = game.createOrFindPlayer(socket.id, 'Player' + Math.round(9999999999 * Math.random())),
-			mainLoop;
-		socket.emit('launchGame', player);
+		var player, mainLoop;
+
+		socket.on('authenticate', function (data) {
+			player = players[data.playerId];
+			if (player.token === data.token) {
+				socket.emit('launchGame', player);
+			}
+		});
 
 		// A message from the client to the socket
 		socket.on('message', function(data) {
 			console.log(data);
-		});
-
-		// A message to broadcast to the other clients
-		socket.on('brodcast_message', function(data) {
-			socket.broadcast.emit('broadcast_message', {id: socket.id, message: data});
 		});
 
 		// When the client disconnects
@@ -50,20 +50,24 @@ exports.init = function(io, initModule, game) {
 
 		// When the client sends the player's data to the socket (on each frame)
 		socket.on('send_user_data', function(data) {
-			// We update his datas
-			players[socket.id].x = data.x;
-			players[socket.id].y = data.y;
-			players[socket.id].angle = data.angle;
-			players[socket.id].speed = data.speed;
+			if (players[data.id] == undefined) {	// If the player doesn't exist
+				socket.emit('connection_lost');
+			}else {
+				// We update his datas
+				players[data.id].x = data.x;
+				players[data.id].y = data.y;
+				players[data.id].angle = data.angle;
+				players[data.id].speed = data.speed;
 
-			var gameData = {
-				players: players,
-				asteroids: []
-			};
-			for (var i in asteroids) {	// We also pass him the asteroids datas, to make them move on his screen
-				gameData.asteroids.push(asteroids[i]);
-			};
-			socket.emit('get_game_state', gameData);	// We send him the players' and asteroids' datas
+				var gameData = {
+					players: players,
+					asteroids: []
+				};
+				for (var i in asteroids) {	// We also pass him the asteroids datas, to make them move on his screen
+					gameData.asteroids.push(asteroids[i]);
+				};
+				socket.emit('get_game_state', gameData);	// We send him the players' and asteroids' datas
+			}
 		});
 	});
-}
+};

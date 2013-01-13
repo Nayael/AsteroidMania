@@ -1,11 +1,9 @@
-exports.checkAuth = function(req, res, next) {
-	if (req.session.playerId !== null) {
-		req.currentPlayer = players[req.session.playerId];
-		console.log('req.currentPlayer: ', req.currentPlayer);
+exports.checkAuth = function(request, response, next) {
+	if (request.session.playerId != undefined && request.session.playerId != null) {
+		request.currentPlayer = players[request.session.playerId];
 		next();
 	}else {
-		// res.redirect('/game', {login: true});
-		res.redirect('/login');
+		response.render('game.jade', {login: true});
 	}
 };
 

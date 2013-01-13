@@ -1,5 +1,28 @@
 @charset 'UTF-8';
 
+#prompt{
+	display: none;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	z-index: 1000;
+	background-color: rgba(255, 255, 255, 0.8);
+	text-align: center;
+	vertical-align: middle;
+	font-family: 'Segoe UI', 'Trebuchet MS', Arial, sans-serif;
+}
+
+#prompt span{
+	display: block;
+	position: absolute;
+	border: 1px solid #888;
+	width: 400px;
+	height: 150px;
+	margin: auto;
+	padding-top: 5px;
+	background-color: rgba(255, 255, 255, 1);
+}
+
 #main_canvas {
 	background-color: #FFFFFF;
 	position: absolute;

@@ -26,6 +26,25 @@ require.config({
 
 require(['jquery', 'game_engine', 'game_client'], function ($, gameEngine, game) {
 	$(function() {
-		gameEngine.init(game, $('#game_content'));
+		if ($('#game_content').data('playerid') != null && $('#game_content').data('token') != null) {
+		    startGame();
+		}else {
+			// We display the login form if necessary
+			if ($('#prompt') != null) {
+				$('#prompt span').css({top:'50%',left:'50%',margin:'-' + ($('#prompt span').height() / 2) + 'px 0 0 -' + ($('#prompt span').width() / 2) + 'px'});
+				$('#prompt').toggle();
+				$('#sendBt').click(function() {
+					if ($('#username').val() != '') {
+						game.authenticate($('#username').val(), startGame);
+					}
+				});
+			}else {
+				startGame();
+			}
+		}
 	});
+
+	function startGame() {
+		gameEngine.init(game, $('#game_content'));
+	}
 });
