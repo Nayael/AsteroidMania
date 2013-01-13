@@ -89,6 +89,12 @@
 #lobby .room .room_players{
 	font-size: 12px;
 	position: absolute;
+	display: none;
+}
+
+#lobby .room .room_nb_players{
+	font-size: 12px;
+	position: absolute;
 	bottom: 0;
 	left: 22px;
 }

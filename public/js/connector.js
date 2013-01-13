@@ -29,7 +29,6 @@ define(['socket_io', 'game_client'], function(io, game) {
 	//
 		// Once the connection is established
 		socket.on('init_game', function(data) {
-			// game.joinLobby(data.player);
 			game.showLobby(data.lobby, data.player);
 		});
 
@@ -40,6 +39,11 @@ define(['socket_io', 'game_client'], function(io, game) {
 		socket.on('could_not_join_room', function() {
 			alert('Impossible de rejoindre la room');
 		})
+
+		// When someone creates a room on the server
+		socket.on('new_room', function(lobby) {
+			game.refreshLobby(lobby);
+		});
 
 		// Once the game is started
 		socket.on('launch_game', function(player) {

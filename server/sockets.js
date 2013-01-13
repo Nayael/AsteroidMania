@@ -27,10 +27,12 @@ exports.init = function(io, init, game, lobbyManager) {
 			player = room.players[player.id];
 			player.roomId = room.id;
 			socket.emit('launch_game', player);
+			socket.broadcast.emit('new_room', GLOBAL.lobby);
 		});
 
 		// When a player decides to join a room
 		socket.on('join_room', function(data) {
+			console.log('data: ', data);
 			var room = lobbyManager.joinRoom(data.roomId, data.player);
 			if (!room) {
 			    socket.emit('could_not_join_room');
