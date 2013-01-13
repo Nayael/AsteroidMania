@@ -18,6 +18,7 @@ Room.prototype.addPlayer = function(player) {
 		var nbPlayers = Object.size(this.players);
 		player.inGame = true;
 		player.inLobby = false;
+		// TODO Couleurs en fonction des joueurs présents dans la room, et pas du nombre de joueurs (s'il ne reste qu'un vert, éviter de recréer un vert)
 		player.x = (nbPlayers < 3 ? 200 : 600);
 		player.y = (nbPlayers == 0 || nbPlayers == 3) ? 150 : (nbPlayers == 1 || nbPlayers == 4) ? 300 : 450;
 		player.color = (nbPlayers == 0 || nbPlayers == 3) ? "#FF0000" : (nbPlayers == 1 || nbPlayers == 4) ? "#00FF00" : "#FFFF00";
@@ -34,7 +35,7 @@ Room.prototype.getPlayersReady = function() {
 	for (player in this.players) {
 		if (this.players.hasOwnProperty(player) && this.players[player].ready === true)
 			playersReady++;
-	}
+	};
 	return playersReady;
 };
 

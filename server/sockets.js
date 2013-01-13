@@ -53,7 +53,7 @@ exports.init = function(io, init, game, lobbyManager) {
 					player = GLOBAL.players[playerId];
 
 					// We get the player that left
-					if (player.socket === socket.id) {
+					if (player.socket === socket.id && player.roomId != undefined) {
 						var room = GLOBAL.lobby.rooms[player.roomId];
 						delete room.players[player.id];				// We remove him from his room
 						player.ready = false;
@@ -66,7 +66,7 @@ exports.init = function(io, init, game, lobbyManager) {
 						}
 					}
 				}
-			}
+			};
 		});
 
 		// When the client sends the player's data to the socket after he connected
