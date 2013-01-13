@@ -1,6 +1,6 @@
 exports.checkAuth = function(request, response, next) {
 	if (request.session.playerId != undefined && request.session.playerId != null) {
-		request.currentPlayer = players[request.session.playerId];
+		request.currentPlayer = GLOBAL.players[request.session.playerId];
 		next();
 	}else {
 		response.render('game.jade', {login: true});

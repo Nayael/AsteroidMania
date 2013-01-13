@@ -1,19 +1,23 @@
 var Player = require('./Player').Player;
 
 exports.createOrFindPlayer = function(username) {
-	for (player in players) {
-		if (players.hasOwnProperty(player) && player.username == username)
+	for (player in GLOBAL.players) {
+		if (GLOBAL.players.hasOwnProperty(player) && player.username == username)
 			return player;
 	}
 	var player = new Player(username);
-	players[player.id] = player;
+	GLOBAL.players[player.id] = player;
+	GLOBAL.lobby.users[player.id] = player;
 	return player;
 };
 
 /**
  * Moves the asteroids according to their direction
+ * @param {int} roomId The game room
  */
-exports.moveAsteroids = function () {
+exports.moveAsteroids = function(roomId) {
+	var room = GLOBAL.lobby.rooms[roomId],
+		asteroids = room.asteroids;
 	for (var key in asteroids) {
 		var asteroid = asteroids[key];
 		asteroids[key].x += asteroid.xDirection * asteroid.speed;

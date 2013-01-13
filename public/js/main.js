@@ -24,7 +24,7 @@ require.config({
 	}
 });
 
-require(['jquery', 'game_engine', 'game_client'], function ($, gameEngine, game) {
+require(['jquery', 'game_engine', 'game_client', 'utils'], function ($, gameEngine, game, utils) {
 	$(function() {
 		if ($('#game_content').data('playerid') != null && $('#game_content').data('token') != null) {
 		    startGame();

@@ -5,6 +5,7 @@ define(['Asteroid', 'Keyboard', 'move', 'collision'], function(Asteroid, Keyboar
 	 */
 	function Ship(data, colors) {
 		this.id = data.id;
+		this.roomId = data.roomId;
 		this.username = data.username;
 		this.x = data.x || 0;
 		this.y = data.y || 0;
@@ -65,7 +66,6 @@ define(['Asteroid', 'Keyboard', 'move', 'collision'], function(Asteroid, Keyboar
 		if (this.hitTest(target)) {
 			if (target instanceof Asteroid && this.vulnerability[target.color] != 0) {
 				this.angle += 180;
-				return 'Touché par un astéroïde !';
 			}else if (target instanceof Ship) {
 				return 'Ne vous rentrez pas dedans !';
 			}

@@ -23,15 +23,72 @@
 	background-color: rgba(255, 255, 255, 1);
 }
 
-#main_canvas {
+#main_canvas{
 	background-color: #FFFFFF;
 	position: absolute;
 }
 
-#logger {
+#logger{
 	float: right;
 	width: 350px;
 	height: 540px;
 	border: 1px solid black;
 	overflow: scroll;
+}
+
+#lobby{
+	display: none;
+	width: 782px;
+	height: 522px;
+	padding: 11px;
+	position: absolute;
+	background-color: #CCC;
+	text-align: center;
+}
+
+#lobby h2{
+	margin-bottom: 50px;
+}
+
+#lobby button#create_room{
+	clear: both;
+	position: absolute;
+	bottom: 50px;
+	left: 332px;
+}
+
+#lobby #rooms{
+	margin-bottom: 50px;
+}
+
+#lobby .lobby_option {
+	cursor: pointer;
+}
+
+#lobby .room{
+	float: left;
+	position: relative;
+	width: 100px;
+	height: 120px;
+	margin: 5px;
+	margin-bottom: 10px;
+	background-color: #ABABAB;
+}
+
+#lobby .room:hover{
+	margin: 2.5px;
+	width: 110px;
+	height: 130px;
+}
+
+#lobby .room.full{
+	cursor: default;
+	background-color: #666;
+}
+
+#lobby .room .room_players{
+	font-size: 12px;
+	position: absolute;
+	bottom: 0;
+	left: 22px;
 }

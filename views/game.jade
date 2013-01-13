@@ -2,6 +2,7 @@
 html
 	head
 		title Asteroid Mania
+		link(type='text/css', rel='stylesheet', href='/css/bootstrap.min.css')
 		link(type='text/css', rel='stylesheet', href='/css/main.css')
 		link(type='text/css', rel='stylesheet', href='/css/game.css')
 	body
@@ -12,12 +13,10 @@ html
 					p
 						input(type="text", name="username", id="username", placeholder="Pseudo")
 					p
-						input(type="button", value="Valider", id="sendBt")
+						input(type="button", value="Valider", id="sendBt", class="btn")
 		div#content
 			header
 				h1 Asteroid Mania
-				- if (typeof(player) != 'undefined')
-					h1 Hello #{player.username} !
 
 			nav
 				a(href="/") Accueil
@@ -27,5 +26,7 @@ html
 				div#game_content(data-playerid=player.id, data-token=player.token)
 			- else
 				div#game_content
+			div#lobby
+				h2 Asteroid Mania
 			div#logger
 			script(type="text/javascript", src="/js/lib/require.js", data-main="/js/main")

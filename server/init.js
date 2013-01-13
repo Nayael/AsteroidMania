@@ -10,10 +10,9 @@ exports.init = function() {
 		return size;
 	};
 	GLOBAL.players = {};
-	GLOBAL.level = 0;
 };
 
-exports.initLevel = function (index) {
+exports.initLevel = function (room) {
 	var waves = [{
 			max: 2,	// The maximum size of asteroids in this wave
 			total: 10
@@ -33,17 +32,17 @@ exports.initLevel = function (index) {
 		colors = ['#FF0000', '#00FF00', '#FFFF00'],
 		colorIndex = 0,
 		totalSize = 0;	// We use the asteroids' sizes to set a number of asteroids per wave
-	GLOBAL.asteroids = [];
+	room.asteroids = [];
 
-	while (totalSize < waves[index].total) {
+	while (totalSize < waves[room.level].total) {
 		if (colorIndex > 2) {
 		    colorIndex = 0;
 		}
-		var size = Math.ceil(Math.random() * waves[index].max),
+		var size = Math.ceil(Math.random() * waves[room.level].max),
 			x = (Math.random() <= 0.5) ? (-1 * (50 + Math.random() * 120)) : (850 + Math.random() * 920),
 			y = Math.random() * 500;
 		totalSize += size;
-		asteroids.push({
+		room.asteroids.push({
 			x: x,
 			y: y,
 			xDirection: (x < 0) ? 1 : -1,

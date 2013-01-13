@@ -28,10 +28,24 @@ define(['socket_io', 'game_client'], function(io, game) {
 	// INITIALISATION EVENTS
 	//
 		// Once the connection is established
-		socket.on('launchGame', function(player) {
+		socket.on('init_game', function(data) {
+			// game.joinLobby(data.player);
+			game.showLobby(data.lobby, data.player);
+		});
+
+		socket.on('could_not_create_room', function() {
+			alert('Impossible de créer la room');
+		});
+
+		socket.on('could_not_join_room', function() {
+			alert('Impossible de rejoindre la room');
+		})
+
+		// Once the game is started
+		socket.on('launch_game', function(player) {
+			game.addPlayer(player, true);
 			game.launch(player);
-			// We send the player data to the socket
-			socket.emit('send_user_init_data', player);
+			socket.emit('init_user', player);	// We send the player data to the socket
 			game.user = player.id;	// We only keep the id, since the user is now with the other players
 		});
 
@@ -50,10 +64,12 @@ define(['socket_io', 'game_client'], function(io, game) {
 
 		// When a new player comes in the game
 		socket.on('new_player', function(newPlayer) {
-			if (!game.players.hasOwnProperty(newPlayer.id) && newPlayer.id != game.user) {
+			if (game.user == undefined || !game.players[game.user])
+			    return;
+			if (!game.players.hasOwnProperty(newPlayer.id) && newPlayer.id != game.user && newPlayer.roomId === game.players[game.user].roomId) {
 				game.addPlayer(newPlayer);
+				game.log(game.players[newPlayer.id].username + ' a rejoint le jeu.');
 			}
-			game.log(game.players[newPlayer.id].username + ' a rejoint le jeu.');
 		});
 
 		// When a player leaves the game

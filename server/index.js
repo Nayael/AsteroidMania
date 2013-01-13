@@ -1,9 +1,11 @@
 var server = require("./server"),
 	sockets = require('./sockets'),
+	lobby = require('./lobby'),
 	init = require('./init'),
 	game = require('./game');
 
 init.init();
+lobby.createLobby();
 
-var io = server.start(game);	// We start the server, and give it the method to create the routes
-sockets.init(io, init, game);
+var io = server.start(game);	// We start the server
+sockets.init(io, init, game, lobby);
