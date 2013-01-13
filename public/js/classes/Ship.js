@@ -1,11 +1,11 @@
 define(['Asteroid', 'Keyboard', 'move', 'collision'], function(Asteroid, Keyboard, addMoveCapabilities, addCollisionCapabilities) {
 	/**
 	 * A Ship for "Asteroid Mania"
-	 * @param data	The data to create the ship (coordinates, etc.)
+	 * @param {Object} data	The data to create the ship (coordinates, etc.)
 	 */
 	function Ship(data, colors) {
-		this.id;
-		this.username;
+		this.id = data.id;
+		this.username = data.username;
 		this.x = data.x || 0;
 		this.y = data.y || 0;
 		this.angle = data.angle || 0;
@@ -59,7 +59,7 @@ define(['Asteroid', 'Keyboard', 'move', 'collision'], function(Asteroid, Keyboar
 
 	/**
 	 * Handles the collisions for a ship
-	 * @param target	The element which the collision will be tested with
+	 * @param {Object} target	The element which the collision will be tested with
 	 */
 	Ship.prototype.handleCollision = function(target) {
 		if (this.hitTest(target)) {
@@ -75,7 +75,7 @@ define(['Asteroid', 'Keyboard', 'move', 'collision'], function(Asteroid, Keyboar
 
 	/**
 	 * Synchronizes the ship's data with the data received from the server
-	 * @param data	The data to insert in the ship
+	 * @param {Object} data	The data to insert in the ship
 	 */
 	Ship.prototype.syncFromServer = function(data) {
 		this.x = data.players[this.id].x;
