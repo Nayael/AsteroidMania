@@ -24,7 +24,7 @@ require.config({
 	}
 });
 
-require(['jquery', 'game_engine', 'game_client', 'utils'], function ($, gameEngine, game, utils) {
+require(['jquery', 'game_engine', 'game_client', 'utils', 'Keyboard'], function ($, gameEngine, game, utils, Keyboard) {
 	$(function() {
 		if ($('#game_content').data('playerid') != null && $('#game_content').data('token') != null) {
 		    startGame();
@@ -34,10 +34,22 @@ require(['jquery', 'game_engine', 'game_client', 'utils'], function ($, gameEngi
 				$('#prompt span').css({top:'50%',left:'50%',margin:'-' + ($('#prompt span').height() / 2) + 'px 0 0 -' + ($('#prompt span').width() / 2) + 'px'});
 				$('#prompt').toggle();
 				$('#sendBt').click(function() {
-					if ($('#username').val() != '') {
+					if ($('#username').val() == '' && $('#username').val().length <= 4) {
+					    alert('Le pseudo doit contenir plus de 4 caractères');
+					}else {
 						game.authenticate($('#username').val(), startGame);
+						Keyboard.remove('keydown', 'ENTER', triggerBt);
 					}
 				});
+				function triggerBt() {
+					$('#sendBt').click();
+				}
+				$('#prompt input').focus(function() {
+					Keyboard.on('keydown', 'ENTER', triggerBt);
+				})
+				$('#prompt input').focusout(function() {
+					Keyboard.remove('keydown', 'ENTER', triggerBt);
+				})
 			}else {
 				startGame();
 			}

@@ -2,8 +2,10 @@ exports.init = function(io, init, game, lobbyManager) {
 	io.sockets.on('connection', function(socket) {
 		var player, mainLoop;
 
+		// When a player authenticates with the login form
 		socket.on('authenticate', function (data) {
-			player = GLOBAL.players[data.playerId];	// We add him to the connected players
+			GLOBAL.players[data.playerId].socket = socket.id;
+			player = GLOBAL.players[data.playerId];
 			if (player.token === data.token) {
 				socket.emit('init_game', {
 					player: player,
@@ -26,43 +28,52 @@ exports.init = function(io, init, game, lobbyManager) {
 			}
 			player = room.players[player.id];
 			player.roomId = room.id;
+			GLOBAL.players[player.id].roomId = room.id;
 			socket.emit('launch_game', player);
-			socket.broadcast.emit('new_room', GLOBAL.lobby);
+			socket.broadcast.emit('refresh_lobby', GLOBAL.lobby);
 		});
 
 		// When a player decides to join a room
 		socket.on('join_room', function(data) {
-			console.log('data: ', data);
 			var room = lobbyManager.joinRoom(data.roomId, data.player);
 			if (!room) {
-			    socket.emit('could_not_join_room');
-			    return;
+				socket.emit('could_not_join_room');
+				return;
 			}
 			player = room.players[data.player.id];
 			player.roomId = room.id;
+			GLOBAL.players[player.id].roomId = room.id;
 			socket.emit('launch_game', player);
 		});
 
 		// When the client disconnects
 		socket.on('disconnect', function() {
-			if (GLOBAL.players[socket.id] != undefined){
-				var player = GLOBAL.players[socket.id];
-				delete GLOBAL.players[socket.id];
-				socket.broadcast.emit('player_quit', {id: player.id, username: player.username});
-				
-				// If there are no players left we stop the main loop
-				// if (Object.size(GLOBAL.players) === 0) {
-				// 	clearInterval(room.mainLoop);
-				// }
+			for (playerId in GLOBAL.players) {
+				if (GLOBAL.players.hasOwnProperty(playerId)) {
+					player = GLOBAL.players[playerId];
+
+					// We get the player that left
+					if (player.socket === socket.id) {
+						var room = GLOBAL.lobby.rooms[player.roomId];
+						delete room.players[player.id];				// We remove him from his room
+						player.ready = false;
+						if (Object.size(room.players) === 0) {			// If there are no players left in the room
+							clearInterval(room.mainLoop);
+							delete GLOBAL.lobby.rooms[player.roomId];	// We delete the room
+							socket.broadcast.emit('refresh_lobby', GLOBAL.lobby);
+						}else {	// Otherwise, we just tell the other players that he left
+							room.broadcast(io, 'player_quit', {id: player.id, username: player.username});
+						}
+					}
+				}
 			}
 		});
 
 		// When the client sends the player's data to the socket after he connected
 		socket.on('init_user', function(player) {
-			// var connectedPlayers = GLOBAL.players;
 			var room = GLOBAL.lobby.rooms[player.roomId];
 			socket.emit('get_players', room.players);	// We send him info about the other players
-			socket.broadcast.emit('new_player', player);	// We tell everyone else he is connected
+			room.broadcast(io, 'new_player', player);	// We tell everyone else he is connected
 			
 			// If it's the first player, we initialize the level
 			if (Object.size(room.players) == 1) {

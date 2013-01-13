@@ -1,5 +1,5 @@
 exports.checkAuth = function(request, response, next) {
-	if (request.session.playerId != undefined && request.session.playerId != null) {
+	if (request.session.playerId != undefined && GLOBAL.players[request.session.playerId] != undefined) {
 		request.currentPlayer = GLOBAL.players[request.session.playerId];
 		next();
 	}else {

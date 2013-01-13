@@ -1,6 +1,10 @@
 define(['socket_io', 'game_client'], function(io, game) {
 	function connectSocket() {
-		var socket = io.connect('http://localhost:8080');
+		var socket = io.connect('http://localhost:8080', {
+			'reconnect': true,
+			'reconnection delay': 500,
+			'max reconnection attempts': 10
+		});
 		
 		function authenticate() {
 			socket.emit('authenticate', {
@@ -41,7 +45,7 @@ define(['socket_io', 'game_client'], function(io, game) {
 		})
 
 		// When someone creates a room on the server
-		socket.on('new_room', function(lobby) {
+		socket.on('refresh_lobby', function(lobby) {
 			game.refreshLobby(lobby);
 		});
 

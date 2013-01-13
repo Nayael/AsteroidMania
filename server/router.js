@@ -15,6 +15,7 @@ exports.route = function (app, checkAuth) {
 	});
 
 	app.post('/auth', function(request, response) {
+		// We parse the players to see if the given username is already taken
 		for (player in GLOBAL.players) {
 			player = GLOBAL.players[player];
 			if (player.username === request.param('username')) {

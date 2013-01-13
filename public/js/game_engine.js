@@ -50,8 +50,10 @@ define(['connector', 'onEachFrame'], function(connectSocket, onEachFrame) {
 			 * @param {Lobby} lobby	The new lobby data
 			 */
 			game.refreshLobby = function(lobby) {
-				$('#lobby').empty();
-				game.showLobby(lobby, player);
+				if (!game.onEachFrame) {	// If the game is not running, we refresh the lobby display
+					$('#lobby').empty();
+					game.showLobby(lobby, player);
+				}
 			}
 		};
 

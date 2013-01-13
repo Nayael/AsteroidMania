@@ -23,6 +23,7 @@ Room.prototype.addPlayer = function(player) {
 		player.color = (nbPlayers == 0 || nbPlayers == 3) ? "#FF0000" : (nbPlayers == 1 || nbPlayers == 4) ? "#00FF00" : "#FFFF00";
 		player.angle = (nbPlayers < 3 ? 180 : 0);
 		delete player.isUser;
+		delete GLOBAL.lobby.users[player.id];	// We remove the player from the lobby users
 		this.players[player.id] = player;
 		return this;
 	}
@@ -35,6 +36,12 @@ Room.prototype.getPlayersReady = function() {
 			playersReady++;
 	}
 	return playersReady;
+};
+
+Room.prototype.broadcast = function(io, event, data) {
+	for (player in this.players) {
+		io.sockets.socket(this.players[player].socket).emit(event, data);
+	};
 };
 
 exports.createRoom = function(player) {
