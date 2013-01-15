@@ -11,6 +11,9 @@ exports.init = function(io, init, game, lobbyManager) {
 					player: player,
 					lobby: GLOBAL.lobby
 				});
+				socket.broadcast.emit('joined_lobby', {
+					message: player.username + ' a rejoint le salon de jeu.'
+				});
 			}
 		});
 
@@ -30,7 +33,10 @@ exports.init = function(io, init, game, lobbyManager) {
 			player.roomId = room.id;
 			GLOBAL.players[player.id].roomId = room.id;
 			socket.emit('launch_game', player);
-			socket.broadcast.emit('refresh_lobby', GLOBAL.lobby);
+			socket.broadcast.emit('refresh_lobby', {
+				lobby: GLOBAL.lobby,
+				message: player.username + ' a rejoint la room #' + room.id + '.'
+			});
 		});
 
 		// When a player decides to join a room
@@ -44,6 +50,10 @@ exports.init = function(io, init, game, lobbyManager) {
 			player.roomId = room.id;
 			GLOBAL.players[player.id].roomId = room.id;
 			socket.emit('launch_game', player);
+			socket.broadcast.emit('refresh_lobby', {
+				lobby: GLOBAL.lobby,
+				message: player.username + ' a rejoint la room #' + room.id + '.'
+			});
 		});
 
 		// When the client disconnects
@@ -55,12 +65,17 @@ exports.init = function(io, init, game, lobbyManager) {
 					// We get the player that left
 					if (player.socket === socket.id && player.roomId != undefined) {
 						var room = GLOBAL.lobby.rooms[player.roomId];
+						if (!room)
+							return;
 						delete room.players[player.id];				// We remove him from his room
 						player.ready = false;
 						if (Object.size(room.players) === 0) {			// If there are no players left in the room
 							clearInterval(room.mainLoop);
 							delete GLOBAL.lobby.rooms[player.roomId];	// We delete the room
-							socket.broadcast.emit('refresh_lobby', GLOBAL.lobby);
+							socket.broadcast.emit('refresh_lobby', {
+								lobby: GLOBAL.lobby,
+								message: player.username + ' a quitté le jeu.'
+							});
 						}else {	// Otherwise, we just tell the other players that he left
 							room.broadcast(io, 'player_quit', {id: player.id, username: player.username});
 						}

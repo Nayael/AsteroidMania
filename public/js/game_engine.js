@@ -18,8 +18,9 @@ define(['connector', 'onEachFrame'], function(connectSocket, onEachFrame) {
 				$('#lobby').toggle();
 			}
 			$('#lobby').append('<h2>Asteroid Mania</h2>');
+			$('#lobby').append('<div id="rooms"></div>');
 			if (Object.size(lobby.rooms) == 0) {
-				$('#lobby').append('<div id="rooms">Aucune room de jeu disponible</div>');
+				$('#rooms').append('Aucune room de jeu disponible');
 			}else {
 				for (roomId in lobby.rooms) {
 					if (lobby.rooms.hasOwnProperty(roomId)) {
@@ -27,7 +28,7 @@ define(['connector', 'onEachFrame'], function(connectSocket, onEachFrame) {
 					}
 				}
 			}
-			$('#lobby').append('<button id="create_room" class="lobby_option btn">Créer une room</button>');
+			$('#rooms').append('<button id="create_room" class="lobby_option btn">Créer une room</button>');
 			$('#create_room').click(function() {
 				gameEngine.socket.emit('create_room', player);
 			});
@@ -63,7 +64,6 @@ define(['connector', 'onEachFrame'], function(connectSocket, onEachFrame) {
 		 * @param {Room} room	The room data
 		 */
 		game.addRoom = function(room) {
-			$('#lobby').append('<div id="rooms"></div>');
 			$('#rooms').append('<div class="room selectable lobby_option" id="room' + room.id + '" data-roomid="' + room.id + '"><h5>Room #' + room.id + '</h5></div>');
 
 			// We display the players' names

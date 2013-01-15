@@ -44,9 +44,14 @@ define(['socket_io', 'game_client'], function(io, game) {
 			alert('Impossible de rejoindre la room');
 		})
 
+		socket.on('joined_lobby', function(data) {
+			game.log(data.message);
+		});
+
 		// When someone creates a room on the server
-		socket.on('refresh_lobby', function(lobby) {
-			game.refreshLobby(lobby);
+		socket.on('refresh_lobby', function(data) {
+			game.refreshLobby(data.lobby);
+			game.log(data.message);
 		});
 
 		// Once the game is started
