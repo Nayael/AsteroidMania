@@ -18,6 +18,7 @@ define(['Ship', 'Asteroid'], function(Ship, Asteroid) {
 	 * @param user The current game user
 	 */
 	game.launch = function(user) {
+		game.inLobby = false;
 		$('#lobby').empty();
 		$('#lobby').toggle();
 		game.log('Bienvenue dans la room #' + user.roomId + ' !');

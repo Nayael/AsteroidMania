@@ -28,12 +28,23 @@
 	position: absolute;
 }
 
-#logger{
+#right_content{
 	float: right;
+}
+
+#players_list{
 	width: 350px;
-	height: 540px;
+	height: 180px;
+	margin-bottom: 35px;
 	border: 1px solid black;
 	overflow: scroll;
+}
+
+#logger{
+	width: 350px;
+	height: 280px;
+	border: 1px solid black;
+	overflow: hidden;
 }
 
 #lobby{

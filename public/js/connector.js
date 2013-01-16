@@ -44,8 +44,8 @@ define(['socket_io', 'game_client'], function(io, game) {
 			alert('Impossible de rejoindre la room');
 		})
 
-		socket.on('joined_lobby', function(data) {
-			game.log(data.message);
+		socket.on('joined_lobby', function(username) {
+			game.addPlayerToLobby(username);
 		});
 
 		// When someone creates a room on the server
@@ -82,15 +82,18 @@ define(['socket_io', 'game_client'], function(io, game) {
 			if (!game.players.hasOwnProperty(newPlayer.id) && newPlayer.id != game.user && newPlayer.roomId === game.players[game.user].roomId) {
 				game.addPlayer(newPlayer);
 				game.log(game.players[newPlayer.id].username + ' a rejoint le jeu.');
+				$('#players_list').append('<div class="player">' + lobby.users[user].username + '</div>');
 			}
 		});
 
 		// When a player leaves the game
-		socket.on('player_quit', function(player) {
-			if (game.players.hasOwnProperty(player.id)) {
+		socket.on('player_left_room', function(player) {
+			if (game.inLobby) {
+				game.removePlayerFromLobbyRoom(player);	// We remove the player in the list of rooms
+			}else if (game.players.hasOwnProperty(player.id)) {
+				game.log(player.username + ' a quitté le jeu.');
 				var leavingPlayer = game.players[player.id];
 
-				game.log(player.username + ' a quitté le jeu.');
 				leavingPlayer.remove(game.canvas);
 				delete game.players[player.id];
 			}

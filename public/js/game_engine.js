@@ -13,10 +13,19 @@ define(['connector', 'onEachFrame'], function(connectSocket, onEachFrame) {
 		 * @param {Object} lobby The lobby object
 		 */
 		game.showLobby = function(lobby, player) {
+			game.inLobby = true;
 			if (!game.lobby) {
 				game.log('Bienvenue <strong>' + player.username + '</strong> !');
 				$('#lobby').toggle();
+				$('#players_list').empty();
 			}
+
+			for (user in lobby.users) {
+				if (lobby.users.hasOwnProperty(user)) {
+					$('#players_list').append('<div class="player">' + lobby.users[user].username + '</div>');
+				}
+			}
+
 			$('#lobby').append('<h2>Asteroid Mania</h2>');
 			$('#lobby').append('<div id="rooms"></div>');
 			if (Object.size(lobby.rooms) == 0) {
@@ -53,11 +62,24 @@ define(['connector', 'onEachFrame'], function(connectSocket, onEachFrame) {
 			game.refreshLobby = function(lobby) {
 				if (!game.onEachFrame) {	// If the game is not running, we refresh the lobby display
 					$('#lobby').empty();
+					$('#players_list').empty();
 					game.showLobby(lobby, player);
 				}
 			}
 		};
 
+		game.addPlayerToLobby = function(username) {
+			game.log(username + ' a rejoint le salon de jeu.');
+			$('#players_list').append('<div class="player" data-username="' + username + '">' + username + '</div>');
+		};
+
+		game.removePlayerFromLobbyRoom = function(player) {
+			game.log(player.username + ' a quitté la room #' + player.roomId);
+			$('#room' + player.roomId).find('[data-playerid="' + player.id + '"]').remove();
+			$('#room' + player.roomId + ' #nb_players').html(parseInt($('#room' + player.roomId + ' #nb_players').html()) - 1);
+			if ($('#room' + player.roomId).hasClass('full'))
+				$('#room' + player.roomId).removeClass('full')
+		}
 		
 		/**
 		 * Adds a room to the display list
@@ -71,11 +93,11 @@ define(['connector', 'onEachFrame'], function(connectSocket, onEachFrame) {
 			for (playerId in room.players) {
 				var roomPlayer = room.players[playerId];
 				if (room.players.hasOwnProperty(playerId)) {
-					$('#room' + room.id + ' .room_players').append('<p>' + roomPlayer.username + '</p>');
+					$('#room' + room.id + ' .room_players').append('<p data-playerid="' + playerId + '">' + roomPlayer.username + '</p>');
 				}
 			}
 
-			$('#room' + room.id).append('<p class="room_nb_players">' + Object.size(room.players) + ' joueur(s)</p>');
+			$('#room' + room.id).append('<p class="room_nb_players"><span id="nb_players">' + Object.size(room.players) + '</span> joueur(s)</p>');
 			if (Object.size(room.players) >= 6) {
 				$('#room' + room.id).removeClass('selectable').addClass('full');
 			}

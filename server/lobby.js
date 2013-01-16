@@ -3,6 +3,12 @@ function Lobby() {
 	this.rooms = {};
 };
 
+Lobby.prototype.broadcast = function(io, event, data) {
+	for (user in this.users) {
+		io.sockets.socket(this.users[user].socket).emit(event, data);
+	};
+};
+
 exports.createLobby = function() {
 	GLOBAL.lobby = new Lobby();
 };
@@ -53,6 +59,7 @@ exports.createRoom = function(player) {
 		room.id = Math.round(999 * Math.random());
 	}while (GLOBAL.lobby.rooms[room.id]);
 	GLOBAL.lobby.rooms[room.id] = room;
+	GLOBAL.players[player.id].roomId = room.id;
 	return room;
 };
 
@@ -60,6 +67,7 @@ exports.joinRoom = function(roomId, player) {
 	if (GLOBAL.lobby.rooms[roomId]) {
 		if (Object.size(GLOBAL.lobby.rooms[roomId]) >= 6)
 			return false;
+		GLOBAL.players[player.id].roomId = roomId;
 		return GLOBAL.lobby.rooms[roomId].addPlayer(player);
 	}
 	return false;
