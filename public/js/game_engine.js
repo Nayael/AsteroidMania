@@ -18,11 +18,12 @@ define(['connector', 'onEachFrame'], function(connectSocket, onEachFrame) {
 				game.log('Bienvenue <strong>' + player.username + '</strong> !');
 				$('#lobby').toggle();
 				$('#players_list').empty();
+				$('#players_list_title').text('Joueurs en attente');
 			}
 
 			for (user in lobby.users) {
 				if (lobby.users.hasOwnProperty(user)) {
-					$('#players_list').append('<div class="player">' + lobby.users[user].username + '</div>');
+					$('#players_list').append('<div class="player" data-username="' + lobby.users[user].username + '">' + lobby.users[user].username + '</div>');
 				}
 			}
 
@@ -79,6 +80,11 @@ define(['connector', 'onEachFrame'], function(connectSocket, onEachFrame) {
 			$('#room' + player.roomId + ' #nb_players').html(parseInt($('#room' + player.roomId + ' #nb_players').html()) - 1);
 			if ($('#room' + player.roomId).hasClass('full'))
 				$('#room' + player.roomId).removeClass('full')
+		};
+
+		game.removePlayerFromLobby = function(player) {
+			game.log(player.username + ' a quitté le jeu');
+			$('#players_list').find('[data-username="' + player.username + '"]').remove();
 		}
 		
 		/**

@@ -51,7 +51,8 @@ define(['socket_io', 'game_client'], function(io, game) {
 		// When someone creates a room on the server
 		socket.on('refresh_lobby', function(data) {
 			game.refreshLobby(data.lobby);
-			game.log(data.message);
+			if (data.message != undefined)
+				game.log(data.message);
 		});
 
 		// Once the game is started
@@ -96,6 +97,13 @@ define(['socket_io', 'game_client'], function(io, game) {
 
 				leavingPlayer.remove(game.canvas);
 				delete game.players[player.id];
+			}
+		});
+
+		// When a player leaves the lobby
+		socket.on('player_left_lobby', function(player) {
+			if (game.inLobby) {
+				game.removePlayerFromLobby(player);	// We remove the player in the list
 			}
 		});
 

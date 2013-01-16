@@ -21,6 +21,8 @@ define(['Ship', 'Asteroid'], function(Ship, Asteroid) {
 		game.inLobby = false;
 		$('#lobby').empty();
 		$('#lobby').toggle();
+		$('#players_list').empty();
+		$('#players_list_title').text('Joueurs connectés');
 		game.log('Bienvenue dans la room #' + user.roomId + ' !');
 
 		/**
