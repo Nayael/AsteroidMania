@@ -7,7 +7,7 @@ html
 		link(type='text/css', rel='stylesheet', href='/css/game.css')
 	body
 		- if (typeof(login) != 'undefined' && login == true)
-			div#prompt
+			div.prompt
 				span
 					h3 Entre ton pseudo
 					p
@@ -28,7 +28,7 @@ html
 				div#game_content
 			div#lobby
 			div#right_content
-				h4#players_list_title Joueurs connectés
+				h4#players_list_title Joueurs en attente
 				div#players_list
 				div#logger
 			script(type="text/javascript", src="/js/lib/require.js", data-main="/js/main")

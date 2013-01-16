@@ -1,6 +1,6 @@
 @charset 'UTF-8';
 
-#prompt{
+.prompt{
 	display: none;
 	position: absolute;
 	width: 100%;
@@ -12,7 +12,7 @@
 	font-family: 'Segoe UI', 'Trebuchet MS', Arial, sans-serif;
 }
 
-#prompt span{
+.prompt span{
 	display: block;
 	position: absolute;
 	border: 1px solid #888;

@@ -16,8 +16,11 @@ exports.createOrFindPlayer = function(username) {
  * @param {int} roomId The game room
  */
 function moveAsteroids(roomId) {
-	var room = GLOBAL.lobby.rooms[roomId],
-		asteroids = room.asteroids;
+	var room = GLOBAL.lobby.rooms[roomId];
+	if (!room)
+		return;
+	
+	var asteroids = room.asteroids;
 	for (var key in asteroids) {
 		var asteroid = asteroids[key];
 		asteroids[key].x += asteroid.xDirection * asteroid.speed;

@@ -34,7 +34,7 @@ exports.init = function(io, init, game, lobbyManager) {
 				player: player
 			});
 			GLOBAL.lobby.broadcast(io, 'refresh_lobby', {
-				lobby: GLOBAL.lobby,
+				lobby: getLobbyUsefulData(),
 				message: player.username + ' a rejoint la room #' + room.id + '.'
 			});
 			init.initLevel(room);	// We initialize the room level
@@ -50,16 +50,16 @@ exports.init = function(io, init, game, lobbyManager) {
 			player = room.players[data.player.id];
 			player.roomId = room.id;
 			socket.emit('enter_room', {
-				player: player,
-				others: room.players
+				playerId: player.id,
+				players: room.players
 			});
 			room.broadcast(io, 'new_player', player);	// We tell everyone else he is connected
-			if (room.getPlayersReady() >= 2) {	// If there are at least 3 players ready in the room, the game has already started
+			if (room.getPlayersReady() >= 1) {	// If there are at least 3 players ready in the room, the game has already started
 				socket.emit('launch_game');
 				socket.emit('start_level', room.asteroids);
 			}
 			GLOBAL.lobby.broadcast(io, 'refresh_lobby', {
-				lobby: GLOBAL.lobby,
+				lobby: getLobbyUsefulData(),
 				message: player.username + ' a rejoint la room #' + room.id + '.'
 			});
 		});
@@ -72,7 +72,7 @@ exports.init = function(io, init, game, lobbyManager) {
 			var room = GLOBAL.lobby.rooms[data.roomId],
 				player = room.players[data.playerId];
 			// If at least 3 players are ready, we start the game
-			if (room.getPlayersReady() == 2) {
+			if (room.getPlayersReady() == 1) {
 				game.launch(init, io, room);
 			}
 		});
@@ -81,6 +81,11 @@ exports.init = function(io, init, game, lobbyManager) {
 		socket.on('unready_player', function(data) {
 			if (GLOBAL.lobby.rooms[data.roomId])
 				GLOBAL.lobby.rooms[data.roomId].players[data.playerId].ready = false;
+		});
+
+		// When a player leaves a room
+		socket.on('player_leave_room', function(player) {
+			playerLeaveRoom(player, io, true);
 		});
 
 		// When the client disconnects
@@ -98,29 +103,8 @@ exports.init = function(io, init, game, lobbyManager) {
 					// socket.broadcast.emit(player.username + ' a quitté le jeu.');
 					// We get the player that left
 					if (player.socket === socket.id) {
-						if (player.roomId != undefined) {	// If the player left while in a game room
-							var room = GLOBAL.lobby.rooms[player.roomId];
-							GLOBAL.lobby.broadcast(io, 'player_left_room', {
-								id: player.id,
-								username: player.username,
-								roomId: player.roomId
-							});
-							delete room.players[player.id];		// We remove him from his room
-							delete player.roomId;
-							player.ready = false;
-							// TODO mettre le player en lobby que s'il retourne bien en lobby et pas s'il change de page
-							// GLOBAL.lobby.users[player.id] = player;
-
-							// If there are no players left in the room
-							if (Object.size(room.players) == 0) {
-								clearInterval(room.mainLoop);
-								delete GLOBAL.lobby.rooms[room.id];	// We delete the room
-								GLOBAL.lobby.broadcast(io, 'refresh_lobby', {
-									lobby: GLOBAL.lobby
-								});
-							}else {	// Otherwise, we just tell the other players that he left
-								room.broadcast(io, 'player_left_room', {id: player.id, username: player.username});
-							}
+						if (player.roomId != undefined && GLOBAL.lobby.rooms[player.roomId]) {	// If the player left while in a game room
+							playerLeaveRoom(player, io);
 						}else {	// Otherwise, he left while in the lobby
 							GLOBAL.lobby.broadcast(io, 'player_left_lobby', {
 								id: player.id,
@@ -164,22 +148,22 @@ exports.init = function(io, init, game, lobbyManager) {
 		});
 
 		// When the client sends the player's data to the socket after he connected
-		socket.on('init_user', function(player) {
-			// var room = GLOBAL.lobby.rooms[player.roomId];
-			// // socket.emit('get_players', room.players);	// We send him info about the other players
-			// // room.broadcast(io, 'new_player', player);	// We tell everyone else he is connected
-			
-			// // If it's the first player, we initialize the level
-			// if (Object.size(room.players) == 1) {
-			// 	init.initLevel(room);
-			// 	socket.emit('start_level', room.asteroids);
+		// socket.on('init_user', function(player) {
+		// 	var room = GLOBAL.lobby.rooms[player.roomId];
+		// 	socket.emit('get_players', room.players);	// We send him info about the other players
+		// 	room.broadcast(io, 'new_player', player);	// We tell everyone else he is connected
+		
+		// 	// If it's the first player, we initialize the level
+		// 	if (Object.size(room.players) == 1) {
+		// 		init.initLevel(room);
+		// 		socket.emit('start_level', room.asteroids);
 
-			// 	// We start the main loop
-			// 	room.mainLoop = setInterval(function() {
-			// 		game.moveAsteroids(room.id);	// We handle the asteroids
-			// 	}, 1000 / 60);
-			// }
-		});
+		// 		// We start the main loop
+		// 		room.mainLoop = setInterval(function() {
+		// 			game.moveAsteroids(room.id);	// We handle the asteroids
+		// 		}, 1000 / 60);
+		// 	}
+		// });
 
 		// When the client sends the player's data to the socket (on each frame)
 		socket.on('send_user_data', function(player) {
@@ -207,3 +191,58 @@ exports.init = function(io, init, game, lobbyManager) {
 		});
 	});
 };
+
+/**
+ * To call when a player leaves his room
+ * @param {Player} player	The player who left
+ * @param {object} io		Socket.IO module, to communicate with clients
+ * @param {bool} inLobby	Is the player back to the lobby or not (definitely gone) ?
+ */
+function playerLeaveRoom(player, io, inLobby) {
+	var room = GLOBAL.lobby.rooms[player.roomId];
+	GLOBAL.lobby.broadcast(io, 'player_left_room', {
+		id: player.id,
+		username: player.username,
+		roomId: player.roomId
+	});
+	delete room.players[player.id];		// We remove him from his room
+	delete player.roomId;
+	player.ready = false;
+	player.inGame = false;
+	// TODO mettre le player en lobby que s'il retourne bien en lobby et pas s'il change de page
+	if (inLobby) {
+		player.inLobby = true;
+		GLOBAL.lobby.users[player.id] = GLOBAL.players[player.id];
+		if (Object.size(room.players) > 0) { // We send the player back to the lobby
+			io.sockets.socket(GLOBAL.players[player.id].socket).emit('refresh_lobby', {
+				lobby: getLobbyUsefulData()
+			});
+		}
+	}
+
+	// If there are no players left in the room
+	if (Object.size(room.players) == 0) {
+		clearInterval(room.mainLoop);
+		delete GLOBAL.lobby.rooms[room.id];	// We delete the room
+		GLOBAL.lobby.broadcast(io, 'refresh_lobby', {
+			lobby: getLobbyUsefulData()
+		});
+	}else {	// Otherwise, we just tell the other players that he left
+		room.broadcast(io, 'player_left_room', {id: player.id, username: player.username});
+	}
+}
+
+function getLobbyUsefulData() {
+	// We build the response data
+	var response = {
+		users: GLOBAL.lobby.users,
+		rooms: {}
+	};
+	for (room in GLOBAL.lobby.rooms) {
+		response.rooms[room] = {
+			id: room,
+			players: GLOBAL.lobby.rooms[room].players
+		};
+	}
+	return response;
+}

@@ -13,7 +13,7 @@ define(['connector', 'onEachFrame', 'Keyboard'], function(connectSocket, onEachF
 		 */
 		game.readyPlayer = function() {
 			game.log('Appuyez sur R si vous n\'êtes pas prêt(e) à commencer.');
-			user.ready = true;
+			game.user.ready = true;
 			gameEngine.socket.emit('ready_player', {
 				playerId: game.user.id,
 				roomId: game.user.roomId
@@ -26,7 +26,7 @@ define(['connector', 'onEachFrame', 'Keyboard'], function(connectSocket, onEachF
 		 */
 		game.unreadyPlayer = function() {
 			game.log('Appuyez sur R si vous êtes prêt(e) à commencer.');
-			user.ready = false;
+			game.user.ready = false;
 			gameEngine.socket.emit('unready_player', {
 				playerId: game.user.id,
 				roomId: game.user.roomId
@@ -49,7 +49,7 @@ define(['connector', 'onEachFrame', 'Keyboard'], function(connectSocket, onEachF
 
 			for (user in lobby.users) {
 				if (lobby.users.hasOwnProperty(user)) {
-					$('#players_list').append('<div class="player" data-username="' + lobby.users[user].username + '">' + lobby.users[user].username + '</div>');
+					$('#players_list').append('<div class="player lobby_player" data-username="' + lobby.users[user].username + '">' + lobby.users[user].username + '</div>');
 				}
 			}
 
@@ -93,6 +93,23 @@ define(['connector', 'onEachFrame', 'Keyboard'], function(connectSocket, onEachF
 					game.showLobby(lobby, player);
 				}
 			}
+		};
+
+		/**
+		 * Exits the game room to return to the lobby
+		 */
+		game.leave = function() {
+			game.inLobby = true;
+			delete game.onEachFrame;
+			delete game.players;
+			delete game.asteroids;
+			delete game.lobby;
+			gameEngine.socket.emit('player_leave_room', {
+				id: game.user.id,
+				username: game.user.username,
+				roomId: game.user.roomId
+			});
+			delete game.user;
 		};
 
 		// We define the main loop

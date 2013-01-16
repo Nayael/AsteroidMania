@@ -60,12 +60,15 @@ define(['socket_io', 'game_client'], function(io, game) {
 
 		// Once the game is started
 		socket.on('enter_room', function(data) {
-			var player = data.player;
-			if (data.others != undefined)	// If there are other players, we add them to the map
-				game.addPlayers(data.others);
-
-			game.addPlayer(player, true);
-			game.enterRoom(player);
+			if (data.players != undefined) {
+				// We add the players to the map
+				data.players[data.playerId].isUser = true;
+				game.addPlayers(data.players);
+			}else if(data.player != undefined) {
+				data.player.isUser = true;
+				game.addPlayer(data.player);
+			}
+			game.enterRoom();
 			// game.launch(player);
 			// socket.emit('init_user', player);	// We send the player data to the socket
 			// game.user = player.id;	// We only keep the id, since the user is now with the other players
@@ -80,15 +83,15 @@ define(['socket_io', 'game_client'], function(io, game) {
 		})
 
 		// When the sockets sends the other players data (on connection)
-		socket.on('get_players', function(players) {
-			game.addPlayers(players);
-		});
+		// socket.on('get_players', function(players) {
+		// 	game.addPlayers(players);
+		// });
 
 		// When a new player comes in the game
 		socket.on('new_player', function(newPlayer) {
-			if (game.user == undefined || typeof(game.user) != 'object' && !game.players[game.user])
+			if (game.user == undefined)
 			    return;
-			if (!game.players.hasOwnProperty(newPlayer.id) && game.user != (typeof(game.user) == 'object' ? newPlayer : newPlayer.id) && newPlayer.roomId == (typeof(game.user) == 'object' ? game.user.roomId : game.players[game.user].roomId)) {
+			if (!game.players.hasOwnProperty(newPlayer.id) && game.user.id != newPlayer.id && game.user.username != newPlayer.username && newPlayer.roomId == game.user.roomId) {
 				game.addPlayer(newPlayer);
 			}
 		});
@@ -115,6 +118,9 @@ define(['socket_io', 'game_client'], function(io, game) {
 	//
 		// When the server sends datas from the game (on each frame)
 		socket.on('get_game_state', function(data) {
+			if (game.players == undefined)
+				return;
+			
 			var players = data.players,
 				asteroids = data.asteroids;
 
