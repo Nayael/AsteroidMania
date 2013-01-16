@@ -45,14 +45,17 @@ define(['socket_io', 'game_client'], function(io, game) {
 		})
 
 		socket.on('joined_lobby', function(username) {
-			game.addPlayerToLobby(username);
+			if (game.inLobby)
+				game.addPlayerToLobby(username);
 		});
 
 		// When someone creates a room on the server
 		socket.on('refresh_lobby', function(data) {
-			game.refreshLobby(data.lobby);
-			if (data.message != undefined)
-				game.log(data.message);
+			if (game.inLobby) {
+				game.refreshLobby(data.lobby);
+				if (data.message != undefined)
+					game.log(data.message);
+			}
 		});
 
 		// Once the game is started
@@ -82,7 +85,7 @@ define(['socket_io', 'game_client'], function(io, game) {
 			    return;
 			if (!game.players.hasOwnProperty(newPlayer.id) && newPlayer.id != game.user && newPlayer.roomId === game.players[game.user].roomId) {
 				game.addPlayer(newPlayer);
-				game.log(game.players[newPlayer.id].username + ' a rejoint le jeu.');
+				game.log(game.players[newPlayer.id].username + ' a rejoint le jeu');
 				$('#players_list').append('<div class="player">' + lobby.users[user].username + '</div>');
 			}
 		});
@@ -92,18 +95,14 @@ define(['socket_io', 'game_client'], function(io, game) {
 			if (game.inLobby) {
 				game.removePlayerFromLobbyRoom(player);	// We remove the player in the list of rooms
 			}else if (game.players.hasOwnProperty(player.id)) {
-				game.log(player.username + ' a quitté le jeu.');
-				var leavingPlayer = game.players[player.id];
-
-				leavingPlayer.remove(game.canvas);
-				delete game.players[player.id];
+				game.removePlayer(player);
 			}
 		});
 
 		// When a player leaves the lobby
 		socket.on('player_left_lobby', function(player) {
 			if (game.inLobby) {
-				game.removePlayerFromLobby(player);	// We remove the player in the list
+				game.removePlayerFromList(player);	// We remove the player in the list
 			}
 		});
 

@@ -23,7 +23,8 @@ define(['Ship', 'Asteroid'], function(Ship, Asteroid) {
 		$('#lobby').toggle();
 		$('#players_list').empty();
 		$('#players_list_title').text('Joueurs connectés');
-		game.log('Bienvenue dans la room #' + user.roomId + ' !');
+		$('#players_list').append('<div class="player" data-username="' + user.username + '">' + user.username + '</div>');
+		game.log('Bienvenue dans la room #' + user.roomId);
 
 		/**
 		 * The game's main loop
@@ -89,7 +90,20 @@ define(['Ship', 'Asteroid'], function(Ship, Asteroid) {
 		if (isUser)
 			game.players[player.id].token = player.token;
 		game.players[player.id].render(game.canvas);	// We display the created user's ship
+		$('#players_list').append('<div class="player" data-username="' + player.username + '">' + player.username + '</div>');
 	};
+
+	/**
+	 * Removes a player from the game room
+	 * @param {Object} player	The player to remove
+	 */
+	game.removePlayer = function(player) {
+		game.removePlayerFromList(player);
+		var leavingPlayer = game.players[player.id];
+
+		leavingPlayer.remove(game.canvas);
+		delete game.players[player.id];
+	}
 
 	/**
 	 * Adds a player ship to the game
@@ -106,6 +120,46 @@ define(['Ship', 'Asteroid'], function(Ship, Asteroid) {
 	game.log = function(message) {
 		$('#logger').append('<div class="message">' + message + '</div>');
 		$("#logger").scrollTop($("#logger")[0].scrollHeight)
+	};
+
+	game.addPlayerToLobby = function(username) {
+		game.log(username + ' a rejoint le salon de jeu');
+		$('#players_list').append('<div class="player" data-username="' + username + '">' + username + '</div>');
+	};
+
+	game.removePlayerFromLobbyRoom = function(player) {
+		game.log(player.username + ' a quitté la room #' + player.roomId);
+		$('#room' + player.roomId).find('[data-playerid="' + player.id + '"]').remove();
+		$('#room' + player.roomId + ' #nb_players').html(parseInt($('#room' + player.roomId + ' #nb_players').html()) - 1);
+		if ($('#room' + player.roomId).hasClass('full'))
+			$('#room' + player.roomId).removeClass('full')
+	};
+
+	game.removePlayerFromList = function(player) {
+		game.log(player.username + ' a quitté le jeu');
+		$('#players_list').find('[data-username="' + player.username + '"]').remove();
+	}
+	
+	/**
+	 * Adds a room to the display list
+	 * @param {Room} room	The room data
+	 */
+	game.addRoom = function(room) {
+		$('#rooms').append('<div class="room selectable lobby_option" id="room' + room.id + '" data-roomid="' + room.id + '"><h5>Room #' + room.id + '</h5></div>');
+
+		// We display the players' names
+		$('#room' + room.id).append('<p class="room_players"></p>');
+		for (playerId in room.players) {
+			var roomPlayer = room.players[playerId];
+			if (room.players.hasOwnProperty(playerId)) {
+				$('#room' + room.id + ' .room_players').append('<p data-playerid="' + playerId + '">' + roomPlayer.username + '</p>');
+			}
+		}
+
+		$('#room' + room.id).append('<p class="room_nb_players"><span id="nb_players">' + Object.size(room.players) + '</span> joueur(s)</p>');
+		if (Object.size(room.players) >= 6) {
+			$('#room' + room.id).removeClass('selectable').addClass('full');
+		}
 	};
 
 	/**
