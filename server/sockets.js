@@ -30,11 +30,14 @@ exports.init = function(io, init, game, lobbyManager) {
 			}
 			player = room.players[player.id];
 			player.roomId = room.id;
-			socket.emit('launch_game', player);
-			socket.broadcast.emit('refresh_lobby', {
+			socket.emit('enter_room', {
+				player: player
+			});
+			GLOBAL.lobby.broadcast(io, 'refresh_lobby', {
 				lobby: GLOBAL.lobby,
 				message: player.username + ' a rejoint la room #' + room.id + '.'
 			});
+			init.initLevel(room);	// We initialize the room level
 		});
 
 		// When a player decides to join a room
@@ -46,11 +49,38 @@ exports.init = function(io, init, game, lobbyManager) {
 			}
 			player = room.players[data.player.id];
 			player.roomId = room.id;
-			socket.emit('launch_game', player);
-			socket.broadcast.emit('refresh_lobby', {
+			socket.emit('enter_room', {
+				player: player,
+				others: room.players
+			});
+			room.broadcast(io, 'new_player', player);	// We tell everyone else he is connected
+			if (room.getPlayersReady() >= 2) {	// If there are at least 3 players ready in the room, the game has already started
+				socket.emit('launch_game');
+				socket.emit('start_level', room.asteroids);
+			}
+			GLOBAL.lobby.broadcast(io, 'refresh_lobby', {
 				lobby: GLOBAL.lobby,
 				message: player.username + ' a rejoint la room #' + room.id + '.'
 			});
+		});
+
+		// When a players says he is ready to start
+		socket.on('ready_player', function(data) {
+			if(!GLOBAL.lobby.rooms[data.roomId])
+				return;
+			GLOBAL.lobby.rooms[data.roomId].players[data.playerId].ready = true;
+			var room = GLOBAL.lobby.rooms[data.roomId],
+				player = room.players[data.playerId];
+			// If at least 3 players are ready, we start the game
+			if (room.getPlayersReady() == 2) {
+				game.launch(init, io, room);
+			}
+		});
+
+		// When a players says he is not ready to start
+		socket.on('unready_player', function(data) {
+			if (GLOBAL.lobby.rooms[data.roomId])
+				GLOBAL.lobby.rooms[data.roomId].players[data.playerId].ready = false;
 		});
 
 		// When the client disconnects
@@ -135,20 +165,20 @@ exports.init = function(io, init, game, lobbyManager) {
 
 		// When the client sends the player's data to the socket after he connected
 		socket.on('init_user', function(player) {
-			var room = GLOBAL.lobby.rooms[player.roomId];
-			socket.emit('get_players', room.players);	// We send him info about the other players
-			room.broadcast(io, 'new_player', player);	// We tell everyone else he is connected
+			// var room = GLOBAL.lobby.rooms[player.roomId];
+			// // socket.emit('get_players', room.players);	// We send him info about the other players
+			// // room.broadcast(io, 'new_player', player);	// We tell everyone else he is connected
 			
-			// If it's the first player, we initialize the level
-			if (Object.size(room.players) == 1) {
-				init.initLevel(room);
-				socket.emit('start_level', room.asteroids);
+			// // If it's the first player, we initialize the level
+			// if (Object.size(room.players) == 1) {
+			// 	init.initLevel(room);
+			// 	socket.emit('start_level', room.asteroids);
 
-				// We start the main loop
-				room.mainLoop = setInterval(function() {
-					game.moveAsteroids(room.id);	// We handle the asteroids
-				}, 1000 / 60);
-			}
+			// 	// We start the main loop
+			// 	room.mainLoop = setInterval(function() {
+			// 		game.moveAsteroids(room.id);	// We handle the asteroids
+			// 	}, 1000 / 60);
+			// }
 		});
 
 		// When the client sends the player's data to the socket (on each frame)

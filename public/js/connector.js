@@ -59,11 +59,20 @@ define(['socket_io', 'game_client'], function(io, game) {
 		});
 
 		// Once the game is started
-		socket.on('launch_game', function(player) {
+		socket.on('enter_room', function(data) {
+			var player = data.player;
+			if (data.others != undefined)	// If there are other players, we add them to the map
+				game.addPlayers(data.others);
+
 			game.addPlayer(player, true);
-			game.launch(player);
-			socket.emit('init_user', player);	// We send the player data to the socket
-			game.user = player.id;	// We only keep the id, since the user is now with the other players
+			game.enterRoom(player);
+			// game.launch(player);
+			// socket.emit('init_user', player);	// We send the player data to the socket
+			// game.user = player.id;	// We only keep the id, since the user is now with the other players
+		});
+
+		socket.on('launch_game', function() {
+			game.launch();
 		});
 
 		socket.on('connection_lost', function() {
@@ -72,21 +81,15 @@ define(['socket_io', 'game_client'], function(io, game) {
 
 		// When the sockets sends the other players data (on connection)
 		socket.on('get_players', function(players) {
-			for (var player in players) {
-				if (!game.players.hasOwnProperty(player) && player != game.user) {
-					game.addPlayer(players[player]);
-				}
-			};
+			game.addPlayers(players);
 		});
 
 		// When a new player comes in the game
 		socket.on('new_player', function(newPlayer) {
-			if (game.user == undefined || !game.players[game.user])
+			if (game.user == undefined || typeof(game.user) != 'object' && !game.players[game.user])
 			    return;
-			if (!game.players.hasOwnProperty(newPlayer.id) && newPlayer.id != game.user && newPlayer.roomId === game.players[game.user].roomId) {
+			if (!game.players.hasOwnProperty(newPlayer.id) && game.user != (typeof(game.user) == 'object' ? newPlayer : newPlayer.id) && newPlayer.roomId == (typeof(game.user) == 'object' ? game.user.roomId : game.players[game.user].roomId)) {
 				game.addPlayer(newPlayer);
-				game.log(game.players[newPlayer.id].username + ' a rejoint le jeu');
-				$('#players_list').append('<div class="player">' + lobby.users[user].username + '</div>');
 			}
 		});
 

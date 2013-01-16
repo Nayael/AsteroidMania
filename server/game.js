@@ -15,7 +15,7 @@ exports.createOrFindPlayer = function(username) {
  * Moves the asteroids according to their direction
  * @param {int} roomId The game room
  */
-exports.moveAsteroids = function(roomId) {
+function moveAsteroids(roomId) {
 	var room = GLOBAL.lobby.rooms[roomId],
 		asteroids = room.asteroids;
 	for (var key in asteroids) {
@@ -34,4 +34,20 @@ exports.moveAsteroids = function(roomId) {
 			asteroids[key].yDirection = -1 * asteroids[key].yDirection;
 		}
 	};
+};
+exports.moveAsteroids = moveAsteroids;
+
+/**
+ * Launches a game in a room
+ * @param {Room} room	The room to launch the game in
+ */
+exports.launch = function(init, io, room) {
+	init.initLevel(room);
+	room.broadcast(io, 'launch_game'/*, player*/);
+	room.broadcast(io, 'start_level', room.asteroids);
+
+	// We start the main loop
+	room.mainLoop = setInterval(function() {
+		moveAsteroids(room.id);	// We handle the asteroids
+	}, 1000 / 60);
 };

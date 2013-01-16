@@ -1,4 +1,4 @@
-define(['Ship', 'Asteroid'], function(Ship, Asteroid) {
+define(['Ship', 'Asteroid', 'Keyboard'], function(Ship, Asteroid, Keyboard) {
 	var game = {};	// The game namespace
 
 	/**
@@ -14,10 +14,9 @@ define(['Ship', 'Asteroid'], function(Ship, Asteroid) {
 	};
 
 	/**
-	 * Launches the game
-	 * @param user The current game user
+	 * Makes the player enter in the game room
 	 */
-	game.launch = function(user) {
+	game.enterRoom = function(user) {
 		game.inLobby = false;
 		$('#lobby').empty();
 		$('#lobby').toggle();
@@ -25,7 +24,17 @@ define(['Ship', 'Asteroid'], function(Ship, Asteroid) {
 		$('#players_list_title').text('Joueurs connectés');
 		$('#players_list').append('<div class="player" data-username="' + user.username + '">' + user.username + '</div>');
 		game.log('Bienvenue dans la room #' + user.roomId);
+		game.log('Appuyez sur R si vous êtes prêt(e) à commencer.');
+		Keyboard.on('keydown', 'R', game.readyPlayer);
+	};
 
+	/**
+	 * Launches the game
+	 */
+	game.launch = function() {
+		var user = game.user;
+		Keyboard.remove('keydown', 'R', game.readyPlayer);
+		Keyboard.remove('keydown', 'R', game.unreadyPlayer);
 		/**
 		 * The game's main loop
 		 * @return {Object} The user's new position
@@ -90,7 +99,21 @@ define(['Ship', 'Asteroid'], function(Ship, Asteroid) {
 		if (isUser)
 			game.players[player.id].token = player.token;
 		game.players[player.id].render(game.canvas);	// We display the created user's ship
+		game.log(player.username + ' a rejoint le jeu');
+		console.log('add '+player.username);
 		$('#players_list').append('<div class="player" data-username="' + player.username + '">' + player.username + '</div>');
+	};
+
+	/**
+	 * Adds the other players to the game map
+	 * @param {Object} players	The players to add
+	 */
+	game.addPlayers = function(players) {
+		for (var player in players) {
+			if (!game.players.hasOwnProperty(player)) {
+				game.addPlayer(players[player]);
+			}
+		};
 	};
 
 	/**

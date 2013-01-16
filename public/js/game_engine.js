@@ -1,4 +1,4 @@
-define(['connector', 'onEachFrame'], function(connectSocket, onEachFrame) {
+define(['connector', 'onEachFrame', 'Keyboard'], function(connectSocket, onEachFrame, Keyboard) {
 	var gameEngine = {};
 
 	/**
@@ -7,6 +7,32 @@ define(['connector', 'onEachFrame'], function(connectSocket, onEachFrame) {
 	gameEngine.init = function(game, gameContainer) {
 		game.init(gameContainer);
 		gameEngine.socket = connectSocket();
+
+		/**
+		 * Sets the player ready
+		 */
+		game.readyPlayer = function() {
+			game.log('Appuyez sur R si vous n\'êtes pas prêt(e) à commencer.');
+			user.ready = true;
+			gameEngine.socket.emit('ready_player', {
+				playerId: game.user.id,
+				roomId: game.user.roomId
+			});
+			Keyboard.on('keydown', 'R', game.unreadyPlayer);
+		}
+
+		/**
+		 * Sets the player not ready
+		 */
+		game.unreadyPlayer = function() {
+			game.log('Appuyez sur R si vous êtes prêt(e) à commencer.');
+			user.ready = false;
+			gameEngine.socket.emit('unready_player', {
+				playerId: game.user.id,
+				roomId: game.user.roomId
+			});
+			Keyboard.on('keydown', 'R', game.readyPlayer);
+		}
 
 		/**
 		 * Displays the lobby screen
