@@ -31,6 +31,9 @@ require(['jquery', 'game_engine', 'game_client', 'utils', 'Keyboard'], function 
 		}else {
 			// We display the login form if necessary
 			if ($('.prompt') != null) {
+				function triggerBt() {
+					$('#sendBt').click();
+				}
 				$('.prompt span').css({top:'50%',left:'50%',margin:'-' + ($('.prompt span').height() / 2) + 'px 0 0 -' + ($('.prompt span').width() / 2) + 'px'});
 				$('.prompt').toggle();
 				$('.prompt input#username').focus(function() {
@@ -48,9 +51,6 @@ require(['jquery', 'game_engine', 'game_client', 'utils', 'Keyboard'], function 
 						Keyboard.remove('keydown', 'ENTER', triggerBt);
 					}
 				});
-				function triggerBt() {
-					$('#sendBt').click();
-				}
 			}else {
 				startGame();
 			}

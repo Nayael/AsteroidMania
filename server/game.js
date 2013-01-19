@@ -45,8 +45,8 @@ exports.moveAsteroids = moveAsteroids;
  * @param {Room} room	The room to launch the game in
  */
 exports.launch = function(init, io, room) {
-	init.initLevel(room);
-	room.broadcast(io, 'launch_game'/*, player*/);
+	init.initWaves(room);
+	room.broadcast(io, 'launch_game');
 	room.broadcast(io, 'start_level', room.asteroids);
 
 	// We start the main loop

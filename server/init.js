@@ -12,7 +12,7 @@ exports.init = function() {
 	GLOBAL.players = {};
 };
 
-exports.initLevel = function (room) {
+exports.initWaves = function (room) {
 	var waves = [{
 			max: 2,	// The maximum size of asteroids in this wave
 			total: 10

@@ -122,8 +122,15 @@ define(['Ship', 'Asteroid', 'Keyboard'], function(Ship, Asteroid, Keyboard) {
 	game.removePlayer = function(player) {
 		game.removePlayerFromList(player);
 		var leavingPlayer = game.players[player.id];
-		leavingPlayer.remove(game.canvas);
+		leavingPlayer.remove(game.canvas);	// We remove the ship from the canvas
 		delete game.players[player.id];
+		// We render the other ships again, just in case the game is not started
+		for (player in game.players) {
+			if (game.players.hasOwnProperty(player)) {
+				game.players[player].render(game.canvas);
+			}
+		}
+		game.user.render(game.canvas);
 	}
 
 	/**

@@ -28,10 +28,20 @@ Room.prototype.addPlayer = function(player) {
 		player.inGame = true;
 		player.inLobby = false;
 		player.ready = false;
-		// TODO Couleurs en fonction des joueurs présents dans la room, et pas du nombre de joueurs (s'il ne reste qu'un vert, éviter de recréer un vert)
 		player.x = (nbPlayers < 3 ? 200 : 600);
 		player.y = (nbPlayers == 0 || nbPlayers == 3) ? 150 : (nbPlayers == 1 || nbPlayers == 4) ? 300 : 450;
 		player.color = (nbPlayers == 0 || nbPlayers == 3) ? "#FF0000" : (nbPlayers == 1 || nbPlayers == 4) ? "#00FF00" : "#FFFF00";
+		// We make  sure the colors are balanced
+		if (this.countColor('#FF0000') < this.countColor('#00FF00') || this.countColor('#FF0000') < this.countColor('#FFFF00')) {
+			player.color = '#FF0000';
+			player.y = 150;
+		}else if (this.countColor('#00FF00') < this.countColor('#FF0000') || this.countColor('#00FF00') < this.countColor('#FFFF00')) {
+			player.color = '#00FF00';
+			player.y = 300;
+		}else if (this.countColor('#FFFF00') < this.countColor('#00FF00') || this.countColor('#FFFF00') < this.countColor('#FF0000')) {
+			player.color = '#FFFF00';
+			player.y = 450;
+		}
 		player.angle = (nbPlayers < 3 ? 180 : 0);
 		delete player.isUser;
 		delete GLOBAL.lobby.users[player.id];	// We remove the player from the lobby users
@@ -49,9 +59,21 @@ Room.prototype.getPlayersReady = function() {
 	return playersReady;
 };
 
-Room.prototype.broadcast = function(io, event, data) {
+Room.prototype.countColor = function(color) {
+	var i = 0;
+	for (var player in this.players) {
+		if (this.players.hasOwnProperty(player) && this.players[player].color == color)
+			i++;
+	}
+	return i;
+};
+
+Room.prototype.broadcast = function(io, event, data, excluded) {
 	for (player in this.players) {
-		io.sockets.socket(this.players[player].socket).emit(event, data);
+		// We send the message to all users, except the exluded ones
+		if (excluded == undefined || excluded.indexOf(this.players[player].id) == -1) {
+			io.sockets.socket(this.players[player].socket).emit(event, data);
+		}
 	};
 };
 
@@ -77,7 +99,7 @@ exports.createRoom = function(player) {
 
 exports.joinRoom = function(roomId, player) {
 	if (GLOBAL.lobby.rooms[roomId]) {
-		if (Object.size(GLOBAL.lobby.rooms[roomId]) >= 6)
+		if (Object.size(GLOBAL.lobby.rooms[roomId].players) >= 6)
 			return false;
 		GLOBAL.players[player.id].roomId = roomId;
 		return GLOBAL.lobby.rooms[roomId].addPlayer(player);
