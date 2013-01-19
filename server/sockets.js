@@ -3,7 +3,7 @@ exports.init = function(io, init, game, lobbyManager) {
 		var player, mainLoop;
 
 		// When a player authenticates with the login form
-		socket.on('authenticate', function (data) {
+		socket.on('authenticate', function(data) {
 			GLOBAL.players[data.playerId].socket = socket.id;
 			player = GLOBAL.players[data.playerId];
 			if (player.token === data.token) {
@@ -12,7 +12,7 @@ exports.init = function(io, init, game, lobbyManager) {
 					player: player,
 					lobby: GLOBAL.lobby
 				});
-				socket.broadcast.emit('joined_lobby', player.username);
+				lobby.broadcast(io, 'joined_lobby', player.username, [player.id]);
 			}
 		});
 
@@ -55,6 +55,8 @@ exports.init = function(io, init, game, lobbyManager) {
 			});
 			room.broadcast(io, 'new_player', player);	// We tell everyone else he is connected
 			if (room.getPlayersReady() >= 1) {	// If there are at least 3 players ready in the room, the game has already started
+				player.ready = true;
+				GLOBAL.players[player.id].ready = true;
 				socket.emit('launch_game');
 				socket.emit('start_level', room.asteroids);
 			}
@@ -68,11 +70,13 @@ exports.init = function(io, init, game, lobbyManager) {
 		socket.on('ready_player', function(data) {
 			if(!GLOBAL.lobby.rooms[data.roomId])
 				return;
-			GLOBAL.lobby.rooms[data.roomId].players[data.playerId].ready = true;
 			var room = GLOBAL.lobby.rooms[data.roomId],
 				player = room.players[data.playerId];
+			GLOBAL.players[player.id].ready = true;
+			player.ready = true;
 			// If at least 3 players are ready, we start the game
 			if (room.getPlayersReady() == 1) {
+				room.startGame();
 				game.launch(init, io, room);
 			}
 		});
@@ -85,7 +89,7 @@ exports.init = function(io, init, game, lobbyManager) {
 
 		// When a player leaves a room
 		socket.on('player_leave_room', function(player) {
-			playerLeaveRoom(player, io, true);
+			playerLeaveRoom(GLOBAL.players[player.id], io, true);
 		});
 
 		// When the client disconnects
@@ -196,9 +200,9 @@ exports.init = function(io, init, game, lobbyManager) {
  * To call when a player leaves his room
  * @param {Player} player	The player who left
  * @param {object} io		Socket.IO module, to communicate with clients
- * @param {bool} inLobby	Is the player back to the lobby or not (definitely gone) ?
+ * @param {bool} toLobby	Is the player back to the lobby or not (definitely gone) ?
  */
-function playerLeaveRoom(player, io, inLobby) {
+function playerLeaveRoom(player, io, toLobby) {
 	var room = GLOBAL.lobby.rooms[player.roomId];
 	GLOBAL.lobby.broadcast(io, 'player_left_room', {
 		id: player.id,
@@ -210,7 +214,7 @@ function playerLeaveRoom(player, io, inLobby) {
 	player.ready = false;
 	player.inGame = false;
 	// TODO mettre le player en lobby que s'il retourne bien en lobby et pas s'il change de page
-	if (inLobby) {
+	if (toLobby) {
 		player.inLobby = true;
 		GLOBAL.lobby.users[player.id] = GLOBAL.players[player.id];
 		if (Object.size(room.players) > 0) { // We send the player back to the lobby

@@ -48,7 +48,7 @@ define(['connector', 'onEachFrame', 'Keyboard'], function(connectSocket, onEachF
 			}
 
 			for (user in lobby.users) {
-				if (lobby.users.hasOwnProperty(user)) {
+				if (lobby.users.hasOwnProperty(user) && user.id != player.id) {
 					$('#players_list').append('<div class="player lobby_player" data-username="' + lobby.users[user].username + '">' + lobby.users[user].username + '</div>');
 				}
 			}
@@ -101,9 +101,9 @@ define(['connector', 'onEachFrame', 'Keyboard'], function(connectSocket, onEachF
 		game.leave = function() {
 			game.inLobby = true;
 			delete game.onEachFrame;
-			delete game.players;
-			delete game.asteroids;
 			delete game.lobby;
+			game.players = {};
+			game.asteroids = [];
 			gameEngine.socket.emit('player_leave_room', {
 				id: game.user.id,
 				username: game.user.username,

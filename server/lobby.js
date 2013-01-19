@@ -3,9 +3,12 @@ function Lobby() {
 	this.rooms = {};
 };
 
-Lobby.prototype.broadcast = function(io, event, data) {
+Lobby.prototype.broadcast = function(io, event, data, excluded) {
 	for (user in this.users) {
-		io.sockets.socket(this.users[user].socket).emit(event, data);
+		// We send the message to all users, except the exluded ones
+		if (excluded == undefined || excluded.indexOf(this.users[user].id) == -1) {
+			io.sockets.socket(this.users[user].socket).emit(event, data);
+		}
 	};
 };
 
@@ -50,6 +53,14 @@ Room.prototype.broadcast = function(io, event, data) {
 	for (player in this.players) {
 		io.sockets.socket(this.players[player].socket).emit(event, data);
 	};
+};
+
+Room.prototype.startGame = function() {
+	for (player in this.players) {
+		if (this.players.hasOwnProperty(player)) {
+			this.players[player].ready = true;
+		}
+	}
 };
 
 exports.createRoom = function(player) {

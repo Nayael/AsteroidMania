@@ -224,6 +224,11 @@ define(['Ship', 'Asteroid', 'Keyboard'], function(Ship, Asteroid, Keyboard) {
 		$('#leave-yes').click(function() {
 			$('#confirm-leave').remove();
 			game.leave();
+			// We clear the game canvas
+			if (game.canvas.getContext) {
+				var ctx = game.canvas.getContext('2d');
+				ctx.clearRect(0, 0, game.canvas.width, game.canvas.height);
+			}
 		});
 		$('#leave-no').click(function() {
 			$('#confirm-leave').remove();
