@@ -4,11 +4,12 @@ require.config({
 		'jquery'  : 'lib/jquery',
 		'Ship': 'classes/Ship',
 		'Asteroid': 'classes/Asteroid',
+		'Bullet': 'classes/Bullet',
 		'onEachFrame': 'lib/onEachFrame',
 		'Keyboard': 'lib/Keyboard.min',
 		'onEachFrame': 'lib/onEachFrame',
 		'render': 'capabilities/render',
-		'move': 'capabilities/move',
+		'ship': 'capabilities/ship',
 		'collision': 'capabilities/collision'
 	},
 	shim: {

@@ -124,7 +124,7 @@ Room.prototype.startGame = function() {
  * Sets the room's remaining game time
  */
 Room.prototype.resetTime = function() {
-	this.time = 500 * 60;	// Every wave lasts for 2 minutes
+	this.time = 2 * 1000 * 60;	// Every wave lasts for 2 minutes
 };
 
 /**
@@ -144,7 +144,7 @@ Room.prototype.resetPlayers = function() {
  * @param {Player} player	The player who created the room
  */
 exports.createRoom = function(player) {
-	if (Object.size(GLOBAL.lobby.rooms) >= 14)
+	if (Object.size(GLOBAL.lobby.rooms) >= 7 || GLOBAL.players[player.id] == undefined)
 		return false;
 	var room = new Room(player);
 	do {

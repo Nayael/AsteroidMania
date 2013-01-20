@@ -1,5 +1,5 @@
 define(['render'], function(addRenderCapabilities) {
-	function addMoveCapabilities (ship, ShipConstructor) {
+	function addShipCapabilities (ship, ShipConstructor) {
 		addRenderCapabilities(ship);	// We make the ship renderable
 
 		/**
@@ -58,5 +58,5 @@ define(['render'], function(addRenderCapabilities) {
 			}
 		};
 	};
-	return addMoveCapabilities;
+	return addShipCapabilities;
 });

@@ -7,9 +7,10 @@ define(function() {
 		obj.render = function(canvas, Ship) {
 			if (canvas.getContext) {
 				var ctx = canvas.getContext('2d');
-				if (obj.setDrawbox) {		    
+				if (obj.setDrawbox)
 					obj.setDrawbox();
-				}
+				else 
+					return;
 				ctx.beginPath();
 				ctx.moveTo(obj.drawbox[0][0], obj.drawbox[0][1]);
 				// The drawbox array contains the coordinates of the bounding box of the object
@@ -27,6 +28,7 @@ define(function() {
 					var displayName = obj.username + ' (' + obj.score + ')',
 						metrics = ctx.measureText(displayName),
 						textWidth = metrics.width;
+					ctx.font = '12px Calibri';
 					ctx.fillStyle = obj.color;
 					ctx.fillText(displayName, obj.x - textWidth / 2, obj.y - obj.height - 10);
 				}

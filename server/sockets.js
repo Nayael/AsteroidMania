@@ -4,6 +4,9 @@ exports.init = function(io, init, game, lobbyManager) {
 
 		// When a player authenticates with the login form
 		socket.on('authenticate', function(data) {
+			if (!GLOBAL.players[data.playerId]) {
+				return;
+			}
 			GLOBAL.players[data.playerId].socket = socket.id;
 			player = GLOBAL.players[data.playerId];
 			if (player.token === data.token) {
@@ -132,7 +135,7 @@ exports.init = function(io, init, game, lobbyManager) {
 								}
 							}
 							delete GLOBAL.players[player.id];	// We remove the player from the server's player, because he disconnected
-						}, 5000);
+						}, 10000);
 
 					}
 				}
@@ -151,7 +154,6 @@ exports.init = function(io, init, game, lobbyManager) {
 				room.players[player.id].x = player.x;
 				room.players[player.id].y = player.y;
 				room.players[player.id].angle = player.angle;
-				room.players[player.id].speed = player.speed;
 			}
 		});
 

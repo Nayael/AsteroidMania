@@ -1,9 +1,10 @@
-define(['Asteroid', 'Keyboard', 'move', 'collision'], function(Asteroid, Keyboard, addMoveCapabilities, addCollisionCapabilities) {
+define(['Asteroid', 'Bullet', 'Keyboard', 'ship', 'collision'], function(Asteroid, Bullet, Keyboard, addShipCapabilities, addCollisionCapabilities) {
 	/**
 	 * A Ship for "Asteroid Mania"
 	 * @param {Object} data	The data to create the ship (coordinates, etc.)
 	 */
 	function Ship(data, colors) {
+		var that = this;
 		this.id = data.id;
 		this.roomId = data.roomId;
 		this.username = data.username;
@@ -17,6 +18,8 @@ define(['Asteroid', 'Keyboard', 'move', 'collision'], function(Asteroid, Keyboar
 		this.height = 20;
 		this.size = 20;
 		this.dead = false;
+		this.canShoot = true;
+		this.bullets = [];
 		
 		// We set the different interactions between the ships and the asteroids, in function of the colors
 		this.vulnerability = {
@@ -25,7 +28,7 @@ define(['Asteroid', 'Keyboard', 'move', 'collision'], function(Asteroid, Keyboar
 			'#FFFF00': (this.color === colors[0] ? 2 : (this.color === colors[1] ? 1 : 0))
 		}
 
-		addMoveCapabilities(this, Ship);	// We add the movement methods
+		addShipCapabilities(this, Ship);
 		addCollisionCapabilities(this);
 
 		if (data.isUser) {
@@ -39,6 +42,9 @@ define(['Asteroid', 'Keyboard', 'move', 'collision'], function(Asteroid, Keyboar
 			this.controls.left = this.moveLeft;
 			this.controls.right = this.moveRight;
 			this.controls.forward = this.moveForward;
+			this.controls['SPACE'] = function() {
+				that.shoot();
+			};
 
 			Keyboard.makeControllable(this);	// We make the ship controllable with the Keyboard
 		}
@@ -82,7 +88,6 @@ define(['Asteroid', 'Keyboard', 'move', 'collision'], function(Asteroid, Keyboar
 	Ship.prototype.syncFromServer = function(data) {
 		this.x = data.players[this.id].x;
 		this.y = data.players[this.id].y;
-		this.speed = data.players[this.id].speed;
 		this.angle = data.players[this.id].angle;
 	};
 
@@ -104,6 +109,21 @@ define(['Asteroid', 'Keyboard', 'move', 'collision'], function(Asteroid, Keyboar
 		this.angle = data.angle;
 		this.score = data.score;
 		this.dead = false;
+	};
+
+	Ship.prototype.shoot = function() {
+		var that = this;
+		if (that.canShoot) {
+			// We create the bullet
+			var bullet = new Bullet(that.x, that.y, that.angle, this.color);
+			that.bullets.push(bullet);
+
+			that.canShoot = false;
+			// We allow him to shoot again only after 500 ms
+			setTimeout(function() {
+				that.canShoot = true;
+			}, 500);
+		}
 	};
 
 	return Ship;

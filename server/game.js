@@ -34,13 +34,13 @@ function moveAsteroids(roomId) {
 
 		// If the asteroid is inside the canvas and touches one of the edges
 		if (asteroid.inside && (asteroids[key].x <= 0 || asteroids[key].x >= (800 - asteroids[key].size))) {
-			asteroids[key].xDirection = -1 * asteroids[key].xDirection;
+			asteroids[key].xDirection *= -1;
 		}else if (asteroids[key].x > 0 && asteroids[key].x < (800 - asteroids[key].size)) {	// Otherwise, we check if the asteroid is inside the visible area of the canvas
 			asteroids[key].inside = true;
 		}
 
 		if (asteroids[key].y <= 0 || asteroids[key].y >= (540 - asteroids[key].size)) {   
-			asteroids[key].yDirection = -1 * asteroids[key].yDirection;
+			asteroids[key].yDirection *= -1;
 		}
 	};
 };
@@ -78,8 +78,14 @@ function mainLoop(io, room) {
 	// drawShips(room.players);	// We virtually draw the ships to test for collisions
 	moveAsteroids(room.id);	// We handle the asteroids
 	var gameData = {
-		players: room.players,
+		players: {},
 		asteroids: []
+	};
+	for (var player in room.players) {
+		gameData.players[player] = {};
+		gameData.players[player].x = room.players[player].x;
+		gameData.players[player].y = room.players[player].y;
+		gameData.players[player].angle = room.players[player].angle;
 	};
 	for (var i in room.asteroids) {	// We also pass him the asteroids datas, to make them move on his screen
 		gameData.asteroids.push(room.asteroids[i]);

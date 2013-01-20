@@ -47,7 +47,7 @@ define(['Ship', 'Asteroid', 'Keyboard'], function(Ship, Asteroid, Keyboard) {
 		 * @return {Object} The user's new position
 		 */
 		game.onEachFrame = function() {
-			var message = '', returnData, special = [];
+			var message = '', returnData = {}, special = [];
 
 			// We render the player only if he is not dead
 			if (!game.user.dead) {
@@ -56,11 +56,32 @@ define(['Ship', 'Asteroid', 'Keyboard'], function(Ship, Asteroid, Keyboard) {
 			}else {	// If he is, we only clear the canvas on each frame
 				game.user.remove(game.canvas);
 			}
+			// We handle the player's bullets
+			for (var i = 0; i < game.user.bullets.length; i++) {
+				// We make the bullets move
+				if (game.user.bullets[i].move(game.canvas) === false) {	// If the bullet passes the canvas view
+					game.user.bullets.splice(i, 1);	// We delete it
+					continue;
+				}
+				// We send will the bullets data to the server
+				if (i == 0)
+					returnData.bullets = [];
+				// returnData.bullets.push({
+				// 	x: game.user.bullets[i].x,
+				// 	y: game.user.bullets[i].x,
+				// });
+			};
 
 			// We render all the players
 			for (var index in game.players) {
 				if (!game.players[index].dead) {
 					game.players[index].render(game.canvas, Ship);
+					// We handle the player's bullets
+					for (var i = 0; i < game.players[index].bullets.length; i++) {
+						game.players[index].bullets[i].move(game.canvas);
+					};
+
+					// We handle collisions
 					message = game.user.handleCollision(game.players[index]);
 					if (typeof(message) == 'string')
 						game.log(message);
@@ -78,15 +99,13 @@ define(['Ship', 'Asteroid', 'Keyboard'], function(Ship, Asteroid, Keyboard) {
 			};
 
 			if (!game.user.dead) {
-				returnData = {
-					player: {
-						id : game.user.id,
-						roomId : game.user.roomId,
-						x : game.user.x,
-						y : game.user.y,
-						angle : game.user.angle,
-						speed : game.user.speed
-					}
+				returnData.player = {
+					id : game.user.id,
+					roomId : game.user.roomId,
+					x : game.user.x,
+					y : game.user.y,
+					angle : game.user.angle,
+					speed : game.user.speed
 				};
 				if (special.length > 0) {	// We send special data if there is
 					returnData.special = {};
@@ -94,7 +113,6 @@ define(['Ship', 'Asteroid', 'Keyboard'], function(Ship, Asteroid, Keyboard) {
 						if (special[i].die === true) {	// If the player died
 							game.user.dead = true;
 							returnData.special.die = true;
-							game.log('Touché !');
 						}
 					};
 				}
@@ -110,6 +128,7 @@ define(['Ship', 'Asteroid', 'Keyboard'], function(Ship, Asteroid, Keyboard) {
 		$('#end_screen').hide();	// We hide the end screen in case it is displayed
 		$('#end_screen').empty();
 		game.resetTime();
+		game.user.score = 0;
 		game.level = data.level;
 		game.asteroids = [];
 		for (var asteroid in data.asteroids) {
@@ -168,10 +187,10 @@ define(['Ship', 'Asteroid', 'Keyboard'], function(Ship, Asteroid, Keyboard) {
 		if (player.isUser === true) {	// If we are creating the current user's ship
 			game.user = new Ship(player, game.colors);
 			game.user.token = player.token;
-			game.user.render(game.canvas);	// We display the created user's ship
+			game.user.render(game.canvas, Ship);	// We display the created user's ship
 		}else {
 			game.players[player.id] = new Ship(player, game.colors);
-			game.players[player.id].render(game.canvas);	// We display the created user's ship
+			game.players[player.id].render(game.canvas, Ship);	// We display the created user's ship
 			game.log(player.username + ' a rejoint le jeu');
 			$('#players_list').append('<div class="player room_player" data-username="' + player.username + '">' + player.username + '</div>');
 		}
@@ -332,7 +351,6 @@ define(['Ship', 'Asteroid', 'Keyboard'], function(Ship, Asteroid, Keyboard) {
 				seconds = time / 1000 > 1 ? Math.floor(time / 1000) : 0,
 				minutes = Math.floor(seconds / 60);
 			seconds -= minutes * 60;
-			ctx.font = '12px Calibri';
 			ctx.fillStyle = '#FEFEFE';
 			ctx.fillText('Temps restant  ' + (minutes < 10 ? ('0' + minutes) : minutes) + ' : ' + (seconds < 10 ? ('0' + seconds) : seconds), 10, 20);
 			ctx.fillText('Round #' + (game.level + 1), 730, 20);
