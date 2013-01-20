@@ -36,7 +36,7 @@ exports.initWaves = function (room) {
 
 	while (totalSize < waves[room.level].total) {
 		if (colorIndex > 2) {
-		    colorIndex = 0;
+			colorIndex = 0;
 		}
 		var size = Math.ceil(Math.random() * waves[room.level].max),
 			x = (Math.random() <= 0.5) ? (-1 * (50 + Math.random() * 120)) : (850 + Math.random() * 920),

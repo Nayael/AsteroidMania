@@ -11,10 +11,12 @@ define(['Asteroid', 'Keyboard', 'move', 'collision'], function(Asteroid, Keyboar
 		this.y = data.y || 0;
 		this.angle = data.angle || 0;
 		this.speed = 2;
+		this.score = 0;
 		this.color = data.color || "#FF0000";
 		this.width = 20;
 		this.height = 20;
 		this.size = 20;
+		this.dead = false;
 		
 		// We set the different interactions between the ships and the asteroids, in function of the colors
 		this.vulnerability = {
@@ -23,7 +25,7 @@ define(['Asteroid', 'Keyboard', 'move', 'collision'], function(Asteroid, Keyboar
 			'#FFFF00': (this.color === colors[0] ? 2 : (this.color === colors[1] ? 1 : 0))
 		}
 
-		addMoveCapabilities(this);	// We add the movement methods
+		addMoveCapabilities(this, Ship);	// We add the movement methods
 		addCollisionCapabilities(this);
 
 		if (data.isUser) {
@@ -64,13 +66,13 @@ define(['Asteroid', 'Keyboard', 'move', 'collision'], function(Asteroid, Keyboar
 	 */
 	Ship.prototype.handleCollision = function(target) {
 		if (this.hitTest(target)) {
-			if (target instanceof Asteroid && this.vulnerability[target.color] != 0) {
-				this.angle += 180;
+			if (target instanceof Asteroid && this.vulnerability[target.color] != 0 && !this.dead) {
+				return {die: true};
 			}else if (target instanceof Ship) {
 				return 'Ne vous rentrez pas dedans !';
 			}
-			return null;
 		}
+		return null;
 	};
 
 	/**
@@ -82,6 +84,26 @@ define(['Asteroid', 'Keyboard', 'move', 'collision'], function(Asteroid, Keyboar
 		this.y = data.players[this.id].y;
 		this.speed = data.players[this.id].speed;
 		this.angle = data.players[this.id].angle;
+	};
+
+	/**
+	 * Makes the ship die (displays the animation)
+	 */
+	Ship.prototype.die = function(canvas) {
+		this.dead = true;
+		this.remove(canvas);
+	};
+
+	/**
+	 * Makes the ship respawn
+	 */
+	Ship.prototype.respawn = function(data) {
+		this.x = data.x;
+		this.y = data.y;
+		this.speed = data.speed;
+		this.angle = data.angle;
+		this.score = data.score;
+		this.dead = false;
 	};
 
 	return Ship;

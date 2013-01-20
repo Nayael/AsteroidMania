@@ -112,6 +112,28 @@ define(['socket_io', 'game_client'], function(io, game) {
 			}
 		});
 
+		// When a player dies
+		socket.on('player_died', function(playerId) {
+			if (!game.inLobby) {
+				if (game.user.id == playerId) {
+					game.user.die(game.canvas);
+				}else if (game.players[playerId]) {
+					game.players[playerId].die(game.canvas);
+				}
+			}
+		});
+
+		// When a player respawns
+		socket.on('player_respawn', function(player) {
+			if (!game.inLobby) {
+				if (game.user.id == player.id) {
+					game.user.respawn(player);
+				}else if (game.players[player.id]) {
+					game.players[player.id].respawn(player);
+				}
+			}
+		});
+
 
 	////////////////////
 	// GAME EVENTS

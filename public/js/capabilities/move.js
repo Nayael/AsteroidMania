@@ -1,49 +1,60 @@
 define(['render'], function(addRenderCapabilities) {
-	function addMoveCapabilities (obj) {
-		addRenderCapabilities(obj);	// We make the object renderable
+	function addMoveCapabilities (ship, ShipConstructor) {
+		addRenderCapabilities(ship);	// We make the ship renderable
 
 		/**
 		 * Calculates the element's new position from its speed and angle
 		 * @param canvas	The canvas which the element is drawn in
 		 */
-		obj.move = function(canvas) {
-			obj.remove(canvas);
-			obj.x += obj.speed * Math.cos(obj.angle * Math.PI / 180);
-			obj.y -= obj.speed * Math.sin(obj.angle * Math.PI / 180);
+		ship.move = function(canvas) {
+			var ctx = canvas.getContext('2d');
+			ship.remove(canvas);
+			ship.x += ship.speed * Math.cos(ship.angle * Math.PI / 180);
+			ship.y -= ship.speed * Math.sin(ship.angle * Math.PI / 180);
 
 			// We prevent the element from going out of the canvas
-			if (obj.x < -obj.width) {
-				obj.x = canvas.width + obj.width;
+			if (ship.x < -ship.width) {
+				ship.x = canvas.width + ship.width;
 			}
-			if (obj.x > canvas.width + obj.width) {
-				obj.x = -obj.width;
+			if (ship.x > canvas.width + ship.width) {
+				ship.x = -ship.width;
 			}
-			if (obj.y < -obj.height) {
-				obj.y = canvas.height + obj.height;
+			if (ship.y < -ship.height) {
+				ship.y = canvas.height + ship.height;
 			}
-			if (obj.y > canvas.height + obj.height) {	
-				obj.y = -obj.height;
+			if (ship.y > canvas.height + ship.height) {	
+				ship.y = -ship.height;
 			}
 
 			// The element automatically slows down
-			if (obj.speed > 2) {	    
-				obj.speed -= 0.1;
+			if (ship.speed > 2) {	    
+				ship.speed -= 0.1;
 			}
 
-			obj.render(canvas);
+			ship.render(canvas, ShipConstructor);
 		};
 
-		obj.moveLeft = function() {
-			obj.angle += 3;
+		ship.moveLeft = function() {
+			ship.angle += 3;
+			if (ship.angle >= 180) {
+				ship.angle -= 360;
+			}else if (ship.angle <= -180) {
+				ship.angle += 360;
+			}
 		};
 
-		obj.moveRight = function() {
-			obj.angle -= 3;
+		ship.moveRight = function() {
+			ship.angle -= 3;
+			if (ship.angle >= 180) {
+				ship.angle -= 360;
+			}else if (ship.angle <= -180) {
+				ship.angle += 360;
+			}
 		};
 
-		obj.moveForward = function() {
-			if (obj.speed < 5) {
-				obj.speed += 0.2;
+		ship.moveForward = function() {
+			if (ship.speed < 5) {
+				ship.speed += 0.2;
 			}
 		};
 	};

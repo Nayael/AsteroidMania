@@ -31,6 +31,9 @@ Room.prototype.addPlayer = function(player) {
 		player.x = (nbPlayers < 3 ? 200 : 600);
 		player.y = (nbPlayers == 0 || nbPlayers == 3) ? 150 : (nbPlayers == 1 || nbPlayers == 4) ? 300 : 450;
 		player.color = (nbPlayers == 0 || nbPlayers == 3) ? "#FF0000" : (nbPlayers == 1 || nbPlayers == 4) ? "#00FF00" : "#FFFF00";
+		player.speed = 0;
+		player.score = 0;
+		player.dead = false;
 		// We make  sure the colors are balanced
 		if (this.countColor('#FF0000') < this.countColor('#00FF00') || this.countColor('#FF0000') < this.countColor('#FFFF00')) {
 			player.color = '#FF0000';

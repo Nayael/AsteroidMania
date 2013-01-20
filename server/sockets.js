@@ -164,16 +164,31 @@ exports.init = function(io, init, game, lobbyManager) {
 				room.players[player.id].y = player.y;
 				room.players[player.id].angle = player.angle;
 				room.players[player.id].speed = player.speed;
-
-				var gameData = {
-					players: room.players,
-					asteroids: []
-				};
-				for (var i in room.asteroids) {	// We also pass him the asteroids datas, to make them move on his screen
-					gameData.asteroids.push(room.asteroids[i]);
-				};
-				socket.emit('get_game_state', gameData);	// We send him the players' and asteroids' datas
 			}
+		});
+
+		// When the user collides an asteroid and dies
+		socket.on('user_dead', function(player) {
+			var room = GLOBAL.lobby.rooms[player.roomId];
+			room.players[player.id].dead = true;
+			room.players[player.id].score -= 5;
+			room.players[player.id].speed = 2;
+			room.broadcast(io, 'player_died', player.id);	// We tell everyone that he died
+			// We plan the respawn
+			setTimeout(function() {
+				room.players[player.id].dead = false;
+				room.players[player.id].x = 100 + Math.random() * 700;
+				room.players[player.id].y = 100 + Math.random() * 500;
+				room.players[player.id].angle = -180 + Math.random() * 360;
+				room.broadcast(io, 'player_respawn', {
+					id: player.id,
+					x: room.players[player.id].x,
+					y: room.players[player.id].y,
+					score: room.players[player.id].score,
+					angle: room.players[player.id].angle,
+					speed: 2
+				});
+			}, 1000);
 		});
 	});
 };

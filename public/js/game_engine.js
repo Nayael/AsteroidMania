@@ -115,20 +115,27 @@ define(['connector', 'onEachFrame', 'Keyboard'], function(connectSocket, onEachF
 		// We define the main loop
 		onEachFrame(function() {
 			if (game.onEachFrame) {
-				var userData = game.onEachFrame();
-				if (userData != null)  
-					gameEngine.sendToServer(userData);
+				var frameData = game.onEachFrame();
+				if (frameData != null)  
+					gameEngine.sendToServer(frameData);
 			}
 		});
 	};
 
 	/**
 	 * Synchronizes the user with the server
-	 * @param userData	The data to send to the server
+	 * @param frameData	The data to send to the server
 	 */
-	gameEngine.sendToServer = function(userData) {
-		// TODO asynchrone : Si le joueur ne change pas de direction, on n'envoie pas les données : les autres joueurs calculent le déplacement de leur côté
-		gameEngine.socket.emit('send_user_data', userData);
+	gameEngine.sendToServer = function(frameData) {
+		gameEngine.socket.emit('send_user_data', frameData.player);
+		if (frameData.special) {
+			if (frameData.special.die === true) {
+				gameEngine.socket.emit('user_dead', {
+					id: frameData.player.id,
+					roomId: frameData.player.roomId
+				});
+			}
+		}
 	};
 
 	return gameEngine;

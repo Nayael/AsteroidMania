@@ -4,7 +4,7 @@ define(function() {
 		 * Displays the element to its new position
 		 * @param canvas	The canvas which the element is drawn in
 		 */
-		obj.render = function(canvas) {
+		obj.render = function(canvas, Ship) {
 			if (canvas.getContext) {
 				var ctx = canvas.getContext('2d');
 				if (obj.setDrawbox) {		    
@@ -22,6 +22,14 @@ define(function() {
 				ctx.strokeStyle = obj.color;
 				ctx.lineWidth = '2';
 				ctx.stroke();
+
+				if (Ship != undefined && obj instanceof Ship) {
+					var displayName = obj.username + ' (' + obj.score + ')',
+						metrics = ctx.measureText(displayName),
+						textWidth = metrics.width;
+					ctx.fillStyle = obj.color;
+					ctx.fillText(displayName, obj.x - textWidth / 2, obj.y - obj.height - 10);
+				}
 			}
 		};
 

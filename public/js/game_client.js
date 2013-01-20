@@ -40,33 +40,59 @@ define(['Ship', 'Asteroid', 'Keyboard'], function(Ship, Asteroid, Keyboard) {
 		 * @return {Object} The user's new position
 		 */
 		game.onEachFrame = function() {
-			var message = null;
-			game.user.checkControls();			// We detect the pressed keys
-			game.user.move(game.canvas);
+			var message = '', returnData, special = [];
 
+			// We render the player only if he is not dead
+			if (!game.user.dead) {
+				game.user.checkControls();			// We detect the pressed keys
+				game.user.move(game.canvas);
+			}else {	// If he is, we only clear the canvas on each frame
+				game.user.remove(game.canvas);
+			}
+
+			// We render all the players
 			for (var index in game.players) {
-				game.players[index].render(game.canvas);
-				if (game.players[index] != game.user) {
+				if (!game.players[index].dead) {
+					game.players[index].render(game.canvas, Ship);
 					message = game.user.handleCollision(game.players[index]);
-					if (message)
+					if (typeof(message) == 'string')
 						game.log(message);
 				}
 			};
+
+			// We render the asteroids and test for collisions
 			for (var asteroid in game.asteroids) {
 				game.asteroids[asteroid].render(game.canvas);
 				message = game.user.handleCollision(game.asteroids[asteroid]);
-				if (message)
+				if (typeof(message) == 'string')
 					game.log(message);
+				else if (typeof(message) == 'object' && message != null && special.indexOf(message) == -1)
+					special.push(message);
 			};
 
-			return {
-				id : game.user.id,
-				roomId : game.user.roomId,
-				x : game.user.x,
-				y : game.user.y,
-				angle : game.user.angle,
-				speed : game.user.speed
-			};
+			if (!game.user.dead) {
+				returnData = {
+					player: {
+						id : game.user.id,
+						roomId : game.user.roomId,
+						x : game.user.x,
+						y : game.user.y,
+						angle : game.user.angle,
+						speed : game.user.speed
+					}
+				};
+				if (special.length > 0) {	// We send special data if there is
+					returnData.special = {};
+					for (var i = 0; i < special.length; i++) {
+						if (special[i].die === true) {	// If the player died
+							game.user.dead = true;
+							returnData.special.die = true;
+							game.log('Touché !');
+						}
+					};
+				}
+				return returnData;
+			}
 		};
 	};
 
