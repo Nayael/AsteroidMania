@@ -48,11 +48,14 @@ exports.moveAsteroids = moveAsteroids;
 
 /**
  * Launches a game in a room
+ * @param {Object} io 	Socket.IO module
  * @param {Room} room	The room to launch the game in
  */
-exports.launch = function(init, io, room) {
+function launch(io, room) {
 	nextWave(room);	// We create the asteroid wave
-	room.broadcast(io, 'launch_game');
+	if (room.level == 0) {	// If it is the first level, we tell everyone that the game is launched
+		room.broadcast(io, 'launch_game');
+	}
 	room.broadcast(io, 'start_level', room.asteroids);
 
 	// We start the main loop
@@ -60,9 +63,12 @@ exports.launch = function(init, io, room) {
 		mainLoop(io, room);
 	}, 1000 / 60);
 };
+exports.launch = launch;
 
 /**
  * The game's main loop
+ * @param {Object} io 	Socket.IO module
+ * @param {Room} room	The room to launch the game in
  */
 function mainLoop(io, room) {
 	// drawAsteroids(room.asteroids);	// We virtually draw the asteroids to test for collisions
@@ -75,7 +81,32 @@ function mainLoop(io, room) {
 	for (var i in room.asteroids) {	// We also pass him the asteroids datas, to make them move on his screen
 		gameData.asteroids.push(room.asteroids[i]);
 	};
-	room.broadcast(io, 'get_game_state', gameData);	// We send him the players' and asteroids' datas
+	console.log('room.time: ', room.time);
+	room.time -= 1000 / 60;	// We reduce the room wave timer, until it reaches 0, then the wave is over
+	gameData.time = room.time;
+	if (room.time <= 0) {
+		endLevel(io, room);
+	}else {
+		room.broadcast(io, 'get_game_state', gameData);	// We send him the players' and asteroids' datas
+	}
+}
+
+/**
+ * Ends the level at the end of the room's timer
+ * @param {Object} io 	Socket.IO module
+ * @param {Room} room	The room to launch the game in
+ */
+function endLevel(io, room) {
+	clearInterval(room.mainLoop);
+	room.broadcast(io, 'level_over');
+
+	// We go to the next level 5 seconds later
+	setTimeout(function() {
+		room.resetTime();
+		room.resetPlayers();
+		room.level++;
+		launch(io, room);
+	}, 5000);
 }
 
 /**

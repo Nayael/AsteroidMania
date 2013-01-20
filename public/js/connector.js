@@ -134,6 +134,11 @@ define(['socket_io', 'game_client'], function(io, game) {
 			}
 		});
 
+		// When the level is over
+		socket.on('level_over', function(data) {
+			game.endLevel(data);
+		});
+
 
 	////////////////////
 	// GAME EVENTS
@@ -156,14 +161,12 @@ define(['socket_io', 'game_client'], function(io, game) {
 					game.players[player].syncFromServer(data);
 				}
 			};
+			game.time = data.time;
 		});
 
 		// When the server starts the level
 		socket.on('start_level', function(asteroids) {
-			game.asteroids = [];
-			for (var asteroid in asteroids) {
-				game.addAsteroid(asteroids[asteroid]);
-			};
+			game.startLevel(asteroids);
 		});
 
 		return socket;

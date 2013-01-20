@@ -4,7 +4,7 @@ exports.Asteroid = function(data) {
 	this.xDirection = (this.x < 0) ? 1 : -1;
 	this.yDirection = (this.y < 270) ? 1 : -1;
 	this.size = data.size;
-	this.speed = 2 / this.size;
+	this.speed = 2;
 	this.color = data.color;
 	this.inside = false;
 };

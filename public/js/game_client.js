@@ -13,6 +13,14 @@ define(['Ship', 'Asteroid', 'Keyboard'], function(Ship, Asteroid, Keyboard) {
 		game.canvas = document.getElementById('main_canvas');
 	};
 
+	/** 
+	 * Sets the room's remaining game time
+	 */
+	game.resetTime = function() {
+		console.log('reset');
+		game.time = 2000 * 60;
+	}
+
 	/**
 	 * Makes the player enter in the game room
 	 */
@@ -91,9 +99,49 @@ define(['Ship', 'Asteroid', 'Keyboard'], function(Ship, Asteroid, Keyboard) {
 						}
 					};
 				}
+				game.displayTime(game.time);	// We show the remaining time
 				return returnData;
+			}else {
+				game.displayTime(game.time);	// We show the remaining time
 			}
 		};
+	};
+
+	game.startLevel = function(asteroids) {
+		$('#end_screen').hide();	// We hide the end screen in case it is displayed
+		$('#end_screen').empty();
+		game.resetTime();
+		game.asteroids = [];
+		for (var asteroid in asteroids) {
+			game.addAsteroid(asteroids[asteroid]);
+		};
+	}
+
+	game.endLevel = function(data) {
+		game.time = 0;	// We stop the game
+		var scores = [];
+		$('#content').append('<div id="end_screen"></div>');
+		$('#end_screen').append('<h2>Temps écoulé</h2>');
+		
+		// We get the players' scores
+		scores.push([game.user.username, game.user.score]);
+		game.user.score = 0;
+		for (player in game.players) {
+			if (game.players.hasOwnProperty(player)) {
+				scores.push([game.players[player].username, game.players[player].score]);
+				game.players[player].score = 0;
+			}
+		}
+		scores.sort(function(a, b) {return b[1] - a[1];});	// We order them by descending score
+		// We display them
+		for (var i = 0; i < scores.length; i++) {
+			$('#end_screen').append('<div class="player_score">' + scores[i][0] + ' : ' + scores[i][1] + ' pts</div>');
+		};
+		$('#end_screen').append('<h3>Préparez-vous pour la prochaine bataille !</h3>');
+		$('#end_screen').toggle();
+		
+		delete game.lobby;
+		game.asteroids = [];
 	};
 
 	/**
@@ -272,6 +320,21 @@ define(['Ship', 'Asteroid', 'Keyboard'], function(Ship, Asteroid, Keyboard) {
 		});
 		$('#confirm-leave span').css({top:'50%',left:'50%',margin:'-' + ($('#confirm-leave span').height() / 2) + 'px 0 0 -' + ($('#confirm-leave span').width() / 2) + 'px'});
 		$('#confirm-leave').toggle();
+	};
+
+	/**
+	 * Displays the level's remaining time to play
+	 */
+	game.displayTime = function(time) {
+		if (game.canvas.getContext) {
+			var ctx = game.canvas.getContext('2d');
+			var seconds = time / 1000 > 1 ? Math.floor(time / 1000) : 0,
+				minutes = Math.floor(seconds / 60);
+			seconds -= minutes * 60;
+			ctx.font = '12px Calibri';
+			ctx.fillStyle = '#FEFEFE';
+			ctx.fillText('Temps restant  ' + (minutes < 10 ? ('0' + minutes) : minutes) + ' : ' + (seconds < 10 ? ('0' + seconds) : seconds), 10, 20);
+		}
 	};
 
 	return game;

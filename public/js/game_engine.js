@@ -110,11 +110,13 @@ define(['connector', 'onEachFrame', 'Keyboard'], function(connectSocket, onEachF
 				roomId: game.user.roomId
 			});
 			delete game.user;
+			$('#end_screen').hide();	// We hide the end screen in case it is displayed
+			$('#end_screen').empty();
 		};
 
 		// We define the main loop
 		onEachFrame(function() {
-			if (game.onEachFrame) {
+			if (game.onEachFrame && game.time > 0) {
 				var frameData = game.onEachFrame();
 				if (frameData != null)  
 					gameEngine.sendToServer(frameData);

@@ -3,6 +3,13 @@ function Lobby() {
 	this.rooms = {};
 };
 
+/**
+ * Sends a message to every player in the lobby
+ * @param {Object} io		Socket.IO module
+ * @param {string} event	The event to trigger
+ * @param {Object} data		The data to send
+ * @param {Array} excluded	An array containing the players that must not receive the message
+ */
 Lobby.prototype.broadcast = function(io, event, data, excluded) {
 	for (user in this.users) {
 		// We send the message to all users, except the exluded ones
@@ -12,6 +19,9 @@ Lobby.prototype.broadcast = function(io, event, data, excluded) {
 	};
 };
 
+/**
+ * Creates the server's lobby
+ */
 exports.createLobby = function() {
 	GLOBAL.lobby = new Lobby();
 };
@@ -19,9 +29,14 @@ exports.createLobby = function() {
 function Room(firstPlayer) {
 	this.players = {};
 	this.level = 0;
+	this.resetTime();
 	this.addPlayer(firstPlayer);
 };
 
+/**
+ * Adds a player in a room by adding his necessary data
+ * @param {PLayer} player	The player to add
+ */
 Room.prototype.addPlayer = function(player) {
 	if (this.players[player.id] == undefined) {
 		var nbPlayers = Object.size(this.players);
@@ -53,6 +68,9 @@ Room.prototype.addPlayer = function(player) {
 	}
 };
 
+/**
+ * returns the number of players in the room that are ready to start
+ */
 Room.prototype.getPlayersReady = function() {
 	var playersReady = 0;
 	for (player in this.players) {
@@ -62,6 +80,10 @@ Room.prototype.getPlayersReady = function() {
 	return playersReady;
 };
 
+/**
+ * Counts the number of ships by color
+ * @param {string} color	The color to count ship by
+ */
 Room.prototype.countColor = function(color) {
 	var i = 0;
 	for (var player in this.players) {
@@ -71,6 +93,13 @@ Room.prototype.countColor = function(color) {
 	return i;
 };
 
+/**
+ * Sends a message to every player in the room
+ * @param {Object} io		Socket.IO module
+ * @param {string} event	The event to trigger
+ * @param {Object} data		The data to send
+ * @param {Array} excluded	An array containing the players that must not receive the message
+ */
 Room.prototype.broadcast = function(io, event, data, excluded) {
 	for (player in this.players) {
 		// We send the message to all users, except the exluded ones
@@ -80,6 +109,9 @@ Room.prototype.broadcast = function(io, event, data, excluded) {
 	};
 };
 
+/**
+ * Starts the game in the room
+ */
 Room.prototype.startGame = function() {
 	for (player in this.players) {
 		if (this.players.hasOwnProperty(player)) {
@@ -88,6 +120,29 @@ Room.prototype.startGame = function() {
 	}
 };
 
+/** 
+ * Sets the room's remaining game time
+ */
+Room.prototype.resetTime = function() {
+	this.time = 500 * 60;	// Every wave lasts for 2 minutes
+};
+
+/**
+ * Resets the room's players' data (after a level is over)
+ */
+Room.prototype.resetPlayers = function() {
+	for (player in this.players) {
+		if (this.players.hasOwnProperty(player)) {
+			this.players[player].score = 0;
+			this.players[player].speed = 2;
+		}
+	}
+};
+
+/**
+ * Creates a room, and puts the first player in
+ * @param {Player} player	The player who created the room
+ */
 exports.createRoom = function(player) {
 	if (Object.size(GLOBAL.lobby.rooms) >= 14)
 		return false;
@@ -100,6 +155,11 @@ exports.createRoom = function(player) {
 	return room;
 };
 
+/**
+ * Makes a player join in a room
+ * @param {int} roomId		The if of the room to join
+ * @param {Player} player	The player who joined the room
+ */
 exports.joinRoom = function(roomId, player) {
 	if (GLOBAL.lobby.rooms[roomId]) {
 		if (Object.size(GLOBAL.lobby.rooms[roomId].players) >= 6)

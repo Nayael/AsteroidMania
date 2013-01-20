@@ -37,7 +37,7 @@ exports.init = function(io, init, game, lobbyManager) {
 				lobby: getLobbyUsefulData(),
 				message: player.username + ' a rejoint la room #' + room.id + '.'
 			});
-			init.initWaves(room);	// We initialize the room level
+			// init.initWaves(room);	// We initialize the room level
 		});
 
 		// When a player decides to join a room
@@ -77,7 +77,7 @@ exports.init = function(io, init, game, lobbyManager) {
 			// If at least 3 players are ready, we start the game
 			if (room.getPlayersReady() == 1) {
 				room.startGame();
-				game.launch(init, io, room);
+				game.launch(io, room);
 			}
 		});
 
@@ -170,6 +170,9 @@ exports.init = function(io, init, game, lobbyManager) {
 		// When the user collides an asteroid and dies
 		socket.on('user_dead', function(player) {
 			var room = GLOBAL.lobby.rooms[player.roomId];
+			if (!room)
+				return;
+			
 			room.players[player.id].dead = true;
 			room.players[player.id].score -= 5;
 			room.players[player.id].speed = 2;

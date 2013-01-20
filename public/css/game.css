@@ -24,7 +24,7 @@
 }
 
 #main_canvas{
-	background-color: #FFFFFF;
+	background-color: #121212;
 	position: absolute;
 }
 
@@ -47,17 +47,37 @@
 	overflow: hidden;
 }
 
-#lobby{
+#lobby, #end_screen{
 	display: none;
+	position: absolute;
 	width: 782px;
 	height: 522px;
 	padding: 11px;
-	position: absolute;
-	background-color: #CCC;
 	text-align: center;
+	z-index: 100;
 }
 
-#lobby h2{
+#end_screen{
+	color: #FEFEFE;
+	background-color: rgba(255, 255, 255, 0.1);
+}
+
+#end_screen .player_score{
+	font-size: 18px;
+	margin-top: 10px;
+}
+
+#end_screen h3{
+	position: absolute;
+	bottom: 25px;
+	left: 155px;
+}
+
+#lobby{
+	background-color: #CCC;
+}
+
+#lobby h2, #end_screen h2{
 	margin-bottom: 50px;
 }
 
