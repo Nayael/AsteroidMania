@@ -3,7 +3,8 @@ exports.Asteroid = function(data) {
 	this.y = data.y;
 	this.xDirection = (this.x < 0) ? 1 : -1;
 	this.yDirection = (this.y < 270) ? 1 : -1;
-	this.size = data.size;
+	this.size = 15 * data.weight;
+	this.weight = data.weight;
 	this.speed = 2;
 	this.color = data.color;
 	this.inside = false;
@@ -15,13 +16,13 @@ exports.Asteroid = function(data) {
 exports.Asteroid.prototype.setDrawbox = function() {
 	// We define the center of the element's bounding box
 	this.center = {
-		x: this.x + 15 * this.size / 2,
-		y: this.y + 15 * this.size / 2
+		x: this.x + this.size / 2,
+		y: this.y + this.size / 2
 	};
 	this.drawbox = [
 		[this.x, this.y],
-		[this.x + 15*this.size, this.y],
-		[this.x + 15*this.size, this.y + 15*this.size],
-		[this.x, this.y + 15*this.size]
+		[this.x + this.size, this.y],
+		[this.x + this.size, this.y + this.size],
+		[this.x, this.y + this.size]
 	];
 };

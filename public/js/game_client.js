@@ -17,7 +17,6 @@ define(['Ship', 'Asteroid', 'Keyboard'], function(Ship, Asteroid, Keyboard) {
 	 * Sets the room's remaining game time
 	 */
 	game.resetTime = function() {
-		console.log('reset');
 		game.time = 2000 * 60;
 	}
 
@@ -99,21 +98,22 @@ define(['Ship', 'Asteroid', 'Keyboard'], function(Ship, Asteroid, Keyboard) {
 						}
 					};
 				}
-				game.displayTime(game.time);	// We show the remaining time
+				game.displayHUD();	// We show the remaining time
 				return returnData;
 			}else {
-				game.displayTime(game.time);	// We show the remaining time
+				game.displayHUD();	// We show the remaining time
 			}
 		};
 	};
 
-	game.startLevel = function(asteroids) {
+	game.startLevel = function(data) {
 		$('#end_screen').hide();	// We hide the end screen in case it is displayed
 		$('#end_screen').empty();
 		game.resetTime();
+		game.level = data.level;
 		game.asteroids = [];
-		for (var asteroid in asteroids) {
-			game.addAsteroid(asteroids[asteroid]);
+		for (var asteroid in data.asteroids) {
+			game.addAsteroid(data.asteroids[asteroid]);
 		};
 	}
 
@@ -323,17 +323,19 @@ define(['Ship', 'Asteroid', 'Keyboard'], function(Ship, Asteroid, Keyboard) {
 	};
 
 	/**
-	 * Displays the level's remaining time to play
+	 * Displays information to the player
 	 */
-	game.displayTime = function(time) {
+	game.displayHUD = function() {
 		if (game.canvas.getContext) {
-			var ctx = game.canvas.getContext('2d');
-			var seconds = time / 1000 > 1 ? Math.floor(time / 1000) : 0,
+			var time = game.time,
+				ctx = game.canvas.getContext('2d'),
+				seconds = time / 1000 > 1 ? Math.floor(time / 1000) : 0,
 				minutes = Math.floor(seconds / 60);
 			seconds -= minutes * 60;
 			ctx.font = '12px Calibri';
 			ctx.fillStyle = '#FEFEFE';
 			ctx.fillText('Temps restant  ' + (minutes < 10 ? ('0' + minutes) : minutes) + ' : ' + (seconds < 10 ? ('0' + seconds) : seconds), 10, 20);
+			ctx.fillText('Round #' + (game.level + 1), 730, 20);
 		}
 	};
 

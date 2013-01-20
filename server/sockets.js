@@ -37,7 +37,6 @@ exports.init = function(io, init, game, lobbyManager) {
 				lobby: getLobbyUsefulData(),
 				message: player.username + ' a rejoint la room #' + room.id + '.'
 			});
-			// init.initWaves(room);	// We initialize the room level
 		});
 
 		// When a player decides to join a room
@@ -58,7 +57,12 @@ exports.init = function(io, init, game, lobbyManager) {
 				player.ready = true;
 				GLOBAL.players[player.id].ready = true;
 				socket.emit('launch_game');
-				socket.emit('start_level', room.asteroids);
+				if (room.mainLoop) {	// If the level is running, we tell the new user to start directly, but if not, he will have to wait until the next level starts
+					socket.emit('start_level', {
+						asteroids: room.asteroids,
+						level: room.level
+					});
+				}
 			}
 			GLOBAL.lobby.broadcast(io, 'refresh_lobby', {
 				lobby: getLobbyUsefulData(),
@@ -98,12 +102,6 @@ exports.init = function(io, init, game, lobbyManager) {
 				if (GLOBAL.players.hasOwnProperty(playerId)) {
 					player = GLOBAL.players[playerId];
 
-			/*******************************************
-			/*******************************************
-					// TODO putain de timeout pour supprimer le joueur au bout d'un moment
-			/*******************************************
-			/*******************************************/
-
 					// socket.broadcast.emit(player.username + ' a quitté le jeu.');
 					// We get the player that left
 					if (player.socket === socket.id) {
@@ -116,35 +114,25 @@ exports.init = function(io, init, game, lobbyManager) {
 							});
 						}
 
-						// player.disconnecting = true;
-						// GLOBAL.players[player.id].osef = setTimeout(function() {
-						// 	player = GLOBAL.players[player.id];
-						// 	console.log('\n\ndisconnecting '+player.id);
-						// 	console.log('\n\ndisconnecting ?'+player.disconnecting);
-						// 	if (player == undefined || !player.disconnecting)	// if the player is not disconnecting anymore
-						// 		return;
-						// 	if (room != undefined) {
-						// 		delete room.players[playerId];		// We remove him from his room
-						// 		delete player.roomId;
-						// 	}
-							
-						// 	player.ready = false;
-						// 	GLOBAL.lobby.users[playerId] = player;
-						// 	socket.broadcast.emit('message', player.username + ' a quitté le jeu.');
-						// 	delete GLOBAL.players[playerId];
-						// 	delete GLOBAL.lobby.users[playerId];
+						// We completely delete the player after 10 seconds (to allow him to reconnect with the same account if he wants to for a little while)
+						setTimeout(function() {
+							player = GLOBAL.players[player.id];
 
-						// 	// If there are no players left in the room
-						// 	if (room != undefined && Object.size(room.players) == 0) {
-						// 		clearInterval(room.mainLoop);
-						// 		delete GLOBAL.lobby.rooms[room.id];	// We delete the room
-						// 		socket.broadcast.emit('refresh_lobby', {
-						// 			lobby: GLOBAL.lobby
-						// 		});
-						// 	}else if (room != undefined) {	// Otherwise, we just tell the other players that he left
-						// 		room.broadcast(io, 'player_quit', {id: player.id, username: player.username});
-						// 	}
-						// }, 5000);
+							// If the player is in the lobby or in a room, we don't delete him
+							if (player == undefined || GLOBAL.lobby.users[player.id] != undefined) {
+								return;
+							}
+							for (var room in GLOBAL.lobby.rooms) {
+								if (GLOBAL.lobby.rooms.hasOwnProperty(room)) {
+									room = GLOBAL.lobby.rooms[room];
+									for (var roomPlayer in room.players) {
+										if (room.players[roomPlayer] != undefined)
+											return;
+									}
+								}
+							}
+							delete GLOBAL.players[player.id];	// We remove the player from the server's player, because he disconnected
+						}, 5000);
 
 					}
 				}
@@ -214,7 +202,6 @@ function playerLeaveRoom(player, io, toLobby) {
 	delete player.roomId;
 	player.ready = false;
 	player.inGame = false;
-	// TODO mettre le player en lobby que s'il retourne bien en lobby et pas s'il change de page
 	if (toLobby) {
 		player.inLobby = true;
 		GLOBAL.lobby.users[player.id] = GLOBAL.players[player.id];

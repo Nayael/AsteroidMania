@@ -33,13 +33,13 @@ function moveAsteroids(roomId) {
 		asteroids[key].y += asteroid.yDirection * asteroid.speed;
 
 		// If the asteroid is inside the canvas and touches one of the edges
-		if (asteroid.inside && (asteroids[key].x <= 0 || asteroids[key].x >= (800 - asteroids[key].size * 10))) {
+		if (asteroid.inside && (asteroids[key].x <= 0 || asteroids[key].x >= (800 - asteroids[key].size))) {
 			asteroids[key].xDirection = -1 * asteroids[key].xDirection;
-		}else if (asteroids[key].x > 0 && asteroids[key].x < (800 - asteroids[key].size * 10)) {	// Otherwise, we check if the asteroid is inside the visible area of the canvas
+		}else if (asteroids[key].x > 0 && asteroids[key].x < (800 - asteroids[key].size)) {	// Otherwise, we check if the asteroid is inside the visible area of the canvas
 			asteroids[key].inside = true;
 		}
 
-		if (asteroids[key].y <= 0 || asteroids[key].y >= (540 - asteroids[key].size * 10)) {   
+		if (asteroids[key].y <= 0 || asteroids[key].y >= (540 - asteroids[key].size)) {   
 			asteroids[key].yDirection = -1 * asteroids[key].yDirection;
 		}
 	};
@@ -56,7 +56,10 @@ function launch(io, room) {
 	if (room.level == 0) {	// If it is the first level, we tell everyone that the game is launched
 		room.broadcast(io, 'launch_game');
 	}
-	room.broadcast(io, 'start_level', room.asteroids);
+	room.broadcast(io, 'start_level', {
+		asteroids: room.asteroids,
+		level: room.level
+	});
 
 	// We start the main loop
 	room.mainLoop = setInterval(function() {
@@ -81,7 +84,6 @@ function mainLoop(io, room) {
 	for (var i in room.asteroids) {	// We also pass him the asteroids datas, to make them move on his screen
 		gameData.asteroids.push(room.asteroids[i]);
 	};
-	console.log('room.time: ', room.time);
 	room.time -= 1000 / 60;	// We reduce the room wave timer, until it reaches 0, then the wave is over
 	gameData.time = room.time;
 	if (room.time <= 0) {
@@ -100,13 +102,13 @@ function endLevel(io, room) {
 	clearInterval(room.mainLoop);
 	room.broadcast(io, 'level_over');
 
-	// We go to the next level 5 seconds later
+	// We go to the next level 3 seconds later
 	setTimeout(function() {
 		room.resetTime();
 		room.resetPlayers();
 		room.level++;
 		launch(io, room);
-	}, 5000);
+	}, 3000);
 }
 
 /**
@@ -146,14 +148,14 @@ function nextWave(room) {
 		if (colorIndex > 2)
 			colorIndex = 0;
 		
-		var size = Math.ceil(Math.random() * curWave.max),
+		var weight = Math.ceil(Math.random() * curWave.max),
 			x = (Math.random() <= 0.5) ? (-1 * (50 + Math.random() * 120)) : (850 + Math.random() * 920),
 			y = Math.random() * 500;
-		totalSize += size;
+		totalSize += weight;
 		room.asteroids.push(new Asteroid({
 			x: x,
 			y: y,
-			size: size,
+			weight: weight,
 			color: colors[colorIndex],
 		}));
 		colorIndex++;

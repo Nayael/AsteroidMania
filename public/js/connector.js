@@ -165,8 +165,8 @@ define(['socket_io', 'game_client'], function(io, game) {
 		});
 
 		// When the server starts the level
-		socket.on('start_level', function(asteroids) {
-			game.startLevel(asteroids);
+		socket.on('start_level', function(data) {
+			game.startLevel(data);
 		});
 
 		return socket;

@@ -7,6 +7,7 @@ define(['render'], function(addRenderCapabilities) {
 		this.x = data.x || 0;
 		this.y = data.y || 0;
 		this.size = data.size || 2;
+		this.weight = data.weight;
 		this.color = data.color || "#FF0000";
 		this.speed = data.speed;
 		this.xDirection = data.xDirection || 1;
@@ -22,14 +23,14 @@ define(['render'], function(addRenderCapabilities) {
 	Asteroid.prototype.setDrawbox = function() {
 		// We define the center of the element's bounding box
 		this.center = {
-			x: this.x + 15 * this.size / 2,
-			y: this.y + 15 * this.size / 2
+			x: this.x + this.size / 2,
+			y: this.y + this.size / 2
 		};
 		this.drawbox = [
 			[this.x, this.y],
-			[this.x + 15*this.size, this.y],
-			[this.x + 15*this.size, this.y + 15*this.size],
-			[this.x, this.y + 15*this.size]
+			[this.x + this.size, this.y],
+			[this.x + this.size, this.y + this.size],
+			[this.x, this.y + this.size]
 		];
 	};
 
