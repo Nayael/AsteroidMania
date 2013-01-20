@@ -63,13 +63,16 @@ define(['Ship', 'Asteroid', 'Keyboard'], function(Ship, Asteroid, Keyboard) {
 					game.user.bullets.splice(i, 1);	// We delete it
 					continue;
 				}
-				// We send will the bullets data to the server
-				if (i == 0)
-					returnData.bullets = [];
-				// returnData.bullets.push({
-				// 	x: game.user.bullets[i].x,
-				// 	y: game.user.bullets[i].x,
-				// });
+				// If the user can't shoot, it means there is a new bullet
+				// We will send the new bullet data to the server
+				if (i == game.user.bullets.length - 1 && !game.user.canShoot) {
+					special.push({
+						bullet: {
+							x: game.user.bullets[i].x,
+							y: game.user.bullets[i].x,
+						}
+					});
+				}
 			};
 
 			// We render all the players
@@ -107,12 +110,15 @@ define(['Ship', 'Asteroid', 'Keyboard'], function(Ship, Asteroid, Keyboard) {
 					angle : game.user.angle,
 					speed : game.user.speed
 				};
-				if (special.length > 0) {	// We send special data if there is
+				if (special.length > 0) {	// We send special data if there is (death, bullets)
 					returnData.special = {};
 					for (var i = 0; i < special.length; i++) {
 						if (special[i].die === true) {	// If the player died
 							game.user.dead = true;
-							returnData.special.die = true;
+							returnData.special.die = true;	// We will say it to the server, in the return data to the game engine
+						}
+						if (special[i].bullet) {	// If the player shot a bullet
+							returnData.special.bullet = special[i].bullet;
 						}
 					};
 				}

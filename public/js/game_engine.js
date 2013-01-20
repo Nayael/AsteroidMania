@@ -6,7 +6,7 @@ define(['connector', 'onEachFrame', 'Keyboard'], function(connectSocket, onEachF
 	 */
 	gameEngine.init = function(game, gameContainer) {
 		gameEngine.socket = connectSocket();
-		game.init(gameContainer, socket);
+		game.init(gameContainer, gameEngine.socket);
 
 		/**
 		 * Sets the player ready
