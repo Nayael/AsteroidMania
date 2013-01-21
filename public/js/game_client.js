@@ -389,7 +389,9 @@ define(['Ship', 'Asteroid', 'Bullet', 'Keyboard'], function(Ship, Asteroid, Bull
 	 */
 	game.removeBullet = function(data) {
 		var player = game.players[data.player];
-		player.bullets.splice(data.bullet, 1);
+		if (player) {
+			player.bullets.splice(data.bullet, 1);
+		}
 	};
 
 	/**
