@@ -61,6 +61,7 @@ define(['Ship', 'Asteroid', 'Bullet', 'Keyboard'], function(Ship, Asteroid, Bull
 				// We make the bullets move
 				if (game.user.bullets[i].move(game.canvas) === false) {	// If the bullet passes the canvas view
 					game.user.bullets.splice(i, 1);	// We delete it
+					i--;
 					continue;
 				}
 				// If the user can't shoot, it means there is a new bullet
