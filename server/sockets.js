@@ -223,8 +223,10 @@ exports.init = function(io, init, game, lobbyManager) {
  * @param {bool} toLobby	Is the player back to the lobby or not (definitely gone) ?
  */
 function playerLeaveRoom(player, io, toLobby) {
-	var room = GLOBAL.lobby.rooms[player.roomId],
-		roomPlayer = room.players[player.id];
+	var room = GLOBAL.lobby.rooms[player.roomId];
+	if (!room)
+		return;
+	var roomPlayer = room.players[player.id];
 	GLOBAL.lobby.broadcast(io, 'player_left_room', {
 		id: player.id,
 		username: player.username,
@@ -236,7 +238,9 @@ function playerLeaveRoom(player, io, toLobby) {
 	player.inGame = false;
 	if (toLobby) {
 		player.inLobby = true;
-		GLOBAL.players[player.id].score = roomPlayer.score;
+		if (roomPlayer && roomPlayer.score) {
+			GLOBAL.players[player.id].score = roomPlayer.score;
+		}
 		GLOBAL.lobby.users[player.id] = GLOBAL.players[player.id];
 		if (room && Object.size(room.players) > 0) { // We send the player back to the lobby
 			io.sockets.socket(GLOBAL.players[player.id].socket).emit('refresh_lobby', {

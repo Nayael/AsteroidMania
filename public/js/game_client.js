@@ -33,7 +33,7 @@ define(['Ship', 'Asteroid', 'Bullet', 'Keyboard'], function(Ship, Asteroid, Bull
 		$('#players_list').append('<div class="player room_player" data-username="' + game.user.username + '">' + game.user.username + '</div>');
 		game.log('Bienvenue dans la room #' + game.user.roomId);
 		Keyboard.on('keydown', 'R', game.readyPlayer);
-		Keyboard.on('keydown', 'ESCAPE', game.confirmLeave);
+		Keyboard.on('keydown', 'L', game.confirmLeave);
 		game.toggleReadyText();
 	};
 
@@ -331,7 +331,7 @@ define(['Ship', 'Asteroid', 'Bullet', 'Keyboard'], function(Ship, Asteroid, Bull
 	 */
 	game.confirmLeave = function() {
 		// First, we remove all the keyboard listeners
-		Keyboard.remove('keydown', 'ESCAPE', game.confirmLeave);
+		Keyboard.remove('keydown', 'L', game.confirmLeave);
 		Keyboard.remove('keydown', 'R', game.readyPlayer);
 		Keyboard.remove('keydown', 'R', game.unreadyPlayer);
 
@@ -350,7 +350,7 @@ define(['Ship', 'Asteroid', 'Bullet', 'Keyboard'], function(Ship, Asteroid, Bull
 		});
 		$('#leave-no').click(function() {
 			$('#confirm-leave').remove();
-			Keyboard.on('keydown', 'ESCAPE', game.confirmLeave);
+			Keyboard.on('keydown', 'L', game.confirmLeave);
 			if (!game.onEachFrame) {	// If the game has not started yet
 				Keyboard.on('keydown', 'R', game.user.ready ? game.unreadyPlayer : game.readyPlayer);
 			}
