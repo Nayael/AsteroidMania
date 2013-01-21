@@ -12,7 +12,7 @@ define(['Asteroid', 'Bullet', 'Keyboard', 'ship', 'collision'], function(Asteroi
 		this.y = data.y || 0;
 		this.angle = data.angle || 0;
 		this.speed = 2;
-		this.score = 0;
+		this.score = data.score || 0;
 		this.color = data.color || "#FF0000";
 		this.width = 20;
 		this.height = 20;
