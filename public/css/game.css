@@ -23,6 +23,10 @@
 	background-color: rgba(255, 255, 255, 1);
 }
 
+.prompt h3{
+	color: #111111;
+}
+
 #main_canvas{
 	background-color: #121212;
 	position: absolute;
@@ -35,16 +39,28 @@
 #players_list{
 	width: 350px;
 	height: 180px;
-	margin-bottom: 35px;
+	margin-bottom: 17px;
 	border: 1px solid black;
+	border-radius: 2px;
 	overflow: scroll;
+	padding: 5px;
 }
 
 #logger{
 	width: 350px;
 	height: 280px;
 	border: 1px solid black;
+	border-radius: 2px;
 	overflow: hidden;
+	background-color: rgba(135, 135, 168, 0.5);
+}
+
+#logger .message{
+	padding: 5px;
+}
+
+#logger .alt_message{
+	background-color: #111122;
 }
 
 #lobby, #end_screen{
@@ -74,7 +90,7 @@
 }
 
 #lobby{
-	background-color: #CCC;
+	background-color: #121212;
 }
 
 #lobby h2, #end_screen h2{

@@ -11,6 +11,7 @@ define(['Ship', 'Asteroid', 'Bullet', 'Keyboard'], function(Ship, Asteroid, Bull
 		game.colors = ['#FF0000', '#00FF00', '#FFFF00'];
 		gameContainer.append('<canvas id="main_canvas" width="800" height="540"></canvas>');
 		game.canvas = document.getElementById('main_canvas');
+		game.altLog = true;	// Used to alternate messages' colors in the logger
 	};
 
 	/** 
@@ -255,7 +256,8 @@ define(['Ship', 'Asteroid', 'Bullet', 'Keyboard'], function(Ship, Asteroid, Bull
 	 * @param {string} message	The message to display
 	 */
 	game.log = function(message) {
-		$('#logger').append('<div class="message">' + message + '</div>');
+		game.altLog = !game.altLog;
+		$('#logger').append('<div class="message ' + (game.altLog ? 'alt_message' : '') + '">' + message + '</div>');
 		$("#logger").scrollTop($("#logger")[0].scrollHeight)
 	};
 

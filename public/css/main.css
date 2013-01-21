@@ -8,12 +8,13 @@ body {
 	margin: 0;
 	padding: 0;
 	height: 100%;
-	background-color: #EEEEEE;
+	background-color: #010101;
+	color: #EFEFEF;
 }
 
 a {
 	text-decoration: none;
-	color: #000000;
+	color: #FEFEFE;
 }
 
 #content {
@@ -23,7 +24,7 @@ a {
 	margin: auto;
 	padding-left: 15px;
 	padding-right: 15px;
-	background-color: #DDDDDD;
+	background-color: #222233;
 	font-family: 'Segoe UI', 'Trebuchet MS', Arial, sans-serif;
 }
 
@@ -31,9 +32,17 @@ a {
 	text-align: justify;
 }
 
+#keys_explanation{
+	margin: 35px -15px 35px -15px;
+	padding: 5px 15px 5px 15px;
+	background-color: #111122;
+	font-style: italic;
+}
+
 header {
 	position: absolute;
-	right: 20px;
+	right: 30px;
+	top: -10px;
 }
 
 header h1 {
@@ -42,18 +51,31 @@ header h1 {
 	font-style: italic;
 }
 
-nav {
-	margin: 0px -15px 20px -15px;
-	padding-left: 10px;
-	background-color: #CCCCCC;
+nav{
+	background-color: #111122;
+	border-width: 0px 2px 2px 2px;
+	border-color: #CCCCCC;
+	border-style: solid;
+	border-radius: 20px;
+	margin-bottom: 10px;
 }
 
-nav a {
+nav a{
 	display: inline-block;
 	padding: 10px 20px 15px 20px;
+	color: #FFFFFF;
+	font-weight: bold;
 }
 
-nav a.current_menu {
-	background-color: #AAAAAA;
-	font-weight: bold;
+nav a.current_menu{
+	background-color: rgba(200, 200, 200, 0.4);
+}
+
+nav a:first-child{
+	border-top-left-radius: 20px;
+	-webkit-border-top-left-radius: 20px;
+	-moz-border-radius-topleft: 20px;
+	border-bottom-left-radius: 20px;
+	-webkit-border-bottom-left-radius: 20px;
+	-moz-border-radius-bottomleft: 20px;
 }

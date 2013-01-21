@@ -51,7 +51,7 @@ exports.init = function(io, init, game, lobbyManager) {
 				socket.emit('could_not_join_room');
 				return;
 			}
-			var roomIsReady = (room.getPlayersReady() >= 2 || (room.getPlayersReady() == Object.size(room.players) && room.asteroids));
+			var roomIsReady = (room.getPlayersReady() >= 2 || (room.getPlayersReady() == Object.size(room.players) && room.asteroids && room.mainLoop));
 			room = lobbyManager.joinRoom(data.roomId, data.player);
 			if (!room) {
 				socket.emit('could_not_join_room');
