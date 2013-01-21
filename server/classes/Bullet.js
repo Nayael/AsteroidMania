@@ -42,7 +42,7 @@ exports.Bullet.prototype.collideAsteroids = function(asteroids, roomId) {
 		top2 = y2 - size2;
 		bottom2 = y2 + size2;
 		// If the bullet collides an asteroid
-		if (!(this.x > right2 || left2 > this.x || this.y > bottom2 || top2 > this.y) && this.vulnerability[asteroid.color] == 2) {
+		if (!(this.x > right2 || left2 > this.x || this.y > bottom2 || top2 > this.y) && this.vulnerability[asteroid.color] != 1) {
 			asteroid.explode(roomId);	// The asteroid explodes
 			asteroids.splice(i, 1);		// We delete it
 			return i;
