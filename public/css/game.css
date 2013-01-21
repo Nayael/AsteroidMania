@@ -124,6 +124,7 @@
 	box-shadow: 1px 0px 3px 1px #666677;
 	-moz-box-shadow: 1px 0px 3px 1px #666677;
 	-webkit-box-shadow: 1px 0px 3px 1px #666677;
+	overflow: hidden;
 }
 
 #lobby .room:hover{
@@ -137,13 +138,19 @@
 
 #lobby .room.full{
 	cursor: default;
-	background-color: #666;
+	background-color: #111122;
 }
 
 #lobby .room .room_players{
 	font-size: 12px;
 	position: absolute;
+	left: 50%;
 	display: none;
+}
+
+#lobby .room .room_players p{
+	position: relative;
+	left: -50%;
 }
 
 #lobby .room .room_nb_players{

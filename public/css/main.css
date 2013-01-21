@@ -26,6 +26,9 @@ a {
 	padding-right: 15px;
 	background-color: #222233;
 	font-family: 'Segoe UI', 'Trebuchet MS', Arial, sans-serif;
+	box-shadow: 0px 0px 3px 1px #DEDEDE;
+	-moz-box-shadow: 0px 0px 3px 1px #DEDEDE;
+	-webkit-box-shadow: 0px 0px 3px 1px #DEDEDE;
 }
 
 #content .text {

@@ -79,6 +79,7 @@ define(['connector', 'onEachFrame', 'Keyboard'], function(connectSocket, onEachF
 			$('.room').hover(function() {
 				var room_players = $(this).find('.room_players');
 				room_players.toggle();
+				$('#lobby .room .room_nb_players').css('left', '27px');
 			}, function() {
 				$(this).find('.room_players').toggle();
 			});
