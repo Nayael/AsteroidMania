@@ -8,21 +8,4 @@ exports.Player = function(username) {
 	this.ready = false;
 	this.inLobby = true;
 };
-
-/**
- * Sets the points that will be used to draw the ship
- */
-exports.Player.prototype.setDrawbox = function() {
-	// We define the center of the element's bounding box
-	this.center = {
-		x: this.x - 10*Math.cos((this.angle * Math.PI / 180) - 0.3),
-		y: this.y + 10*Math.sin((this.angle * Math.PI / 180) - 0.3)
-	};
-	// this.drawbox = [
-	// 	[this.x, this.y],
-	// 	[this.x - 20*Math.cos((this.angle * Math.PI / 180) - 0.3), this.y + 20*Math.sin((this.angle * Math.PI / 180) - 0.3)],
-	// 	[this.x - 20*Math.cos((this.angle * Math.PI / 180) + 0.3), this.y + 20*Math.sin((this.angle * Math.PI / 180) + 0.3)]
-	// ];
-};
-
 exports.Player.pointsWin = 10;	// The number of points gained when the player destroyes an asteroid

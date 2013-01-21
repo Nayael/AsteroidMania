@@ -12,7 +12,8 @@ define(['connector', 'onEachFrame', 'Keyboard'], function(connectSocket, onEachF
 		 * Sets the player ready
 		 */
 		game.readyPlayer = function() {
-			game.log('Appuyez sur R si vous n\'êtes pas prêt(e) à commencer.');
+			game.toggleReadyText();
+
 			game.user.ready = true;
 			gameEngine.socket.emit('ready_player', {
 				playerId: game.user.id,
@@ -25,7 +26,8 @@ define(['connector', 'onEachFrame', 'Keyboard'], function(connectSocket, onEachF
 		 * Sets the player not ready
 		 */
 		game.unreadyPlayer = function() {
-			game.log('Appuyez sur R si vous êtes prêt(e) à commencer.');
+			game.toggleReadyText();
+
 			game.user.ready = false;
 			gameEngine.socket.emit('unready_player', {
 				playerId: game.user.id,

@@ -58,7 +58,7 @@ exports.init = function(io, init, game, lobbyManager) {
 				players: room.players
 			});
 			room.broadcast(io, 'new_player', player);	// We tell everyone else he is connected
-			if (room.getPlayersReady() >= 1) {	// If there are at least 3 players ready in the room, the game has already started
+			if (room.getPlayersReady() >= 2) {	// If there are at least 3 players ready in the room, the game has already started
 				player.ready = true;
 				GLOBAL.players[player.id].ready = true;
 				socket.emit('launch_game');
@@ -84,7 +84,7 @@ exports.init = function(io, init, game, lobbyManager) {
 			GLOBAL.players[player.id].ready = true;
 			player.ready = true;
 			// If at least 3 players are ready, we start the game
-			if (room.getPlayersReady() == 1) {
+			if (room.getPlayersReady() == 2) {
 				room.startGame();
 				game.launch(io, room);
 			}

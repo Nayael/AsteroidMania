@@ -111,7 +111,6 @@ exports.launch = launch;
  */
 function mainLoop(io, room) {
 	drawAsteroids(room.asteroids);	// We virtually draw the asteroids to test for collisions
-	// drawShips(room.players);	// We virtually draw the ships to test for collisions
 	moveAsteroids(room.id);		// We handle the asteroids
 	moveBullets(io, room.id);	// We handle the bullets
 	var gameData = {

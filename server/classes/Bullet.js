@@ -5,7 +5,7 @@ exports.Bullet = function(x, y, angle, color) {
 	this.speed = 8;
 	this.color = color;
 	this.vulnerability = {};
-	this.vulnerability[GLOBAL.colors[0]] = (this.color === GLOBAL.colors[0] ? 0 : (this.color === GLOBAL.colors[1] ? 1 : 2));
+	this.vulnerability[GLOBAL.colors[0]] = (this.color === GLOBAL.colors[0] ? 0 : (this.color === GLOBAL.colors[1] ? 2 : 1));
 	this.vulnerability[GLOBAL.colors[1]] = (this.color === GLOBAL.colors[0] ? 1 : (this.color === GLOBAL.colors[1] ? 0 : 2));
 	this.vulnerability[GLOBAL.colors[2]] = (this.color === GLOBAL.colors[0] ? 2 : (this.color === GLOBAL.colors[1] ? 1 : 0));
 }

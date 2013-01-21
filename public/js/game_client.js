@@ -31,9 +31,9 @@ define(['Ship', 'Asteroid', 'Bullet', 'Keyboard'], function(Ship, Asteroid, Bull
 		$('#players_list_title').text('Joueurs connectés');
 		$('#players_list').append('<div class="player room_player" data-username="' + game.user.username + '">' + game.user.username + '</div>');
 		game.log('Bienvenue dans la room #' + game.user.roomId);
-		game.log('Appuyez sur R si vous êtes prêt(e) à commencer.');
 		Keyboard.on('keydown', 'R', game.readyPlayer);
 		Keyboard.on('keydown', 'ESCAPE', game.confirmLeave);
+		game.toggleReadyText();
 	};
 
 	/**
@@ -394,7 +394,35 @@ define(['Ship', 'Asteroid', 'Bullet', 'Keyboard'], function(Ship, Asteroid, Bull
 		player.score = data.playerScore;
 		player.bullets.splice(data.bullet, 1);				// We remove the bullet
 		game.asteroids[data.asteroid].explode(game.canvas);	// We make the asteroid explode
-	};	
+	};
+
+	/**
+	 * Displays the text at the beginning to tell the player to ready himself
+	 */
+	game.toggleReadyText = function() {
+		if (game.canvas.getContext) {
+			var x, ctx = game.canvas.getContext('2d');
+			if (game.readyText != undefined) {
+				var metrics = ctx.measureText(game.readyText),
+					textWidth = metrics.width;
+				ctx.clearRect(220, 32, textWidth + 50, 25);
+			}
+			if (game.readyText === 'Appuyer sur R si vous êtes prêt(e) à commencer'){
+				game.readyText = 'Appuyer sur R si vous n\'êtes pas prêt(e) à commencer';
+				ctx.fillStyle = '#FEFEFE';
+				ctx.font = '14px Calibri';
+				ctx.fillText('Prêt', 10, 20);
+				x = 220;
+			}else {
+				game.readyText = 'Appuyer sur R si vous êtes prêt(e) à commencer';
+				x = 240;
+				ctx.clearRect(0, 0, 50, 50);
+			}
+			ctx.fillStyle = '#FEFEFE';
+			ctx.font = '18px Calibri';
+			ctx.fillText(game.readyText, x, 50);
+		}
+	}	
 
 	return game;
 });

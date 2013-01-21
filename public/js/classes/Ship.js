@@ -23,7 +23,7 @@ define(['Asteroid', 'Bullet', 'Keyboard', 'ship', 'collision'], function(Asteroi
 		
 		// We set the different interactions between the ships and the asteroids, in function of the colors
 		this.vulnerability = {
-			'#FF0000': (this.color === colors[0] ? 0 : (this.color === colors[1] ? 1 : 2)),
+			'#FF0000': (this.color === colors[0] ? 0 : (this.color === colors[1] ? 2 : 1)),
 			'#00FF00': (this.color === colors[0] ? 1 : (this.color === colors[1] ? 0 : 2)),
 			'#FFFF00': (this.color === colors[0] ? 2 : (this.color === colors[1] ? 1 : 0))
 		}
