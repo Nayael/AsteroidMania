@@ -33,9 +33,13 @@ function moveBullets(io, roomId) {
 			var player = room.players[key];
 			// We make the bullets move
 			for (var i = 0; i < player.bullets.length; i++) {
-				if (player.bullets[i].move(canvasWidth, canvasHeight) === false)	// If the bullet passes the canvas view
+				if (player.bullets[i].move(canvasWidth, canvasHeight) === false) {	// If the bullet passes the canvas view
 					player.bullets.splice(i, 1);	// We delete it
-				else if ((destroyed = player.bullets[i].collideAsteroids(room.asteroids, room.id)) !== false) {	// We test if the bullet touches an asteroid
+					room.broadcast(io, 'bullet_gone', {
+						player: key,
+						bullet: i
+					}, [key]);
+				}else if ((destroyed = player.bullets[i].collideAsteroids(room.asteroids, room.id)) !== false) {	// We test if the bullet touches an asteroid
 					player.bullets.splice(i, 1);	// We delete it
 					player.score += Player.pointsWin;				// The player wins 10 points
 					room.broadcast(io, 'asteroid_destroyed', {

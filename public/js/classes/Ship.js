@@ -89,12 +89,17 @@ define(['Asteroid', 'Bullet', 'Keyboard', 'ship', 'collision'], function(Asteroi
 		this.x = data.players[this.id].x;
 		this.y = data.players[this.id].y;
 		this.angle = data.players[this.id].angle;
+		console.log('this.bullets.length: ', this.bullets.length);
 		for (var i = 0; i < this.bullets.length; i++) {
 			if (!data.players[this.id].bullets[i]) {
 				continue;
 			}
 			this.bullets[i].x = data.players[this.id].bullets[i].x;
 			this.bullets[i].y = data.players[this.id].bullets[i].y;
+			if (this.bullets[i].x < 0 || this.bullets[i].x > 800 || this.bullets[i].y < 0 || this.bullets[i].y > 600) {
+				this.bullets.splice(i, 1);
+				i--;
+			}
 		};
 	};
 

@@ -12,6 +12,8 @@ exports.Bullet = function(x, y, angle, color) {
 
 /**
  * Calculates the bullet's new position from its speed and angle
+ * The bullet moves on the client side only for the shooter, so that the bullet's travel seems legit to him
+ * To the other players, this bullet will be displayed with the "real" bullet data, coming from the server
  */
 exports.Bullet.prototype.move = function(canvasWidth, canvasHeight) {
 	this.x += this.speed * Math.cos(this.angle * Math.PI / 180);

@@ -373,12 +373,20 @@ define(['Ship', 'Asteroid', 'Bullet', 'Keyboard'], function(Ship, Asteroid, Bull
 	};
 
 	/**
-	 * Destroys an asteroid
+	 * Adds a bullet to the canvas
 	 */
 	game.addBullet = function(data) {
 		var player = game.players[data.playerId],
 			bullet = new Bullet(data.bullet.x, data.bullet.y, null, player.color);
 		player.bullets.push(bullet);
+	};
+
+	/**
+	 * Removes a bullet from the canvas
+	 */
+	game.removeBullet = function(data) {
+		var player = game.players[data.player];
+		player.bullets.splice(data.bullet, 1);
 	};
 
 	/**

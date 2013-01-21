@@ -170,6 +170,11 @@ define(['socket_io', 'game_client'], function(io, game) {
 			}
 		});
 
+		// When a bullet is gone outside the canvas
+		socket.on('bullet_gone', function(data) {
+			game.removeBullet(data);
+		});
+
 		// When an asteroid is destroyed
 		socket.on('asteroid_destroyed', function(data) {
 			game.destroyAsteroid(data);
