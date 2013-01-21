@@ -2,6 +2,7 @@ exports.Bullet = function(x, y, angle, color) {
 	this.x = x;
 	this.y = y;
 	this.angle = angle;
+	this.speed = 8;
 	this.color = color;
 	this.vulnerability = {};
 	this.vulnerability[GLOBAL.colors[0]] = (this.color === GLOBAL.colors[0] ? 0 : (this.color === GLOBAL.colors[1] ? 1 : 2));
@@ -13,8 +14,8 @@ exports.Bullet = function(x, y, angle, color) {
  * Calculates the bullet's new position from its speed and angle
  */
 exports.Bullet.prototype.move = function(canvasWidth, canvasHeight) {
-	this.x += 5 * Math.cos(this.angle * Math.PI / 180);
-	this.y -= 5 * Math.sin(this.angle * Math.PI / 180);
+	this.x += this.speed * Math.cos(this.angle * Math.PI / 180);
+	this.y -= this.speed * Math.sin(this.angle * Math.PI / 180);
 
 	// We delete the bullet once outside of the canvas
 	if (this.x < 0 || this.x > canvasWidth || this.y < 0 || this.y > canvasHeight) {

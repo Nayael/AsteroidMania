@@ -6,6 +6,7 @@ define(function() {
 			this.angle = angle;
 		}
 		this.color = color;
+		this.speed = 8
 	}
 
 	Bullet.prototype.render = function(canvas) {
@@ -23,8 +24,8 @@ define(function() {
 	 * @param canvas	The canvas which the element is drawn in
 	 */
 	Bullet.prototype.move = function(canvas) {
-		this.x += 5 * Math.cos(this.angle * Math.PI / 180);
-		this.y -= 5 * Math.sin(this.angle * Math.PI / 180);
+		this.x += this.speed * Math.cos(this.angle * Math.PI / 180);
+		this.y -= this.speed * Math.sin(this.angle * Math.PI / 180);
 
 		// We delete the bullet once outside of the canvas
 		if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {

@@ -1,12 +1,12 @@
 var Player = require('./classes/Player').Player,
 	Asteroid = require('./classes/Asteroid').Asteroid,
-	colors = ['#FF0000', '#00FF00', '#FFFF00'],
 	wave = {
 		max: 2,	// The maximum size of asteroids in this wave
 		total: 10
 	},
 	canvasWidth = 800,
 	canvasHeight = 600;
+exports.wave = wave;
 
 exports.createOrFindPlayer = function(username) {
 	for (var playerId in GLOBAL.players) {
@@ -69,12 +69,14 @@ function moveAsteroids(roomId) {
 		// If the asteroid is inside the canvas and touches one of the edges
 		if (asteroid.inside && (asteroids[key].x <= 0 || asteroids[key].x >= (800 - asteroids[key].size))) {
 			asteroids[key].xDirection *= -1;
+			asteroids[key].yDirection *= Math.random() > 0.5 ? -1 : 1;
 		}else if (asteroids[key].x > 0 && asteroids[key].x < (800 - asteroids[key].size)) {	// Otherwise, we check if the asteroid is inside the visible area of the canvas
 			asteroids[key].inside = true;
 		}
 
 		if (asteroids[key].y <= 0 || asteroids[key].y >= (540 - asteroids[key].size)) {   
 			asteroids[key].yDirection *= -1;
+			asteroids[key].xDirection *= Math.random() > 0.5 ? -1 : 1;
 		}
 	};
 };
@@ -208,7 +210,7 @@ function nextWave(room) {
 			x: x,
 			y: y,
 			weight: weight,
-			color: colors[colorIndex],
+			color: GLOBAL.colors[colorIndex],
 		}));
 		colorIndex++;
 	};
