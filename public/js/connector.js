@@ -69,9 +69,6 @@ define(['socket_io', 'game_client'], function(io, game) {
 				game.addPlayer(data.player);
 			}
 			game.enterRoom();
-			// game.launch(player);
-			// socket.emit('init_user', player);	// We send the player data to the socket
-			// game.user = player.id;	// We only keep the id, since the user is now with the other players
 		});
 
 		socket.on('launch_game', function() {

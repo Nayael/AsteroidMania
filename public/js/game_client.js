@@ -406,7 +406,6 @@ define(['Ship', 'Asteroid', 'Bullet', 'Keyboard'], function(Ship, Asteroid, Bull
 		}
 		player.score = data.playerScore;
 		player.bullets.splice(data.bullet, 1);				// We remove the bullet
-		game.asteroids[data.asteroid].explode(game.canvas);	// We make the asteroid explode
 	};
 
 	/**
