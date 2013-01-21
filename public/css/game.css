@@ -28,8 +28,9 @@
 }
 
 #main_canvas{
-	background-color: #121212;
+	background-color: rgba(18, 18, 18, 0.9);
 	position: absolute;
+	border: 1px solid #FEFEFE;
 }
 
 #right_content{
@@ -44,23 +45,26 @@
 	border-radius: 2px;
 	overflow: scroll;
 	padding: 5px;
+	background-color: rgba(17, 17, 34, 0.7);
 }
 
 #logger{
 	width: 350px;
 	height: 280px;
 	border: 1px solid black;
-	border-radius: 2px;
+	border-radius: 5px;
 	overflow: hidden;
-	background-color: rgba(135, 135, 168, 0.5);
+	background-color: rgba(75, 75, 80, 0.8);
 }
 
 #logger .message{
 	padding: 5px;
+	color: #EBEBEB;
 }
 
 #logger .alt_message{
 	background-color: #111122;
+	color: #EEEEEE;
 }
 
 #lobby, #end_screen{
@@ -90,7 +94,7 @@
 }
 
 #lobby{
-	background-color: #121212;
+	/*background-color: rgba(18, 18, 18, 0.7);*/
 }
 
 #lobby h2, #end_screen h2{

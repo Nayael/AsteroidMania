@@ -5,7 +5,7 @@ html
 		link(type='text/css', rel='stylesheet', href='/css/bootstrap.min.css')
 		link(type='text/css', rel='stylesheet', href='/css/main.css')
 	body
-		div#content
+		div#content.textPage
 			header
 				h1 Asteroid Mania
 			nav
@@ -19,13 +19,13 @@ html
 					br
 					| Les parties s'effectuent de 3 à 6 joueurs maximum. Chaque vaisseau possède un blindage de couleur, plus ou moins vulnérable aux différents types d'astéroïdes&nbsp;:
 					ul
-						li Les astéroïdes de la même couleur que votre blindage ne vous causent aucun dégât
+						li Les astéroïdes de la même couleur que votre blindage ne vous causent aucun dégât, et vous pouvez les détruire
 						li Les astéroïdes de la couleur qui vous est supérieure détruisent votre vaisseau au moindre contact
 						li Vous pouvez détruire les astéroïdes de la couleur qui vous est inférieure, mais ils peuvent aussi vous causer des dégâts. Attention, certains astéroïdes se séparent en deux lorsque vous leur tirez dessus !
 				p Les couleurs sont réparties de cette manière :
 				p
 					img(src="/images/colors_explanation.png", alt="Rouge => Jaune => Vert => Rouge")
-				p(id="keys_explanation") 
+				p#keys_explanation 
 					| Déplacez votre vaisseau avec les flèches de votre clavier (ou les touches Q, Z, D). Tirez avec la touche ESPACE.
 					br
 					| Vous pouvez quitter une partie en appuyant sur L.
