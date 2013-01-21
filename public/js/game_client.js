@@ -1,11 +1,11 @@
-define(['Ship', 'Asteroid', 'Keyboard'], function(Ship, Asteroid, Keyboard) {
+define(['Ship', 'Asteroid', 'Bullet', 'Keyboard'], function(Ship, Asteroid, Bullet, Keyboard) {
 	var game = {};	// The game namespace
 
 	/**
 	 * Initializes the game's data
 	 * @param {HTMLDivElement} gameContainer	The <div> which the canvas will be added in
 	 */
-	game.init = function(gameContainer) {
+	game.init = function(gameContainer, socket) {
 		game.players = {};
 		game.asteroids = [];
 		game.colors = ['#FF0000', '#00FF00', '#FFFF00'];
@@ -65,11 +65,13 @@ define(['Ship', 'Asteroid', 'Keyboard'], function(Ship, Asteroid, Keyboard) {
 				}
 				// If the user can't shoot, it means there is a new bullet
 				// We will send the new bullet data to the server
-				if (i == game.user.bullets.length - 1 && !game.user.canShoot) {
+				if (i == game.user.bullets.length - 1 && game.user.shooting) {
+					game.user.shooting = false;
 					special.push({
 						bullet: {
 							x: game.user.bullets[i].x,
-							y: game.user.bullets[i].x,
+							y: game.user.bullets[i].y,
+							angle: game.user.bullets[i].angle
 						}
 					});
 				}
@@ -80,8 +82,15 @@ define(['Ship', 'Asteroid', 'Keyboard'], function(Ship, Asteroid, Keyboard) {
 				if (!game.players[index].dead) {
 					game.players[index].render(game.canvas, Ship);
 					// We handle the player's bullets
-					for (var i = 0; i < game.players[index].bullets.length; i++) {
-						game.players[index].bullets[i].move(game.canvas);
+					for (var i = 0, bullet; i < game.players[index].bullets.length; i++) {
+						bullet = game.players[index].bullets[i];
+						// If the bullet passes the canvas view
+						if (bullet.x < 0 || bullet.x > game.canvas.width || bullet.y < 0 || bullet.y > game.canvas.height) {
+							game.players[index].bullets.splice(i, 1);
+							i--;
+							continue;
+						}
+						game.players[index].bullets[i].render(game.canvas);
 					};
 
 					// We handle collisions
@@ -362,6 +371,30 @@ define(['Ship', 'Asteroid', 'Keyboard'], function(Ship, Asteroid, Keyboard) {
 			ctx.fillText('Round #' + (game.level + 1), 730, 20);
 		}
 	};
+
+	/**
+	 * Destroys an asteroid
+	 */
+	game.addBullet = function(data) {
+		var player = game.players[data.playerId],
+			bullet = new Bullet(data.bullet.x, data.bullet.y, null, player.color);
+		player.bullets.push(bullet);
+	};
+
+	/**
+	 * Destroys an asteroid
+	 */
+	game.destroyAsteroid = function(data) {
+		var player;
+		if (game.user.id == data.player) {	// If the player who shot is the current user
+			player = game.user;
+		}else {
+			player = game.players[data.player];
+		}
+		player.score = data.playerScore;
+		player.bullets.splice(data.bullet, 1);				// We remove the bullet
+		game.asteroids[data.asteroid].explode(game.canvas);	// We make the asteroid explode
+	};	
 
 	return game;
 });

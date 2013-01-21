@@ -34,5 +34,13 @@ define(['render'], function(addRenderCapabilities) {
 		];
 	};
 
+	/**
+	 * Makes the asteroid explode (displays the animation)
+	 * @param {Canvas} canvas	The canvas wich the asteroid is drawn into
+	 */
+	Asteroid.prototype.explode = function(canvas) {
+		
+	};
+
 	return Asteroid;
 });

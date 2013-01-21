@@ -1,3 +1,5 @@
+var Bullet = require('./classes/Bullet').Bullet;
+
 exports.init = function(io, init, game, lobbyManager) {
 	io.sockets.on('connection', function(socket) {
 		var player, mainLoop;
@@ -169,6 +171,9 @@ exports.init = function(io, init, game, lobbyManager) {
 			room.broadcast(io, 'player_died', player.id);	// We tell everyone that he died
 			// We plan the respawn
 			setTimeout(function() {
+				if (!room.players[player.id]) {
+					return;
+				}
 				room.players[player.id].dead = false;
 				room.players[player.id].x = 100 + Math.random() * 700;
 				room.players[player.id].y = 100 + Math.random() * 500;
@@ -182,6 +187,24 @@ exports.init = function(io, init, game, lobbyManager) {
 					speed: 2
 				});
 			}, 1000);
+		});
+
+		// When the user shoots a bullet
+		socket.on('shoot_bullet', function(data) {
+			var room = GLOBAL.lobby.rooms[data.roomId];
+			if (!room)
+				return;
+			var player = room.players[data.playerId];
+			if (!player)
+				return;
+			if (player.bullets == undefined)
+				player.bullets = [];
+			var bullet = new Bullet(data.bullet.x, data.bullet.y, data.bullet.angle, player.color);
+			player.bullets.push(bullet);
+			room.broadcast(io, 'bullet_shot', {
+				bullet: bullet,
+				playerId: player.id
+			}, [player.id]);
 		});
 	});
 };

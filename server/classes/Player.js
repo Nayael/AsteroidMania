@@ -24,3 +24,5 @@ exports.Player.prototype.setDrawbox = function() {
 	// 	[this.x - 20*Math.cos((this.angle * Math.PI / 180) + 0.3), this.y + 20*Math.sin((this.angle * Math.PI / 180) + 0.3)]
 	// ];
 };
+
+exports.Player.pointsWin = 10;	// The number of points gained when the player destroyes an asteroid

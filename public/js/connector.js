@@ -82,11 +82,9 @@ define(['socket_io', 'game_client'], function(io, game) {
 			window.location.reload();
 		})
 
-		// When the sockets sends the other players data (on connection)
-		// socket.on('get_players', function(players) {
-		// 	game.addPlayers(players);
-		// });
-
+		////////////////////
+		// GAME EVENTS
+		//
 		// When a new player comes in the game
 		socket.on('new_player', function(newPlayer) {
 			if (game.user == undefined)
@@ -139,10 +137,6 @@ define(['socket_io', 'game_client'], function(io, game) {
 			game.endLevel(data);
 		});
 
-
-	////////////////////
-	// GAME EVENTS
-	//
 		// When the server sends datas from the game (on each frame)
 		socket.on('get_game_state', function(data) {
 			if (game.players == undefined)
@@ -167,6 +161,18 @@ define(['socket_io', 'game_client'], function(io, game) {
 		// When the server starts the level
 		socket.on('start_level', function(data) {
 			game.startLevel(data);
+		});
+
+		// When a bullet is shot
+		socket.on('bullet_shot', function(data) {
+			if (data.playerId != game.user.id) {
+				game.addBullet(data);
+			}
+		});
+
+		// When an asteroid is destroyed
+		socket.on('asteroid_destroyed', function(data) {
+			game.destroyAsteroid(data);
 		});
 
 		return socket;

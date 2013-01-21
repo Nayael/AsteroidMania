@@ -137,6 +137,13 @@ define(['connector', 'onEachFrame', 'Keyboard'], function(connectSocket, onEachF
 					roomId: frameData.player.roomId
 				});
 			}
+			if (frameData.special.bullet) {
+				gameEngine.socket.emit('shoot_bullet', {
+					playerId: frameData.player.id,
+					roomId: frameData.player.roomId,
+					bullet: frameData.special.bullet
+				});
+			}
 		}
 	};
 

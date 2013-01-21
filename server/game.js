@@ -1,10 +1,12 @@
-var Player = require('./Player').Player,
-	Asteroid = require('./Asteroid').Asteroid,
+var Player = require('./classes/Player').Player,
+	Asteroid = require('./classes/Asteroid').Asteroid,
 	colors = ['#FF0000', '#00FF00', '#FFFF00'],
 	wave = {
 		max: 2,	// The maximum size of asteroids in this wave
 		total: 10
-	};
+	},
+	canvasWidth = 800,
+	canvasHeight = 600;
 
 exports.createOrFindPlayer = function(username) {
 	for (var playerId in GLOBAL.players) {
@@ -15,6 +17,38 @@ exports.createOrFindPlayer = function(username) {
 	GLOBAL.players[player.id] = player;
 	GLOBAL.lobby.users[player.id] = player;
 	return player;
+};
+
+/**
+ * Moves the bullets according to their direction
+ * @param {Object} io 	Socket.IO module
+ * @param {int} roomId The game room
+ */
+function moveBullets(io, roomId) {
+	var room = GLOBAL.lobby.rooms[roomId], destroyed;
+	if (!room)
+		return;
+	for (var key in room.players) {
+		if (room.players.hasOwnProperty(key) && room.players[key].bullets) {
+			var player = room.players[key];
+			// We make the bullets move
+			for (var i = 0; i < player.bullets.length; i++) {
+				if (player.bullets[i].move(canvasWidth, canvasHeight) === false)	// If the bullet passes the canvas view
+					player.bullets.splice(i, 1);	// We delete it
+				else if ((destroyed = player.bullets[i].collideAsteroids(room.asteroids, room.id)) !== false) {	// We test if the bullet touches an asteroid
+					player.bullets.splice(i, 1);	// We delete it
+					player.score += Player.pointsWin;				// The player wins 10 points
+					room.broadcast(io, 'asteroid_destroyed', {
+						bullet: i,
+						player: key,
+						asteroid: destroyed,
+						playerScore: player.score
+					});
+				}
+			};
+		}
+	}
+	return false;
 };
 
 /**
@@ -74,18 +108,30 @@ exports.launch = launch;
  * @param {Room} room	The room to launch the game in
  */
 function mainLoop(io, room) {
-	// drawAsteroids(room.asteroids);	// We virtually draw the asteroids to test for collisions
+	drawAsteroids(room.asteroids);	// We virtually draw the asteroids to test for collisions
 	// drawShips(room.players);	// We virtually draw the ships to test for collisions
-	moveAsteroids(room.id);	// We handle the asteroids
+	moveAsteroids(room.id);		// We handle the asteroids
+	moveBullets(io, room.id);	// We handle the bullets
 	var gameData = {
 		players: {},
 		asteroids: []
 	};
+	// We pass the players' datas
 	for (var player in room.players) {
 		gameData.players[player] = {};
 		gameData.players[player].x = room.players[player].x;
 		gameData.players[player].y = room.players[player].y;
 		gameData.players[player].angle = room.players[player].angle;
+		if (!room.players[player].bullets)	// If the player has no bullets displayed, we wont send data about them, we pass to the next player
+			continue;
+		
+		gameData.players[player].bullets = [];
+		for (var i = 0; i < room.players[player].bullets.length; i++) {
+			gameData.players[player].bullets.push({
+				x: room.players[player].bullets[i].x,
+				y: room.players[player].bullets[i].y
+			});
+		};
 	};
 	for (var i in room.asteroids) {	// We also pass him the asteroids datas, to make them move on his screen
 		gameData.asteroids.push(room.asteroids[i]);

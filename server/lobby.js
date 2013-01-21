@@ -45,21 +45,22 @@ Room.prototype.addPlayer = function(player) {
 		player.ready = false;
 		player.x = (nbPlayers < 3 ? 200 : 600);
 		player.y = (nbPlayers == 0 || nbPlayers == 3) ? 150 : (nbPlayers == 1 || nbPlayers == 4) ? 300 : 450;
-		player.color = (nbPlayers == 0 || nbPlayers == 3) ? "#FF0000" : (nbPlayers == 1 || nbPlayers == 4) ? "#00FF00" : "#FFFF00";
+		player.color = (nbPlayers == 0 || nbPlayers == 3) ? colors[0] : (nbPlayers == 1 || nbPlayers == 4) ? colors[1] : colors[2];
 		player.speed = 0;
 		player.score = 0;
 		player.dead = false;
 		// We make  sure the colors are balanced
-		if (this.countColor('#FF0000') < this.countColor('#00FF00') || this.countColor('#FF0000') < this.countColor('#FFFF00')) {
-			player.color = '#FF0000';
+		if (this.countColor(GLOBAL.colors[0]) < this.countColor(GLOBAL.colors[1]) || this.countColor(GLOBAL.colors[0]) < this.countColor(GLOBAL.colors[2])) {
+			player.color = GLOBAL.colors[0];
 			player.y = 150;
-		}else if (this.countColor('#00FF00') < this.countColor('#FF0000') || this.countColor('#00FF00') < this.countColor('#FFFF00')) {
-			player.color = '#00FF00';
+		}else if (this.countColor(GLOBAL.colors[1]) < this.countColor(GLOBAL.colors[0]) || this.countColor(GLOBAL.colors[1]) < this.countColor(GLOBAL.colors[2])) {
+			player.color = GLOBAL.colors[1];
 			player.y = 300;
-		}else if (this.countColor('#FFFF00') < this.countColor('#00FF00') || this.countColor('#FFFF00') < this.countColor('#FF0000')) {
-			player.color = '#FFFF00';
+		}else if (this.countColor(GLOBAL.colors[2]) < this.countColor(GLOBAL.colors[1]) || this.countColor(GLOBAL.colors[2]) < this.countColor(GLOBAL.colors[0])) {
+			player.color = GLOBAL.colors[2];
 			player.y = 450;
 		}
+		
 		player.angle = (nbPlayers < 3 ? 180 : 0);
 		delete player.isUser;
 		delete GLOBAL.lobby.users[player.id];	// We remove the player from the lobby users

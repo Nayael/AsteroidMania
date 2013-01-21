@@ -89,6 +89,13 @@ define(['Asteroid', 'Bullet', 'Keyboard', 'ship', 'collision'], function(Asteroi
 		this.x = data.players[this.id].x;
 		this.y = data.players[this.id].y;
 		this.angle = data.players[this.id].angle;
+		for (var i = 0; i < this.bullets.length; i++) {
+			if (!data.players[this.id].bullets[i]) {
+				continue;
+			}
+			this.bullets[i].x = data.players[this.id].bullets[i].x;
+			this.bullets[i].y = data.players[this.id].bullets[i].y;
+		};
 	};
 
 	/**
@@ -117,7 +124,7 @@ define(['Asteroid', 'Bullet', 'Keyboard', 'ship', 'collision'], function(Asteroi
 			// We create the bullet
 			var bullet = new Bullet(that.x, that.y, that.angle, this.color);
 			that.bullets.push(bullet);
-
+			that.shooting = true;
 			that.canShoot = false;
 			// We allow him to shoot again only after 500 ms
 			setTimeout(function() {

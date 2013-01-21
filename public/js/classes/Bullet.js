@@ -2,7 +2,9 @@ define(function() {
 	function Bullet(x, y, angle, color) {
 		this.x = x;
 		this.y = y;
-		this.angle = angle;
+		if (angle != null) {
+			this.angle = angle;
+		}
 		this.color = color;
 	}
 

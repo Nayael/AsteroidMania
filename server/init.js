@@ -10,4 +10,5 @@ exports.init = function() {
 		return size;
 	};
 	GLOBAL.players = {};
+	GLOBAL.colors = ['#FF0000', '#00FF00', '#FFFF00'];
 };
