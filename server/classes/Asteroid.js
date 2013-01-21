@@ -50,8 +50,8 @@ Asteroid.prototype.explode = function(roomId) {
 	// We create the 2 asteroid's children
 	for (var i = 0, asteroid; i < 2; i++) {
 		asteroid = new Asteroid({
-			x: this.x + Math.floor(Math.random() * 100) * (Math.random() > 0.5 ? -1 : 1),
-			y: this.y + Math.floor(Math.random() * 100) * (Math.random() > 0.5 ? -1 : 1),
+			x: this.x + Math.floor(Math.random() * 40) * (Math.random() > 0.5 ? -1 : 1),
+			y: this.y + Math.floor(Math.random() * 40) * (Math.random() > 0.5 ? -1 : 1),
 			xDirection: Math.random() > 0.5 ? -1 : 1,
 			yDirection: Math.random() > 0.5 ? -1 : 1,
 			weight: weight,

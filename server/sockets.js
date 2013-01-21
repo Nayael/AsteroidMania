@@ -46,7 +46,13 @@ exports.init = function(io, init, game, lobbyManager) {
 
 		// When a player decides to join a room
 		socket.on('join_room', function(data) {
-			var room = lobbyManager.joinRoom(data.roomId, data.player);
+			var room = GLOBAL.lobby.rooms[data.roomId];
+			if (!room) {
+				socket.emit('could_not_join_room');
+				return;
+			}
+			var roomIsReady = (room.getPlayersReady() >= 2 || (room.getPlayersReady() == Object.size(room.players) && room.asteroids));
+			room = lobbyManager.joinRoom(data.roomId, data.player);
 			if (!room) {
 				socket.emit('could_not_join_room');
 				return;
@@ -58,14 +64,15 @@ exports.init = function(io, init, game, lobbyManager) {
 				players: room.players
 			});
 			room.broadcast(io, 'new_player', player);	// We tell everyone else he is connected
-			if (room.getPlayersReady() >= 2) {	// If there are at least 3 players ready in the room, the game has already started
+			if (roomIsReady) {	// If there are at least 3 players ready in the room, the game has already started
 				player.ready = true;
 				GLOBAL.players[player.id].ready = true;
 				socket.emit('launch_game');
 				if (room.mainLoop) {	// If the level is running, we tell the new user to start directly, but if not, he will have to wait until the next level starts
 					socket.emit('start_level', {
 						asteroids: room.asteroids,
-						level: room.level
+						level: room.level,
+						playerScore: player.score
 					});
 				}
 			}
@@ -216,7 +223,8 @@ exports.init = function(io, init, game, lobbyManager) {
  * @param {bool} toLobby	Is the player back to the lobby or not (definitely gone) ?
  */
 function playerLeaveRoom(player, io, toLobby) {
-	var room = GLOBAL.lobby.rooms[player.roomId];
+	var room = GLOBAL.lobby.rooms[player.roomId],
+		roomPlayer = room.players[player.id];
 	GLOBAL.lobby.broadcast(io, 'player_left_room', {
 		id: player.id,
 		username: player.username,
@@ -224,11 +232,11 @@ function playerLeaveRoom(player, io, toLobby) {
 	});
 	if (room)
 		delete room.players[player.id];		// We remove him from his room
-	delete player.roomId;
 	player.ready = false;
 	player.inGame = false;
 	if (toLobby) {
 		player.inLobby = true;
+		GLOBAL.players[player.id].score = roomPlayer.score;
 		GLOBAL.lobby.users[player.id] = GLOBAL.players[player.id];
 		if (room && Object.size(room.players) > 0) { // We send the player back to the lobby
 			io.sockets.socket(GLOBAL.players[player.id].socket).emit('refresh_lobby', {

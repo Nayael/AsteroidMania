@@ -60,6 +60,9 @@ Room.prototype.addPlayer = function(player) {
 			player.color = GLOBAL.colors[2];
 			player.y = 450;
 		}
+		if (GLOBAL.players[player.id].roomId != undefined && GLOBAL.players[player.id].roomId == this.id && GLOBAL.players[player.id].score != undefined) {
+			player.score = GLOBAL.players[player.id].score;
+		}
 		
 		player.angle = (nbPlayers < 3 ? 180 : 0);
 		delete player.isUser;

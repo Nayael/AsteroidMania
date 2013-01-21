@@ -143,7 +143,7 @@ define(['Ship', 'Asteroid', 'Bullet', 'Keyboard'], function(Ship, Asteroid, Bull
 		$('#end_screen').hide();	// We hide the end screen in case it is displayed
 		$('#end_screen').empty();
 		game.resetTime();
-		game.user.score = 0;
+		game.user.score = data.playerScore || 0;
 		game.level = data.level;
 		game.asteroids = [];
 		for (var asteroid in data.asteroids) {
