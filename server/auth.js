@@ -2,7 +2,7 @@ exports.checkAuth = function(request, response, next) {
 	if (request.session.playerId != undefined && GLOBAL.players[request.session.playerId] != undefined) {
 		request.currentPlayer = GLOBAL.players[request.session.playerId];
 		next();
-	}else {
+	} else {
 		response.render('game.jade', {login: true});
 	}
 };

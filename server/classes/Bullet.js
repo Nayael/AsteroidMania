@@ -33,6 +33,9 @@ exports.Bullet.prototype.move = function(canvasWidth, canvasHeight) {
 exports.Bullet.prototype.collideAsteroids = function(asteroids, roomId) {
 	for (var i = 0; i < asteroids.length; i++) {
 		asteroid = asteroids[i];
+		if (!asteroid.center) {
+		    return false;
+		}
 		var x2 = asteroid.center.x,
 			y2 = asteroid.center.y,
 			size2 = asteroid.size / 2,
